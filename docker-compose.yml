@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  backend:
+    container_name: coin_library_backend
+    build:
+      context: Backend
+      dockerfile: Dockerfile
+    ports:
+      - "9010:8080"
+    depends_on:
+      - database
+    environment:
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+
+  database:
+    container_name: coin_library_database
+    image: mariadb:10.9.3
+    environment:
+      - MARIADB_DATABASE=coin_library
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+    volumes:
+      - ./Backend/data/database:/var/lib/mysql
+    ports:
+      - "3306:3306"
