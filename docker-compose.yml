@@ -4,8 +4,7 @@ services:
   backend:
     container_name: coin_library_backend
     build:
-      context: Backend
-      dockerfile: Dockerfile
+      dockerfile: backend.Dockerfile
     ports:
       - "9010:8080"
     depends_on:
@@ -26,3 +25,10 @@ services:
       - ./Backend/data/database:/var/lib/mysql
     ports:
       - "3306:3306"
+
+  frontend:
+    container_name: coin_library_frontend
+    build:
+      dockerfile: frontend.Dockerfile
+    ports:
+      - "9012:80"
