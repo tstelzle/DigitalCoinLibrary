@@ -1,8 +1,5 @@
 package com.coinlibrary.backend.model;
 
-import com.coinlibrary.backend.enums.CoinSize;
-import com.coinlibrary.backend.enums.Country;
-
 import javax.persistence.*;
 
 @Entity
@@ -11,31 +8,39 @@ public class Coin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private Country country;
+    @Column(name = "id", nullable = false)
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "edition_id")
+    private Edition edition;
     private int year;
     private boolean special;
     private String name;
-    private CoinSize size;
-
-    public Coin(String country, int year, String size) {
-        this.country = Country.valueOf(country);
-        this.year = year;
-        this.size = CoinSize.valueOf(size);
-        this.special = false;
-        this.name = "";
-    }
-
-    public Coin(String country, int year, String size, boolean special, String name) {
-        this.country = Country.valueOf(country);
-        this.year = year;
-        this.size = CoinSize.valueOf(size);
-        this.special = special;
-        this.name = name;
-    }
+    private int size;
+    private String imageUrl;
 
     public Coin() {
 
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Edition getEdition() {
+        return edition;
+    }
+
+    public void setEdition(Edition edition) {
+        this.edition = edition;
     }
 
     public boolean isSpecial() {
@@ -54,27 +59,11 @@ public class Coin {
         this.name = name;
     }
 
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public CoinSize getSize() {
+    public int getSize() {
         return size;
     }
 
-    public void setSize(CoinSize size) {
+    public void setSize(int size) {
         this.size = size;
     }
 

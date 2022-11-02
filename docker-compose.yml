@@ -17,7 +17,6 @@ services:
     container_name: coin_library_database
     image: mariadb:10.9.3
     environment:
-      - MARIADB_DATABASE=coin_library
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
