@@ -9,7 +9,7 @@ public class Coin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    private int id;
     @ManyToOne
     @JoinColumn(name = "edition_id")
     private Edition edition;
@@ -17,22 +17,36 @@ public class Coin {
     private boolean special;
     private String name;
     private int size;
-    private String imageUrl;
+    private boolean available;
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    private String imagePath;
 
     public Coin() {
 
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public boolean isAvailable() {
+        return available;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Edition getEdition() {
@@ -41,6 +55,16 @@ public class Coin {
 
     public void setEdition(Edition edition) {
         this.edition = edition;
+    }
+
+    public String getEditionString() {
+        if (edition.getYear_from() == 0 && edition.getYear_to() == 0) {
+            return String.format("%d. %s", edition.getEdition(), edition.getCountry());
+        } else if (edition.getYear_to() == 0) {
+            return String.format("%d. %s (%d)", edition.getEdition(), edition.getCountry(), edition.getYear_from());
+        } else {
+            return String.format("%d. %s (%d - %d)", edition.getEdition(), edition.getCountry(), edition.getYear_from(), edition.getYear_to());
+        }
     }
 
     public boolean isSpecial() {

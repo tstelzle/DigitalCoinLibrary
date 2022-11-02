@@ -1,7 +1,6 @@
 package com.coinlibrary.backend.controller;
 
 import com.coinlibrary.backend.model.Coin;
-import com.coinlibrary.backend.model.Edition;
 import com.coinlibrary.backend.service.CoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,18 @@ public class CoinController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<Edition, List<Coin>>> getCoins() {
+    public ResponseEntity<Map<String, List<Coin>>> getCoins() {
         return new ResponseEntity<>(coinService.listCoins(), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> postCoin(@RequestParam Integer coinId) {
+        long status = coinService.updateCoin(coinId);
+
+        if (status == -1) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

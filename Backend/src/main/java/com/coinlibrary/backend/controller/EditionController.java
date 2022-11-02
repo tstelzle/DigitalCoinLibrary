@@ -1,8 +1,9 @@
 package com.coinlibrary.backend.controller;
 
 import com.coinlibrary.backend.model.Edition;
+import com.coinlibrary.backend.service.CoinService;
 import com.coinlibrary.backend.service.EditionService;
-import com.coinlibrary.backend.service.SeleniumService;
+import com.coinlibrary.backend.service.WikipediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -20,18 +22,14 @@ public class EditionController {
 
     private final EditionService editionService;
 
-    private final SeleniumService seleniumService;
-
     @Autowired
-    public EditionController(EditionService editionService, SeleniumService seleniumService) {
+    public EditionController(EditionService editionService, WikipediaService wikipediaService, CoinService coinService) throws MalformedURLException {
         this.editionService = editionService;
-        this.seleniumService = seleniumService;
 
-        seleniumService.init();
-        List<String> countryUrls = seleniumService.getEuroCountryLinks();
-//        seleniumService.saveCountries(countryUrls);
-        seleniumService.getEditions(countryUrls);
-        seleniumService.quit();
+        if (Boolean.parseBoolean(System.getenv("DOWNLOAD_DATA"))) {
+            wikipediaService.run();
+            coinService.generateAllCoins();
+        }
     }
 
     @GetMapping

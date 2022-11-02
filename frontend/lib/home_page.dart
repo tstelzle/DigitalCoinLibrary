@@ -28,8 +28,14 @@ class _MyHomePageState extends State<MyHomePage> {
             itemBuilder: (BuildContext context, int index) {
               return Column(children: <Widget>[
                 ListTile(title: Text(coinList.coinMap.keys.elementAt(index))),
-                ListView.builder(
+                GridView.builder(
                     shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 8,
+                      crossAxisSpacing: 5.0,
+                      mainAxisSpacing: 5.0,
+                    ),
                     itemCount: coinList.coinMap.values.elementAt(index).length,
                     itemBuilder: (BuildContext context, int index2) {
                       return createCoinWidget(coinList.coinMap.values
@@ -45,7 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Widget createCoinWidget(Coin coin) {
   return Card(
+      color: coin.available ? Colors.green : Colors.red,
       child: ListTile(
-          title: Text("${coin.year.toString()} ${coin.coinSize}"),
+          title: Text(coin.coinSize >= 100
+              ? "${coin.coinSize / 100}€"
+              : "${coin.coinSize} ct."),
           subtitle: coin.special ? Text(coin.name) : null));
 }

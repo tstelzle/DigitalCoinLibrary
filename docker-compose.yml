@@ -12,6 +12,7 @@ services:
     environment:
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - DOWNLOAD_DATA=${DOWNLOAD_DATA}
 
   database:
     container_name: coin_library_database
@@ -30,4 +31,13 @@ services:
     build:
       dockerfile: frontend.Dockerfile
     ports:
-      - "9012:80"
+      - "9013:80"
+
+  selenium:
+    container_name: coin_library_selenium
+    image: selenium/standalone-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "4444:4444"
+      - "7900:7900"
