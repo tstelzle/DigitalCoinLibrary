@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/coin.dart';
 import 'package:provider/provider.dart';
 
+import 'coin.dart';
 import 'coin_list.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -17,7 +17,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     CoinList coinList = context.watch<CoinList>();
-    // coinList.updateMap();
 
     return Scaffold(
         appBar: AppBar(

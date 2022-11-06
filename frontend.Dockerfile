@@ -1,11 +1,11 @@
 FROM cirrusci/flutter:stable as BUILD_STAGE
 
-ADD frontend frontend
+ADD flutter_frontend frontend
 
 WORKDIR frontend
 
-USER root
-RUN flutter build web
+RUN flutter config --enable-web
+RUN flutter build web --web-renderer html --release
 
 FROM nginx:latest as DEPLOY_STAGE
 

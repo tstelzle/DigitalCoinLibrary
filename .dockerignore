@@ -1,2 +1,4 @@
 Backend/data/
 Backend/target/
+flutter_frontend/.dart_tool
+flutter_frontend/build
