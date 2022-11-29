@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
+import '../core/constants.dart' as constants;
 import '../model/coin.dart';
-import '../core/constants.dart' as Constants;
 
 class CoinList extends ChangeNotifier {
   Map<String, List<Coin>> coinMap = {};
@@ -15,8 +14,8 @@ class CoinList extends ChangeNotifier {
   }
 
   Future<void> updateMap() async {
-    final response = await http.get(Uri.parse(Constants.coinUrl));
-    if (response.statusCode != HttpStatus.ok) {
+    final response = await http.get(Uri.parse(constants.coinUrl));
+    if (response.statusCode != 200) {
       return;
     }
 
