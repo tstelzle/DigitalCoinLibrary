@@ -1,2 +1,4 @@
-const String apiBaseUrl = "http://192.168.177.21:9010/api";
+const String ipAddress = "172.24.157.102";
+const String port = "9010";
+const String apiBaseUrl = "http://$ipAddress:$port/api";
 const String coinUrl = "$apiBaseUrl/coin";
