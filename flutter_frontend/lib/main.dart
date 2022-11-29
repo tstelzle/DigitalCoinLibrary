@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'coin_list.dart';
-import 'home_page.dart';
+import 'home/coin_list.dart';
+import 'home/home_page.dart';
 
 void main() {
   runApp(const MyApp());
