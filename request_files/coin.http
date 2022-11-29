@@ -1,0 +1,8 @@
+# @import ./constants.http
+###
+GET /api/coin
+Accept: application/json
+
+POST /api/coin?coinId=217
+
+POST /api/coin?coinId=1000
