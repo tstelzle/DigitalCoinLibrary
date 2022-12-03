@@ -1,30 +1,25 @@
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_frontend/core/coin_api.dart';
 
-import '../core/constants.dart' as constants;
 import '../model/coin.dart';
 
 class CoinList extends ChangeNotifier {
+  final CoinApi coinApi;
   Map<String, List<Coin>> coinMap = {};
 
-  CoinList() {
+  CoinList({required this.coinApi}) {
     updateMap();
   }
 
   Future<void> updateMap() async {
-    final response = await http.get(Uri.parse(constants.coinUrl));
-    if (response.statusCode != 200) {
-      return;
+    try {
+      final map = await coinApi.fetchCoins();
+      coinMap = map;
+    } catch (error, _) {
+      log(error.toString());
     }
-
-    Map countryMap = Map.from(jsonDecode(utf8.decode(response.bodyBytes)));
-
-    countryMap.forEach((key, value) {
-      coinMap.putIfAbsent(key, () => List<Coin>.from(value.map((coin) => Coin.fromJson(coin))));
-    });
-
     notifyListeners();
   }
 }
