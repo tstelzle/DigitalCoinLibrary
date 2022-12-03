@@ -7,14 +7,15 @@ import javax.persistence.*;
 public class Coin {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "edition_id")
     private Edition edition;
     private int year;
     private boolean special;
+    @Lob
     private String name;
     private int size;
     private boolean available;
@@ -41,11 +42,11 @@ public class Coin {
         this.available = available;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

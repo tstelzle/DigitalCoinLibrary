@@ -1,11 +1,12 @@
 package com.coinlibrary.backend.service;
 
+import com.coinlibrary.backend.model.Coin;
 import com.coinlibrary.backend.model.Edition;
+import com.coinlibrary.backend.repository.CoinRepository;
 import com.coinlibrary.backend.repository.EditionRepository;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 @Service
 public class WikipediaService {
@@ -21,11 +23,15 @@ public class WikipediaService {
     private final static String WIKIPEDIA_EURO_COINS_URL = "https://de.wikipedia.org/wiki/Eurom%C3%BCnzen";
     @Autowired
     private EditionRepository editionRepository;
+
+    @Autowired
+    private CoinRepository coinRepository;
     private WebDriver webDriver;
 
     public void run() throws MalformedURLException {
         init();
         getEditions(getEuroCountryLinks());
+        getSpecialCoins(getEuroCountryLinks());
         quit();
     }
 
@@ -42,18 +48,19 @@ public class WikipediaService {
         List<WebElement> countryUrls = column.findElements(By.tagName("li"));
 
         return countryUrls.stream()
-                          .map((elem) -> elem.findElement(By.tagName("a"))
-                                             .getAttribute("href"))
-                          .toList();
+                .map((elem) -> elem.findElement(By.tagName("a"))
+                        .getAttribute("href"))
+                .toList();
     }
 
     private String getCountryNameFromUrl(String url) {
         String[] urlParts = url.split("/");
 
         return urlParts[urlParts.length - 1].replace("_", " ")
-                                            .replace("%C3%BC", "ü")
-                                            .replace("%C3%A4", "ä")
-                                            .replace("%C3%B6", "ö");
+                .replace("%C3%BC", "ü")
+                .replace("%C3%A4", "ä")
+                .replace("%C3%96", "Ö")
+                .replace("%C3%B6", "ö");
     }
 
     private void getEditions(List<String> urls) {
@@ -64,6 +71,11 @@ public class WikipediaService {
         webDriver.get(countryUrl);
 
         List<WebElement> editions = webDriver.findElements(By.partialLinkText("Prägeserie"));
+
+        Edition specialEdition = new Edition();
+        specialEdition.setCountry(getCountryNameFromUrl(countryUrl));
+        specialEdition.setEdition(0);
+        editionRepository.save(specialEdition);
 
         if (editions.isEmpty()) {
             Edition edition = new Edition();
@@ -78,7 +90,7 @@ public class WikipediaService {
     private void extractPrägeserieEdition(List<WebElement> editions, String countryName) {
         for (WebElement edition : editions) {
             String[] valueParts = edition.getText()
-                                         .split(" ");
+                    .split(" ");
 
             Edition edition1 = new Edition();
             edition1.setCountry(countryName);
@@ -105,6 +117,86 @@ public class WikipediaService {
             }
 
             editionRepository.save(edition1);
+        }
+    }
+
+    private void getSpecialCoins(List<String> urls) {
+        urls.forEach(this::getSpecialCoinsForCountry);
+    }
+
+    private void getSpecialCoinsForCountry(String countryUrl) {
+        webDriver.get(countryUrl);
+
+        boolean themaTable = false;
+
+        WebElement specialCoinTable = null;
+
+        List<WebElement> tables = webDriver.findElements(By.tagName("table"));
+
+        for (WebElement table : tables) {
+            List<WebElement> tableHeaders = table.findElements(By.tagName("th"));
+            for (WebElement tableHeader : tableHeaders) {
+                if (tableHeader.getText().equals("Anlass")) {
+                    specialCoinTable = table;
+                    break;
+                } else if (tableHeader.getText().equals("Thema")) {
+                    specialCoinTable = table;
+                    themaTable = true;
+                    break;
+                }
+            }
+
+            if (specialCoinTable != null) {
+                break;
+            }
+        }
+
+        List<WebElement> tableRows = specialCoinTable.findElements(By.tagName("tr"));
+        tableRows.remove(0);
+        if (themaTable) {
+            tableRows.remove(1);
+        }
+
+        List<Edition> editionList = StreamSupport.stream(editionRepository.findAll().spliterator(), false)
+                .filter(edition -> getCountryNameFromUrl(countryUrl).equals(edition.getCountry()))
+                .filter(edition -> edition.getEdition() == 0)
+                .toList();
+
+        if (editionList.size() != 1) {
+            System.out.println("Multiple Special Edtions Found For Country");
+            return;
+        }
+
+        Edition edition = editionList.get(0);
+
+
+        for (WebElement tableRow : tableRows) {
+            List<WebElement> tableRowEntries = tableRow.findElements(By.tagName("td"));
+
+            // TODO set year
+
+            if (tableRowEntries.size() > 2) {
+                Coin specialCoin = new Coin();
+                specialCoin.setEdition(edition);
+                specialCoin.setSize(200);
+                specialCoin.setSpecial(true);
+                if (themaTable) {
+                    try {
+                        specialCoin.setImagePath(tableRowEntries.get(0).findElement(By.tagName("img")).getAttribute("src"));
+                    } catch (Exception e) {
+                        System.out.println("No Picture For Coin.");
+                    }
+                    specialCoin.setName(tableRowEntries.get(1).getText());
+                } else {
+                    try {
+                        specialCoin.setImagePath(tableRowEntries.get(1).findElement(By.tagName("img")).getAttribute("src"));
+                    } catch (Exception e) {
+                        System.out.println("No Picture For Coin.");
+                    }
+                    specialCoin.setName(tableRowEntries.get(3).getText());
+                }
+                coinRepository.save(specialCoin);
+            }
         }
     }
 

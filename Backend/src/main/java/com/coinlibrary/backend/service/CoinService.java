@@ -28,11 +28,11 @@ public class CoinService {
 
         if (coin.isPresent()) {
             coin.get()
-                .setAvailable(true);
+                    .setAvailable(true);
             coinRepository.save(coin.get());
 
-            return coin.get()
-                       .getId();
+            return Math.toIntExact(coin.get()
+                    .getId());
         }
 
         return -1;
@@ -42,7 +42,7 @@ public class CoinService {
         Iterable<Coin> coinIterable = coinRepository.findAll();
 
         return StreamSupport.stream(coinIterable.spliterator(), false)
-                            .collect(Collectors.groupingBy(Coin::getEditionString));
+                .collect(Collectors.groupingBy(Coin::getEditionString));
     }
 
     public void generateAllCoins() {
@@ -50,13 +50,15 @@ public class CoinService {
         List<Integer> coinSizes = Arrays.asList(1, 2, 5, 10, 20, 50, 100, 200);
 
         for (Edition edition : editionIterator) {
-            for (Integer coinSize : coinSizes) {
-                Coin coin = new Coin();
-                coin.setEdition(edition);
-                coin.setSize(coinSize);
-                coin.setSpecial(false);
+            if (edition.getEdition() != 0) {
+                for (Integer coinSize : coinSizes) {
+                    Coin coin = new Coin();
+                    coin.setEdition(edition);
+                    coin.setSize(coinSize);
+                    coin.setSpecial(false);
 
-                coinRepository.save(coin);
+                    coinRepository.save(coin);
+                }
             }
         }
     }
