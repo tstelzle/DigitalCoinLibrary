@@ -2,6 +2,7 @@ package com.coinlibrary.backend.controller;
 
 import com.coinlibrary.backend.model.Edition;
 import com.coinlibrary.backend.service.CoinService;
+import com.coinlibrary.backend.service.EcbService;
 import com.coinlibrary.backend.service.EditionService;
 import com.coinlibrary.backend.service.WikipediaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,13 @@ public class EditionController {
     private final EditionService editionService;
 
     @Autowired
-    public EditionController(EditionService editionService, WikipediaService wikipediaService, CoinService coinService) throws MalformedURLException {
+    public EditionController(EditionService editionService, WikipediaService wikipediaService, EcbService ecbService, CoinService coinService) throws MalformedURLException {
         this.editionService = editionService;
 
         if (Boolean.parseBoolean(System.getenv("DOWNLOAD_DATA"))) {
             wikipediaService.run();
             coinService.generateAllCoins();
+            ecbService.run();
         }
     }
 

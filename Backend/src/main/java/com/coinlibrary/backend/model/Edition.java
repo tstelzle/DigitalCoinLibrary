@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "edition")
+@Embeddable
 public class Edition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

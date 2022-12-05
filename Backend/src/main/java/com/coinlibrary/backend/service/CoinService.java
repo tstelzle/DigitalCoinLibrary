@@ -2,8 +2,8 @@ package com.coinlibrary.backend.service;
 
 import com.coinlibrary.backend.model.Coin;
 import com.coinlibrary.backend.model.Edition;
-import com.coinlibrary.backend.repository.CoinRepository;
-import com.coinlibrary.backend.repository.EditionRepository;
+import com.coinlibrary.backend.repository.CoinDao;
+import com.coinlibrary.backend.repository.EditionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +18,18 @@ import java.util.stream.StreamSupport;
 public class CoinService {
 
     @Autowired
-    private CoinRepository coinRepository;
+    private CoinDao coinDao;
 
     @Autowired
-    private EditionRepository editionRepository;
+    private EditionDao editionDao;
 
     public int updateCoin(int coinId) {
-        Optional<Coin> coin = coinRepository.findById(coinId);
+        Optional<Coin> coin = coinDao.findById(coinId);
 
         if (coin.isPresent()) {
             coin.get()
                     .setAvailable(true);
-            coinRepository.save(coin.get());
+            coinDao.save(coin.get());
 
             return Math.toIntExact(coin.get()
                     .getId());
@@ -39,14 +39,14 @@ public class CoinService {
     }
 
     public Map<String, List<Coin>> listCoins() {
-        Iterable<Coin> coinIterable = coinRepository.findAll();
+        Iterable<Coin> coinIterable = coinDao.findAll();
 
         return StreamSupport.stream(coinIterable.spliterator(), false)
                 .collect(Collectors.groupingBy(Coin::getEditionString));
     }
 
     public void generateAllCoins() {
-        Iterable<Edition> editionIterator = editionRepository.findAll();
+        Iterable<Edition> editionIterator = editionDao.findAll();
         List<Integer> coinSizes = Arrays.asList(1, 2, 5, 10, 20, 50, 100, 200);
 
         for (Edition edition : editionIterator) {
@@ -57,7 +57,7 @@ public class CoinService {
                     coin.setSize(coinSize);
                     coin.setSpecial(false);
 
-                    coinRepository.save(coin);
+                    coinDao.save(coin);
                 }
             }
         }

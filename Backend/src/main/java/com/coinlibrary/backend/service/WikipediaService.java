@@ -2,43 +2,61 @@ package com.coinlibrary.backend.service;
 
 import com.coinlibrary.backend.model.Coin;
 import com.coinlibrary.backend.model.Edition;
-import com.coinlibrary.backend.repository.CoinRepository;
-import com.coinlibrary.backend.repository.EditionRepository;
+import com.coinlibrary.backend.repository.CoinDao;
+import com.coinlibrary.backend.repository.EditionDao;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.StreamSupport;
 
 @Service
-public class WikipediaService {
+public class WikipediaService extends SeleniumExtraction {
 
     private final static String WIKIPEDIA_EURO_COINS_URL = "https://de.wikipedia.org/wiki/Eurom%C3%BCnzen";
-    @Autowired
-    private EditionRepository editionRepository;
+    public final Map<String, String> countryAbbreviations = Map.ofEntries(
+            Map.entry("Spanische Euromünzen", "es"),
+            Map.entry("Griechische Euromünzen", "gr"),
+            Map.entry("Lettische Euromünzen", "lv"),
+            Map.entry("Andorranische Euromünzen", "ad"),
+            Map.entry("Belgische Euromünzen", "be"),
+            Map.entry("Zyprische Euromünzen", "cy"),
+            Map.entry("Portugiesische Euromünzen", "pt"),
+            Map.entry("Vatikanische Euromünzen", "va"),
+            Map.entry("Maltesische Euromünzen", "mt"),
+            Map.entry("Österreichische Euromünzen", "at"),
+            Map.entry("Niederländische Euromünzen", "nl"),
+            Map.entry("Monegassische Euromünzen", "mo"),
+            Map.entry("Irische Euromünzen", "ie"),
+            Map.entry("Luxemburgische Euromünzen", "lu"),
+            Map.entry("Finnische Euromünzen", "fi"),
+            Map.entry("Italienische Euromünzen", "it"),
+            Map.entry("San-marinesische Euromünzen", "sm"),
+            Map.entry("Slowakische Euromünzen", "sk"),
+            Map.entry("Slowenische Euromünzen", "sl"),
+            Map.entry("Französische Euromünzen", "fr"),
+            Map.entry("Litauische Euromünzen", "lt"),
+            Map.entry("Deutsche Euromünzen", "de"),
+            Map.entry("Estnische Euromünzen", "et")
+    );
+
 
     @Autowired
-    private CoinRepository coinRepository;
-    private WebDriver webDriver;
+    private EditionDao editionDao;
+
+    @Autowired
+    private CoinDao coinDao;
 
     public void run() throws MalformedURLException {
         init();
         getEditions(getEuroCountryLinks());
+        addMissingYearsForEdition();
         getSpecialCoins(getEuroCountryLinks());
         quit();
-    }
-
-    private void init() throws MalformedURLException {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setHeadless(true);
-        webDriver = new RemoteWebDriver(new URL("http://coin_library_selenium:4444"), chromeOptions);
     }
 
     private List<String> getEuroCountryLinks() {
@@ -57,10 +75,10 @@ public class WikipediaService {
         String[] urlParts = url.split("/");
 
         return urlParts[urlParts.length - 1].replace("_", " ")
-                .replace("%C3%BC", "ü")
-                .replace("%C3%A4", "ä")
-                .replace("%C3%96", "Ö")
-                .replace("%C3%B6", "ö");
+                                            .replace("%C3%BC", "ü")
+                                            .replace("%C3%A4", "ä")
+                                            .replace("%C3%96", "Ö")
+                                            .replace("%C3%B6", "ö");
     }
 
     private void getEditions(List<String> urls) {
@@ -75,13 +93,13 @@ public class WikipediaService {
         Edition specialEdition = new Edition();
         specialEdition.setCountry(getCountryNameFromUrl(countryUrl));
         specialEdition.setEdition(0);
-        editionRepository.save(specialEdition);
+        editionDao.save(specialEdition);
 
         if (editions.isEmpty()) {
             Edition edition = new Edition();
-            edition.setCountry(getCountryNameFromUrl(countryUrl));
+            edition.setCountry(countryAbbreviations.get(getCountryNameFromUrl(countryUrl)));
             edition.setEdition(1);
-            editionRepository.save(edition);
+            editionDao.save(edition);
         } else {
             extractPrägeserieEdition(editions, getCountryNameFromUrl(countryUrl));
         }
@@ -93,7 +111,7 @@ public class WikipediaService {
                     .split(" ");
 
             Edition edition1 = new Edition();
-            edition1.setCountry(countryName);
+            edition1.setCountry(countryAbbreviations.get(countryName));
 
             switch (valueParts[1]) {
                 case "Erste", "erste" -> edition1.setEdition(1);
@@ -112,11 +130,33 @@ public class WikipediaService {
                 edition1.setYear_to(Integer.parseInt(years[0].substring(1, years[0].length() - 1)));
             } else {
                 edition1.setYear_from(Integer.parseInt(valueParts[4].substring(0, valueParts[4].length() - 1)));
-                editionRepository.save(edition1);
+                editionDao.save(edition1);
                 break;
             }
 
-            editionRepository.save(edition1);
+            editionDao.save(edition1);
+        }
+    }
+
+    public void addMissingYearsForEdition() {
+        for (String countryAbbreviation : countryAbbreviations.values()) {
+            List<Edition> editionList = editionDao.findByCountry(countryAbbreviation);
+
+            for (Edition edition : editionList) {
+                if (edition.getYear_from() == 0) {
+                    edition.setYear_from(1800);
+                }
+
+                if (edition.getYear_to() == 0) {
+                    Edition nextEdition = editionDao.findByCountryAndEdition(countryAbbreviation, edition.getEdition() + 1);
+                    if (nextEdition != null) {
+                        edition.setYear_to(nextEdition.getYear_from() - 1);
+                    } else {
+                        edition.setYear_to(2100);
+                    }
+                }
+                editionDao.save(edition);
+            }
         }
     }
 
@@ -157,7 +197,7 @@ public class WikipediaService {
             tableRows.remove(1);
         }
 
-        List<Edition> editionList = StreamSupport.stream(editionRepository.findAll().spliterator(), false)
+        List<Edition> editionList = StreamSupport.stream(editionDao.findAll().spliterator(), false)
                 .filter(edition -> getCountryNameFromUrl(countryUrl).equals(edition.getCountry()))
                 .filter(edition -> edition.getEdition() == 0)
                 .toList();
@@ -195,12 +235,9 @@ public class WikipediaService {
                     }
                     specialCoin.setName(tableRowEntries.get(3).getText());
                 }
-                coinRepository.save(specialCoin);
+                coinDao.save(specialCoin);
             }
         }
     }
 
-    private void quit() {
-        webDriver.quit();
-    }
 }
