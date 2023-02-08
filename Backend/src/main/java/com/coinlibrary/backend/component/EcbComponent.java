@@ -1,24 +1,24 @@
-package com.coinlibrary.backend.service;
+package com.coinlibrary.backend.component;
 
 import com.coinlibrary.backend.model.Coin;
 import com.coinlibrary.backend.model.Edition;
 import com.coinlibrary.backend.repository.CoinDao;
 import com.coinlibrary.backend.repository.EditionDao;
+import com.coinlibrary.backend.service.CoinService;
+import com.coinlibrary.backend.service.EditionService;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service
-public class EcbService extends SeleniumExtraction {
+@Component
+@Slf4j
+public class EcbComponent extends SeleniumExtraction {
 
     private final String baseLink = "https://www.ecb.europa.eu/euro/coins/html/";
     private final String baseLinkEnd = ".en.html";
@@ -38,15 +38,22 @@ public class EcbService extends SeleniumExtraction {
             Map.entry("2e", 200)
     );
 
-    @Autowired
-    private CoinDao coinDao;
-    @Autowired
-    private EditionService editionService;
+    private final CoinDao coinDao;
+    private final CoinService coinService;
+    private final EditionService editionService;
     private final Map<String, String> countryAbbreviations = new HashMap<>();
-    @Autowired
-    private EditionDao editionDao;
+    private final EditionDao editionDao;
 
-    public void run() throws MalformedURLException {
+    @Autowired
+    public EcbComponent(CoinService coinService, CoinDao coinDao, EditionService editionService, EditionDao editionDao) {
+        this.coinDao = coinDao;
+        this.coinService = coinService;
+        this.editionService = editionService;
+        this.editionDao = editionDao;
+    }
+
+    public void run() {
+        log.info("Starting ECB extraction.");
         init();
         start();
         quit();
@@ -58,9 +65,9 @@ public class EcbService extends SeleniumExtraction {
     }
 
     private void extractCountryAbbreviations() {
-        webDriver.get(twoEuroCoins);
+        getWebDriver().get(twoEuroCoins);
 
-        List<WebElement> contentBoxList = webDriver.findElement(By.className("boxes"))
+        List<WebElement> contentBoxList = getWebDriver().findElement(By.className("boxes"))
                                                    .findElements(By.className("content-box"));
 
         for (WebElement contentBox : contentBoxList) {
@@ -74,9 +81,9 @@ public class EcbService extends SeleniumExtraction {
 
     private void updateCoinImages() {
         for (Map.Entry<String, String> countryAbbreviation : countryAbbreviations.entrySet()) {
-            webDriver.get(baseLink + countryAbbreviation.getValue() + baseLinkEnd);
+            getWebDriver().get(baseLink + countryAbbreviation.getValue() + baseLinkEnd);
 
-            List<WebElement> boxElements = webDriver.findElement(By.className("boxes")).findElements(By.className("box"));
+            List<WebElement> boxElements = getWebDriver().findElement(By.className("boxes")).findElements(By.className("box"));
 
             for (WebElement boxElement : boxElements) {
                 List<WebElement> pictureElements = boxElement.findElements(By.tagName("div")).get(0).findElements(By.tagName("picture"));
@@ -84,17 +91,27 @@ public class EcbService extends SeleniumExtraction {
                 for (WebElement pictureElement : pictureElements) {
                     String pictureUrl = pictureElement.findElement(By.tagName("img")).getAttribute("src");
                     List<Integer> yearList = extractYearsFromText(pictureUrl);
-                    Edition edition;
+                    Edition edition = null;
                     if (yearList.size() > 1) {
-                        System.out.println("Too Many Years;");
+                        log.debug("Too many years.");
                         continue;
                     }
                     else if (yearList.size() == 0) {
-                        edition = editionDao.findByCountryAndEdition(countryAbbreviation.getValue(), 1);
+                        Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviation.getValue(), 1);
+                        if (optionalEdition.isPresent()) {
+                            edition = optionalEdition.get();
+                        }
                     }
                     else {
-                        List<Edition> editionList = editionDao.findByCountry(countryAbbreviation.getValue());
-                        edition = editionService.getEditionByYear(editionList, yearList.get(0));
+                        Optional<Edition> optionalEdition = editionDao.findByCountryAndYearFromGreaterThanAndYearToLessThan(countryAbbreviation.getValue(), yearList.get(0), yearList.get(0));
+                        if (optionalEdition.isPresent()) {
+                            edition = optionalEdition.get();
+                        }
+                    }
+
+                    if (edition == null) {
+                        log.debug("Edition not found.");
+                        continue;
                     }
 
                     int coinValueInteger = -1;
@@ -106,17 +123,18 @@ public class EcbService extends SeleniumExtraction {
                     }
 
                     if (coinValueInteger != -1) {
-                        Coin coin = coinDao.findByEditionAndSize(edition, coinValueInteger);
-                        if (coin != null) {
+                        Optional<Coin> optionalCoin = coinDao.findByEditionAndSizeAndSpecial(edition, coinValueInteger, false);
+                        if (optionalCoin.isPresent()) {
+                            Coin coin = optionalCoin.get();
                             coin.setImagePath(pictureUrl);
-                            coinDao.save(coin);
+                            coinService.updateOrInsertCoin(coin);
                         }
                         else {
-                            System.out.printf("Coin Is Null: %s;%d", edition.getCountry(), coinValueInteger);
+                            log.info("Coin is null: {};{}", edition.getCountry(), coinValueInteger);
                         }
                     }
                     else {
-                        System.out.printf("Coin Value Not Found: %s", pictureUrl);
+                        log.info("Coin value not found: {}", pictureUrl);
                     }
                 }
             }

@@ -14,11 +14,17 @@ public class Coin {
     @JoinColumn(name = "edition_id")
     private Edition edition;
     private int year;
-    private boolean special;
+    private boolean special = false;
     @Lob
     private String name;
     private int size;
     private boolean available;
+    @Lob
+    private String imagePath;
+
+    public Coin() {
+
+    }
 
     public String getImagePath() {
         return imagePath;
@@ -26,12 +32,6 @@ public class Coin {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
-    }
-
-    private String imagePath;
-
-    public Coin() {
-
     }
 
     public boolean isAvailable() {
@@ -59,12 +59,12 @@ public class Coin {
     }
 
     public String getEditionString() {
-        if (edition.getYear_from() == 0 && edition.getYear_to() == 0) {
+        if (edition.getYearFrom() == 0 && edition.getYearTo() == 0) {
             return String.format("%d. %s", edition.getEdition(), edition.getCountry());
-        } else if (edition.getYear_to() == 0) {
-            return String.format("%d. %s (%d)", edition.getEdition(), edition.getCountry(), edition.getYear_from());
+        } else if (edition.getYearTo() == 0) {
+            return String.format("%d. %s (%d)", edition.getEdition(), edition.getCountry(), edition.getYearFrom());
         } else {
-            return String.format("%d. %s (%d - %d)", edition.getEdition(), edition.getCountry(), edition.getYear_from(), edition.getYear_to());
+            return String.format("%d. %s (%d - %d)", edition.getEdition(), edition.getCountry(), edition.getYearFrom(), edition.getYearTo());
         }
     }
 

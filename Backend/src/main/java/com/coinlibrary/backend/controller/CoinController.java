@@ -29,7 +29,7 @@ public class CoinController {
 
     @PostMapping
     public ResponseEntity<Void> postCoin(@RequestParam Integer coinId) {
-        long status = coinService.updateCoin(coinId);
+        long status = coinService.setAvailable(coinId);
 
         if (status == -1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

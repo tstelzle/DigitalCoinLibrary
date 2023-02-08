@@ -1,21 +1,24 @@
-package com.coinlibrary.backend.service;
+package com.coinlibrary.backend.component;
 
 import com.coinlibrary.backend.model.Coin;
 import com.coinlibrary.backend.model.Edition;
-import com.coinlibrary.backend.repository.CoinDao;
 import com.coinlibrary.backend.repository.EditionDao;
+import com.coinlibrary.backend.service.CoinService;
+import com.coinlibrary.backend.service.EditionService;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-@Service
-public class WikipediaService extends SeleniumExtraction {
+@Component
+@Slf4j
+public class WikipediaComponent extends SeleniumExtraction {
 
     private final static String WIKIPEDIA_EURO_COINS_URL = "https://de.wikipedia.org/wiki/Eurom%C3%BCnzen";
     public final Map<String, String> countryAbbreviations = Map.ofEntries(
@@ -45,13 +48,19 @@ public class WikipediaService extends SeleniumExtraction {
     );
 
 
-    @Autowired
-    private EditionDao editionDao;
+    private final EditionDao editionDao;
+    private final CoinService coinService;
+    private final EditionService editionService;
 
     @Autowired
-    private CoinDao coinDao;
+    public WikipediaComponent(CoinService coinService, EditionDao editionDao, EditionService editionService) {
+        this.editionDao = editionDao;
+        this.coinService = coinService;
+        this.editionService = editionService;
+    }
 
-    public void run() throws MalformedURLException {
+    public void run() {
+        log.info("Starting Wikipedia extraction.");
         init();
         getEditions(getEuroCountryLinks());
         addMissingYearsForEdition();
@@ -60,9 +69,9 @@ public class WikipediaService extends SeleniumExtraction {
     }
 
     private List<String> getEuroCountryLinks() {
-        webDriver.get(WIKIPEDIA_EURO_COINS_URL);
+        getWebDriver().get(WIKIPEDIA_EURO_COINS_URL);
 
-        WebElement column = webDriver.findElement(By.className("column-multiple"));
+        WebElement column = getWebDriver().findElement(By.className("column-multiple"));
         List<WebElement> countryUrls = column.findElements(By.tagName("li"));
 
         return countryUrls.stream()
@@ -86,20 +95,20 @@ public class WikipediaService extends SeleniumExtraction {
     }
 
     private void getCountryEditions(String countryUrl) {
-        webDriver.get(countryUrl);
+        getWebDriver().get(countryUrl);
 
-        List<WebElement> editions = webDriver.findElements(By.partialLinkText("Prägeserie"));
+        List<WebElement> editions = getWebDriver().findElements(By.partialLinkText("Prägeserie"));
 
         Edition specialEdition = new Edition();
         specialEdition.setCountry(getCountryNameFromUrl(countryUrl));
         specialEdition.setEdition(0);
-        editionDao.save(specialEdition);
+        editionService.updateOrInsert(specialEdition);
 
         if (editions.isEmpty()) {
             Edition edition = new Edition();
             edition.setCountry(countryAbbreviations.get(getCountryNameFromUrl(countryUrl)));
             edition.setEdition(1);
-            editionDao.save(edition);
+            editionService.updateOrInsert(edition);
         } else {
             extractPrägeserieEdition(editions, getCountryNameFromUrl(countryUrl));
         }
@@ -123,18 +132,18 @@ public class WikipediaService extends SeleniumExtraction {
 
             String[] years = valueParts[3].split("–");
             if (years.length > 1) {
-                edition1.setYear_from(Integer.parseInt(years[0].substring(1)));
-                edition1.setYear_to(Integer.parseInt(years[1].substring(0, years[0].length() - 1)));
+                edition1.setYearFrom(Integer.parseInt(years[0].substring(1)));
+                edition1.setYearTo(Integer.parseInt(years[1].substring(0, years[0].length() - 1)));
             } else if (years[0].length() == 6) {
-                edition1.setYear_from(Integer.parseInt(years[0].substring(1, years[0].length() - 1)));
-                edition1.setYear_to(Integer.parseInt(years[0].substring(1, years[0].length() - 1)));
+                edition1.setYearFrom(Integer.parseInt(years[0].substring(1, years[0].length() - 1)));
+                edition1.setYearTo(Integer.parseInt(years[0].substring(1, years[0].length() - 1)));
             } else {
-                edition1.setYear_from(Integer.parseInt(valueParts[4].substring(0, valueParts[4].length() - 1)));
-                editionDao.save(edition1);
+                edition1.setYearFrom(Integer.parseInt(valueParts[4].substring(0, valueParts[4].length() - 1)));
+                editionService.updateOrInsert(edition1);
                 break;
             }
 
-            editionDao.save(edition1);
+            editionService.updateOrInsert(edition1);
         }
     }
 
@@ -143,19 +152,19 @@ public class WikipediaService extends SeleniumExtraction {
             List<Edition> editionList = editionDao.findByCountry(countryAbbreviation);
 
             for (Edition edition : editionList) {
-                if (edition.getYear_from() == 0) {
-                    edition.setYear_from(1800);
+                if (edition.getYearFrom() == 0) {
+                    edition.setYearFrom(1800);
                 }
 
-                if (edition.getYear_to() == 0) {
-                    Edition nextEdition = editionDao.findByCountryAndEdition(countryAbbreviation, edition.getEdition() + 1);
-                    if (nextEdition != null) {
-                        edition.setYear_to(nextEdition.getYear_from() - 1);
+                if (edition.getYearTo() == 0) {
+                    Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviation, edition.getEdition() + 1);
+                    if (optionalEdition.isPresent()) {
+                        edition.setYearTo(optionalEdition.get().getYearFrom() - 1);
                     } else {
-                        edition.setYear_to(2100);
+                        edition.setYearTo(2100);
                     }
                 }
-                editionDao.save(edition);
+                editionService.updateOrInsert(edition);
             }
         }
     }
@@ -165,13 +174,13 @@ public class WikipediaService extends SeleniumExtraction {
     }
 
     private void getSpecialCoinsForCountry(String countryUrl) {
-        webDriver.get(countryUrl);
+        getWebDriver().get(countryUrl);
 
         boolean themaTable = false;
 
         WebElement specialCoinTable = null;
 
-        List<WebElement> tables = webDriver.findElements(By.tagName("table"));
+        List<WebElement> tables = getWebDriver().findElements(By.tagName("table"));
 
         for (WebElement table : tables) {
             List<WebElement> tableHeaders = table.findElements(By.tagName("th"));
@@ -191,6 +200,11 @@ public class WikipediaService extends SeleniumExtraction {
             }
         }
 
+        if (specialCoinTable == null) {
+            log.info("SpecialCoinTable is null.");
+            return;
+        }
+
         List<WebElement> tableRows = specialCoinTable.findElements(By.tagName("tr"));
         tableRows.remove(0);
         if (themaTable) {
@@ -203,7 +217,7 @@ public class WikipediaService extends SeleniumExtraction {
                 .toList();
 
         if (editionList.size() != 1) {
-            System.out.println("Multiple Special Edtions Found For Country");
+            log.info("Multiple Special Edtions Found For Country");
             return;
         }
 
@@ -224,18 +238,18 @@ public class WikipediaService extends SeleniumExtraction {
                     try {
                         specialCoin.setImagePath(tableRowEntries.get(0).findElement(By.tagName("img")).getAttribute("src"));
                     } catch (Exception e) {
-                        System.out.println("No Picture For Coin.");
+                        log.debug(e.getMessage(), "No picture for coin.");
                     }
                     specialCoin.setName(tableRowEntries.get(1).getText());
                 } else {
                     try {
                         specialCoin.setImagePath(tableRowEntries.get(1).findElement(By.tagName("img")).getAttribute("src"));
                     } catch (Exception e) {
-                        System.out.println("No Picture For Coin.");
+                        log.debug(e.getMessage(), "No picture for coin.");
                     }
                     specialCoin.setName(tableRowEntries.get(3).getText());
                 }
-                coinDao.save(specialCoin);
+                coinService.updateOrInsertCoin(specialCoin);
             }
         }
     }

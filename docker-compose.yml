@@ -12,7 +12,6 @@ services:
     environment:
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
-      - DOWNLOAD_DATA=${DOWNLOAD_DATA}
 
   database:
     container_name: coin_library_database
