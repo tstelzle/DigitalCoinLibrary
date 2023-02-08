@@ -44,7 +44,8 @@ public class WikipediaComponent extends SeleniumExtraction {
             Map.entry("Französische Euromünzen", "fr"),
             Map.entry("Litauische Euromünzen", "lt"),
             Map.entry("Deutsche Euromünzen", "de"),
-            Map.entry("Estnische Euromünzen", "et")
+            Map.entry("Estnische Euromünzen", "et"),
+            Map.entry("Kroatische Euromünzen", "hr")
     );
 
 
@@ -100,7 +101,7 @@ public class WikipediaComponent extends SeleniumExtraction {
         List<WebElement> editions = getWebDriver().findElements(By.partialLinkText("Prägeserie"));
 
         Edition specialEdition = new Edition();
-        specialEdition.setCountry(getCountryNameFromUrl(countryUrl));
+        specialEdition.setCountry(countryAbbreviations.get(getCountryNameFromUrl(countryUrl)));
         specialEdition.setEdition(0);
         editionService.updateOrInsert(specialEdition);
 
@@ -128,6 +129,8 @@ public class WikipediaComponent extends SeleniumExtraction {
                 case "Dritte", "dritte" -> edition1.setEdition(3);
                 case "Vierte", "vierte" -> edition1.setEdition(4);
                 case "Fünfte", "fünfte" -> edition1.setEdition(5);
+                case "Sechste", "sechste" -> edition1.setEdition(6);
+                case "Siebte", "siebte" -> edition1.setEdition(7);
             }
 
             String[] years = valueParts[3].split("–");
@@ -139,6 +142,7 @@ public class WikipediaComponent extends SeleniumExtraction {
                 edition1.setYearTo(Integer.parseInt(years[0].substring(1, years[0].length() - 1)));
             } else {
                 edition1.setYearFrom(Integer.parseInt(valueParts[4].substring(0, valueParts[4].length() - 1)));
+                edition1.setYearTo(2100);
                 editionService.updateOrInsert(edition1);
                 break;
             }
@@ -156,7 +160,11 @@ public class WikipediaComponent extends SeleniumExtraction {
                     edition.setYearFrom(1800);
                 }
 
-                if (edition.getYearTo() == 0) {
+                if (edition.getEdition() == 0) {
+                    edition.setYearTo(2100);
+                }
+
+                if (edition.getYearTo() == 0 && edition.getEdition() != 0) {
                     Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviation, edition.getEdition() + 1);
                     if (optionalEdition.isPresent()) {
                         edition.setYearTo(optionalEdition.get().getYearFrom() - 1);
@@ -212,7 +220,7 @@ public class WikipediaComponent extends SeleniumExtraction {
         }
 
         List<Edition> editionList = StreamSupport.stream(editionDao.findAll().spliterator(), false)
-                .filter(edition -> getCountryNameFromUrl(countryUrl).equals(edition.getCountry()))
+                .filter(edition -> countryAbbreviations.get(getCountryNameFromUrl(countryUrl)).equals(edition.getCountry()))
                 .filter(edition -> edition.getEdition() == 0)
                 .toList();
 
