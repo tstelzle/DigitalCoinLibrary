@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/home/coin_card.dart';
 import 'package:provider/provider.dart';
 
-import '../model/coin.dart';
 import 'coin_list.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -37,17 +37,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     itemCount: coinList.coinMap.values.elementAt(index).length,
                     itemBuilder: (BuildContext context, int index2) {
-                      return createCoinWidget(coinList.coinMap.values.elementAt(index).elementAt(index2));
+                      return FlipCard(coin: coinList.coinMap.values.elementAt(index).elementAt(index2));
                     })
               ]);
             }));
   }
-}
-
-Widget createCoinWidget(Coin coin) {
-  return Card(
-      color: coin.available ? Colors.green : Colors.red,
-      child: ListTile(
-          title: Text(coin.coinSize >= 100 ? "${coin.coinSize / 100}€" : "${coin.coinSize} ct."),
-          subtitle: coin.special ? Text(coin.name) : null));
 }
