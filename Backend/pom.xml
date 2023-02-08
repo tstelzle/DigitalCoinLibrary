@@ -14,7 +14,6 @@
         <maven.compiler.target>19</maven.compiler.target>
         <java.version>19</java.version>
         <spring.version>2.7.5</spring.version>
-        <log4j.version>2.19.0</log4j.version>
     </properties>
 
     <dependencies>
