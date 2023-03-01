@@ -15,8 +15,8 @@ class Edition {
     return Edition(
         country: json["country"],
         edition: json['edition'],
-        yearFrom: json['year_from'],
-        yearTo: json['year_to'],
+        yearFrom: json['yearFrom'],
+        yearTo: json['yearTo'],
     );
   }
 }

@@ -2,6 +2,7 @@ coin_library.env
 Backend/data
 Backend/target
 **/.iml
+**/*/*.log
 
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

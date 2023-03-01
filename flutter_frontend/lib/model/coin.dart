@@ -26,11 +26,11 @@ class Coin {
     return Coin(
         id: json['id'],
         edition: Edition.fromJson(json["edition"]),
-        year: json['year'],
-        special: json['special'],
+        year: json['year'] ?? -1,
+        special: json['special'] ?? false,
         name: json['name'] ?? "",
-        coinSize: json['size'],
-        available: json['available'],
+        coinSize: json['size'] ?? -1,
+        available: json['available'] ?? false,
         editionString: json['editionString'] ?? "",
         imagePath: json["imagePath"] ?? "");
   }

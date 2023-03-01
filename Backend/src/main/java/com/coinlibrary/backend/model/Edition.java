@@ -1,11 +1,10 @@
 package com.coinlibrary.backend.model;
 
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "edition")
+@Embeddable
 public class Edition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,8 +13,8 @@ public class Edition {
 
     private String country;
     private int edition;
-    private int year_from;
-    private int year_to;
+    private int yearFrom;
+    private int yearTo;
 
     public Edition() {
 
@@ -37,19 +36,19 @@ public class Edition {
         this.edition = edition;
     }
 
-    public int getYear_from() {
-        return year_from;
+    public int getYearFrom() {
+        return yearFrom;
     }
 
-    public void setYear_from(int year_from) {
-        this.year_from = year_from;
+    public void setYearFrom(int year_from) {
+        this.yearFrom = year_from;
     }
 
-    public int getYear_to() {
-        return year_to;
+    public int getYearTo() {
+        return yearTo;
     }
 
-    public void setYear_to(int year_to) {
-        this.year_to = year_to;
+    public void setYearTo(int year_to) {
+        this.yearTo = year_to;
     }
 }

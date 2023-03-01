@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CoinLibraryApplication (development)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <envs>
+      <env name="SPRING_CONFIG_LOCATION" value="./Backend/src/main/resources/" />
+    </envs>
+    <module name="Backend" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.config.name=application-dev" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.coinlibrary.backend.CoinLibraryApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
