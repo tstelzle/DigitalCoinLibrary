@@ -13,4 +13,4 @@ COPY --from=BUILD_STAGE /tmp/Backend/target/*.jar coinlibrary.jar
 
 EXPOSE 8080
 
-CMD java -jar coinlibrary.jar
+CMD ["java", "-jar", "coinlibrary.jar", "--spring.config.name=application-prod"]

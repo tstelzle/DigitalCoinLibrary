@@ -29,6 +29,9 @@ services:
     container_name: coin_library_frontend
     build:
       dockerfile: frontend.Dockerfile
+    environment:
+      - API_URL=${API_URL}
+      - API_PORT=${API_PORT}
     ports:
       - "9013:80"
 
@@ -38,5 +41,5 @@ services:
     volumes:
       - /dev/shm:/dev/shm
     ports:
-      - "4444:4444"
+      - "4445:4444"
       - "7900:7900"

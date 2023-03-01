@@ -1,0 +1,53 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build_backend:
+    name: Build Backend
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build Dockerfile
+        run: docker-compose build backend
+
+  build_frontend:
+    name: Build Frontend
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build Dockerfile
+        run: docker-compose build frontend
+
+  run_application:
+    needs: [ build_backend, build_frontend ]
+    name: Run Application
+    environment: production
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Create Environment File
+        run: touch coin_library.env
+
+      - name: Add DB User
+        run: echo "MARIADB_USER=$MARIADB_USER" >> coin_library.prod
+
+      - name: Add DB Password
+        run: echo "MARIADB_PASSWORD=MARIADB_PASSWORD" >> coin_library.prod
+
+      - name: Add DB Root Password
+        run: echo "MARIADB_ROOT_PASSWORD=MARIADB_ROOT_PASSWORD" >> coin_library.prod
+
+      - name: Add API URL
+        run: echo "API_URL=$API_URL" >> coin_library.prod
+
+      - name: Run Application
+        run: docker-compose --env-file coin_library.env up -d
