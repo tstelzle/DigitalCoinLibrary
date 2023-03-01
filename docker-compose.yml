@@ -5,7 +5,7 @@ services:
     container_name: coin_library_backend
     build:
       dockerfile: backend.Dockerfile
-      context: Backend
+      context: .
     ports:
       - "9010:8080"
     depends_on:
@@ -30,7 +30,7 @@ services:
     container_name: coin_library_frontend
     build:
       dockerfile: frontend.Dockerfile
-      context: flutter_frontend
+      context: .
     environment:
       - API_URL=${API_URL}
       - API_PORT=${API_PORT}
