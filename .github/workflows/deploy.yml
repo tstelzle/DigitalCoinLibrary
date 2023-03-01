@@ -30,6 +30,7 @@ jobs:
     needs: [ build_backend, build_frontend ]
     name: Run Application
     environment: production
+    runs-on: self-hosted
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
