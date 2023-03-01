@@ -39,16 +39,29 @@ jobs:
         run: touch coin_library.env
 
       - name: Add DB User
-        run: echo "MARIADB_USER=$MARIADB_USER" >> coin_library.prod
+        env:
+          MARIADB_USER: ${{ secrets.MARIADB_USER }}
+        run: echo "MARIADB_USER=$MARIADB_USER" >> coin_library.env
 
       - name: Add DB Password
-        run: echo "MARIADB_PASSWORD=MARIADB_PASSWORD" >> coin_library.prod
+        env:
+          MARIADB_PASSWORD: ${{ secrets.MARIADB_PASSWORD }}
+        run: echo "MARIADB_PASSWORD=$MARIADB_PASSWORD" >> coin_library.env
 
       - name: Add DB Root Password
-        run: echo "MARIADB_ROOT_PASSWORD=MARIADB_ROOT_PASSWORD" >> coin_library.prod
+        env:
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+        run: echo "MARIADB_ROOT_PASSWORD=MARIADB_ROOT_PASSWORD" >> coin_library.env
 
       - name: Add API URL
-        run: echo "API_URL=$API_URL" >> coin_library.prod
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: echo "API_URL=$API_URL" >> coin_library.env
+
+      - name: Add API PORT
+        env:
+          API_PORT: ${{ secrets.API_PORT }}
+        run: echo "API_PORT=$API_PORT" >> coin_library.env
 
       - name: Run Application
         run: docker-compose --env-file coin_library.env up -d
