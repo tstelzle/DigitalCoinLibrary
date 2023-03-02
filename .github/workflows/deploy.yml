@@ -6,35 +6,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_backend:
-    name: Build Backend
+
+  checkout_repository:
+    name: Checkout Repository
     runs-on: self-hosted
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Build Dockerfile
-        run: docker-compose build backend
-
-  build_frontend:
-    name: Build Frontend
+  create_env_file:
+    name: Create Environment File
     runs-on: self-hosted
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Build Dockerfile
-        run: docker-compose build frontend
-
-  run_application:
-    needs: [ build_backend, build_frontend ]
-    name: Run Application
-    environment: production
-    runs-on: self-hosted
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
       - name: Create Environment File
         run: touch coin_library.env
 
@@ -73,5 +56,27 @@ jobs:
           DATABASE_MOUNT: ${{ secrets.DATABASE_MOUNT }}
         run: mkdir -p $DATABASE_MOUNT
 
+  build_backend:
+    needs: [ checkout_repository, create_env_file]
+    name: Build Backend
+    runs-on: self-hosted
+    steps:
+      - name: Build Dockerfile
+        run: docker-compose --env-file coin_library.env build --no-cache backend
+
+  build_frontend:
+    needs: [ checkout_repository, create_env_file]
+    name: Build Frontend
+    runs-on: self-hosted
+    steps:
+      - name: Build Dockerfile
+        run: docker-compose --env-file coin_library.env build --no-cache frontend
+
+  run_application:
+    needs: [ build_backend, build_frontend ]
+    name: Run Application
+    environment: production
+    runs-on: self-hosted
+    steps:
       - name: Run Application
         run: docker-compose --env-file coin_library.env up -d
