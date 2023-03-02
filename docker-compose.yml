@@ -22,7 +22,7 @@ services:
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
     volumes:
-      - ./Backend/data/database:/var/lib/mysql
+      - ${DATABASE_MOUNT}:/var/lib/mysql
     ports:
       - "3306:3306"
 

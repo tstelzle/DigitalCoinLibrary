@@ -63,5 +63,15 @@ jobs:
           API_PORT: ${{ secrets.API_PORT }}
         run: echo "API_PORT=$API_PORT" >> coin_library.env
 
+      - name: Add DATABASE MOUNT
+        env:
+          DATABASE_MOUNT: ${{ secrets.DATABASE_MOUNT }}
+        run: echo "DATABASE_MOUNT=$DATABASE_MOUNT" >> coin_library.env
+
+      - name: Create DATABASE MOUNT
+        env:
+          DATABASE_MOUNT: ${{ secrets.DATABASE_MOUNT }}
+        run: mkdir -p $DATABASE_MOUNT
+
       - name: Run Application
         run: docker-compose --env-file coin_library.env up -d
