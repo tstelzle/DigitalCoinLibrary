@@ -51,7 +51,7 @@ jobs:
       - name: Add DB Root Password
         env:
           MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
-        run: echo "MARIADB_ROOT_PASSWORD=MARIADB_ROOT_PASSWORD" >> coin_library.env
+        run: echo "MARIADB_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD" >> coin_library.env
 
       - name: Add API URL
         env:
