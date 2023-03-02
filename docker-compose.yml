@@ -13,6 +13,7 @@ services:
     environment:
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
 
   database:
     container_name: coin_library_database
@@ -21,8 +22,10 @@ services:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
     volumes:
-      - ${DATABASE_MOUNT}:/var/lib/mysql
+      - ${DATABASE_MOUNT}/data:/var/lib/mysql
+      - ${DATABASE_MOUNT}/conf:/etc/mysql
     ports:
       - "3306:3306"
 
