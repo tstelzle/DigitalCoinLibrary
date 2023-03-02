@@ -15,6 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
   create_env_file:
+    needs: [ checkout_repository ]
     name: Create Environment File
     runs-on: self-hosted
     steps:
