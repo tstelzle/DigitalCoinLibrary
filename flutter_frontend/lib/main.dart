@@ -8,8 +8,6 @@ import 'home/home.dart';
 
 void main() {
   injectionContainer.init();
-  print(ipAddress);
-  print(port);
   runApp(const MyApp());
 }
 
