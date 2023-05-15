@@ -10,7 +10,7 @@ public class Edition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private int id;
-
+    @Column(columnDefinition = "TEXT COLLATE utf8mb4_unicode_ci")
     private String country;
     private int edition;
     private int yearFrom;

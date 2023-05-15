@@ -16,10 +16,12 @@ public class Coin {
     private int year;
     private boolean special = false;
     @Lob
+    @Column(columnDefinition = "TEXT COLLATE utf8mb4_unicode_ci")
     private String name;
     private int size;
     private boolean available;
     @Lob
+    @Column(columnDefinition = "TEXT COLLATE utf8mb4_unicode_ci")
     private String imagePath;
 
     public Coin() {
