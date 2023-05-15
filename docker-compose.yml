@@ -1,5 +1,10 @@
 version: "3.7"
 
+networks:
+  proxy-network:
+    name: ${PROXY_NETWORK}
+    external: true
+
 services:
   backend:
     container_name: coin_library_backend
@@ -40,7 +45,7 @@ services:
     ports:
       - "9013:80"
     networks:
-      -  ${PROXY_NETWORK}
+      -  proxy-network
 
   selenium:
     container_name: coin_library_selenium
