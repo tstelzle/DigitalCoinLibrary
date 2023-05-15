@@ -3,10 +3,13 @@ import 'package:flutter_frontend/core/coin_api.dart';
 import 'package:flutter_frontend/injection_container.dart' as injectionContainer;
 import 'package:provider/provider.dart';
 
+import 'core/constants.dart';
 import 'home/home.dart';
 
 void main() {
   injectionContainer.init();
+  print(ipAddress);
+  print(port);
   runApp(const MyApp());
 }
 
