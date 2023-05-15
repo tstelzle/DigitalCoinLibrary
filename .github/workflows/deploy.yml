@@ -60,8 +60,8 @@ jobs:
 
       - name: Add PROXY NETWORK
         env:
-          DATABASE_MOUNT: ${{ secrets.PROXY_NETWORK }}
-        run: echo "PROXY_NETWORK=PROXY_NETWORK" >> coin_library.env
+          PROXY_NETWORK: ${{ secrets.PROXY_NETWORK }}
+        run: echo "PROXY_NETWORK=$PROXY_NETWORK" >> coin_library.env
 
       - name: Create DATABASE MOUNT
         env:
