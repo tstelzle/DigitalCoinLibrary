@@ -37,9 +37,6 @@ services:
       args:
         - API_URL=${API_URL}
         - API_PORT=${API_PORT}
-    environment:
-      - API_URL=${API_URL}
-      - API_PORT=${API_PORT}
     ports:
       - "9013:80"
 
