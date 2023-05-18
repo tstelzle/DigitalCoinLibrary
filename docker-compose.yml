@@ -21,6 +21,8 @@ services:
       - MARIADB_DATABASE=${MARIADB_DATABASE}
       - SPRING_USERNAME=${SPRING_USERNAME}
       - SPRING_PASSWORD=${SPRING_PASSWORD}
+    networks:
+      - proxy-network
 
   database:
     container_name: coin_library_database
