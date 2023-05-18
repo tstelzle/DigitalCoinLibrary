@@ -4,6 +4,9 @@ networks:
   proxy-network:
     name: ${PROXY_NETWORK}
     external: true
+  coin-library-network:
+    name: coin-library-network
+    external: false
 
 services:
   backend:
@@ -22,6 +25,7 @@ services:
       - SPRING_USERNAME=${SPRING_USERNAME}
       - SPRING_PASSWORD=${SPRING_PASSWORD}
     networks:
+      - coin-library-network
       - proxy-network
 
   database:
@@ -37,6 +41,8 @@ services:
       - ${DATABASE_MOUNT}/conf:/etc/mysql
     ports:
       - "3306:3306"
+    networks:
+      - coin-library-network
 
   frontend:
     container_name: coin_library_frontend
@@ -59,3 +65,5 @@ services:
     ports:
       - "4445:4444"
       - "7900:7900"
+    networks:
+      - coin-library-network
