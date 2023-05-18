@@ -19,6 +19,8 @@ services:
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
       - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - SPRING_USERNAME=${SPRING_USERNAME}
+      - SPRING_PASSWORD=${SPRING_PASSWORD}
 
   database:
     container_name: coin_library_database

@@ -39,7 +39,7 @@ public class CoinService {
         }
     }
 
-    public int setAvailable(int coinId) {
+    public int setAvailable(long coinId) {
         Optional<Coin> coin = coinDao.findById(coinId);
 
         if (coin.isPresent()) {

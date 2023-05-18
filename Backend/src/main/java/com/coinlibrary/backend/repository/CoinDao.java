@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CoinDao extends CrudRepository<Coin, Integer>, CoinRepository<Coin, Integer> {
+public interface CoinDao extends CrudRepository<Coin, Long>, CoinRepository<Coin, Long> {
 }
