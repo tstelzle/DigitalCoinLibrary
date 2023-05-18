@@ -65,12 +65,12 @@ jobs:
 
       - name: Add SPRING USERNAME
         env:
-          PROXY_NETWORK: ${{ secrets.SPRING_USERNAME }}
+          SPRING_USERNAME: ${{ secrets.SPRING_USERNAME }}
         run: echo "SPRING_USERNAME=$SPRING_USERNAME" >> coin_library.env
 
       - name: Add SPRING PASSWORD
         env:
-          PROXY_NETWORK: ${{ secrets.SPRING_PASSWORD }}
+          SPRING_PASSWORD: ${{ secrets.SPRING_PASSWORD }}
         run: echo "SPRING_PASSWORD=$SPRING_PASSWORD" >> coin_library.env
 
       - name: Create DATABASE MOUNT
