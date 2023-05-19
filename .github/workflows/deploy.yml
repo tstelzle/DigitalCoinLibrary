@@ -73,6 +73,11 @@ jobs:
           SPRING_PASSWORD: ${{ secrets.SPRING_PASSWORD }}
         run: echo "SPRING_PASSWORD=$SPRING_PASSWORD" >> coin_library.env
 
+      - name: Add FRONTEND URL
+        env:
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+        run: echo "FRONTEND_URL=$FRONTEND_URL" >> coin_library.env
+
       - name: Create DATABASE MOUNT
         env:
           DATABASE_MOUNT: ${{ secrets.DATABASE_MOUNT }}
