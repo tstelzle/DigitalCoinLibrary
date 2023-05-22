@@ -1,45 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_frontend/home/coin_card.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_frontend/core/edition_api.dart';
+import 'package:flutter_frontend/home/edition_view.dart';
 
-import 'coin_list.dart';
+import '../model/edition.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
   final String title;
+
+  const MyHomePage({super.key, required this.title});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final EditionApi editionApi = EditionApi();
+
   @override
   Widget build(BuildContext context) {
-    CoinList coinList = context.watch<CoinList>();
-
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: ListView.builder(
-            shrinkWrap: true,
-            itemCount: coinList.coinMap.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(children: <Widget>[
-                ListTile(title: Text(coinList.coinMap.keys.elementAt(index))),
-                GridView.builder(
+        body: FutureBuilder<List<Edition>>(
+            future: editionApi.fetchEditions(),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Edition>> snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
                     shrinkWrap: true,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 8,
-                      crossAxisSpacing: 5.0,
-                      mainAxisSpacing: 5.0,
-                    ),
-                    itemCount: coinList.coinMap.values.elementAt(index).length,
-                    itemBuilder: (BuildContext context, int index2) {
-                      return FlipCard(coin: coinList.coinMap.values.elementAt(index).elementAt(index2));
-                    })
-              ]);
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return EditionView(edition: snapshot.data![index]);
+                    });
+              } else {
+                return const Text("Gathering Editions.");
+              }
             }));
   }
 }

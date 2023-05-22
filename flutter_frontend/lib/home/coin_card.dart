@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../model/coin.dart';
 
-class FlipCard extends StatefulWidget {
+class CoinCard extends StatefulWidget {
   final Coin coin;
 
-  const FlipCard({super.key, required this.coin});
+  const CoinCard({super.key, required this.coin});
 
   @override
-  State<FlipCard> createState() => _FlipCardState();
+  State<CoinCard> createState() => _CoinCardState();
 }
 
-class _FlipCardState extends State<FlipCard> {
+class _CoinCardState extends State<CoinCard> {
   bool showText = true;
 
   @override

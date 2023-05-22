@@ -51,4 +51,8 @@ public class Edition {
     public void setYearTo(int year_to) {
         this.yearTo = year_to;
     }
+
+    public int getId() {
+        return id;
+    }
 }

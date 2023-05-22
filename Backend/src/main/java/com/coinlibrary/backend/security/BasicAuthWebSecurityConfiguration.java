@@ -24,12 +24,12 @@ public class BasicAuthWebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors()
-            .and()
-            .csrf()
+        http.csrf()
             .disable()
             .authorizeRequests()
             .antMatchers(HttpMethod.GET)
+            .permitAll()
+            .antMatchers(HttpMethod.OPTIONS)
             .permitAll()
             .anyRequest()
             .authenticated()

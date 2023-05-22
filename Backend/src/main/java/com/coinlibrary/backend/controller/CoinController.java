@@ -1,18 +1,10 @@
 package com.coinlibrary.backend.controller;
 
-import com.coinlibrary.backend.model.Coin;
 import com.coinlibrary.backend.service.CoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/coin")
@@ -26,8 +18,12 @@ public class CoinController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, List<Coin>>> getCoins() {
-        return new ResponseEntity<>(coinService.listCoins(), HttpStatus.OK);
+    public ResponseEntity<?> getCoinsByEdition(@RequestParam(required = false) Integer editionId) {
+        if (editionId == null) {
+            return new ResponseEntity<>(coinService.listCoins(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(coinService.listCoinsByEditionId(editionId), HttpStatus.OK);
+        }
     }
 
     @PostMapping
