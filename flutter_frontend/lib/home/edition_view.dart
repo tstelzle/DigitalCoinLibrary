@@ -23,8 +23,10 @@ class EditionView extends StatefulWidget {
     String country = countryNames.getCountryName(edition.country);
     String year = "";
     if (!specialEdition) {
-      if (edition.yearTo.compareTo(2100) == 0 || edition.yearTo.compareTo(0) == 0) {
-        if (edition.yearFrom.compareTo(1800) == 0 || edition.yearFrom.compareTo(0) == 0) {
+      if (edition.yearTo.compareTo(2100) == 0 ||
+          edition.yearTo.compareTo(0) == 0) {
+        if (edition.yearFrom.compareTo(1800) == 0 ||
+            edition.yearFrom.compareTo(0) == 0) {
           year = "ab 1999";
         } else {
           year = "ab ${edition.yearFrom}";
@@ -45,25 +47,37 @@ class _EditionViewState extends State<EditionView> {
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       ListTile(title: Text(widget.getTitle())),
-      FutureBuilder<List<Coin>>(
-          future: coinApi.fetchCoinsByEdition(widget.edition.id),
-          builder: (BuildContext context, AsyncSnapshot<List<Coin>> snapshot) {
-            if (snapshot.hasData) {
-              return GridView.builder(
+      LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final screenWidth = constraints.maxWidth;
+          final itemWidth =
+              100.0; // Adjust this value based on your item's desired width
+          final crossAxisCount = (screenWidth / itemWidth).floor();
+
+          return FutureBuilder<List<Coin>>(
+            future: coinApi.fetchCoinsByEdition(widget.edition.id),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Coin>> snapshot) {
+              if (snapshot.hasData) {
+                return GridView.builder(
                   shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 8,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 5.0,
                     mainAxisSpacing: 5.0,
                   ),
                   itemCount: snapshot.data?.length,
                   itemBuilder: (BuildContext context, int index) {
                     return CoinCard(coin: snapshot.data![index]);
-                  });
-            } else {
-              return const Text("Gathering Coins.");
-            }
-          })
+                  },
+                );
+              } else {
+                return const Text("Gathering Coins.");
+              }
+            },
+          );
+        },
+      ),
     ]);
   }
 }
