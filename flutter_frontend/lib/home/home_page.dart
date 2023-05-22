@@ -28,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 (BuildContext context, AsyncSnapshot<List<Edition>> snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: snapshot.data?.length,
                     itemBuilder: (BuildContext context, int index) {
