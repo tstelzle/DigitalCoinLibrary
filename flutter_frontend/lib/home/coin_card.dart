@@ -23,7 +23,7 @@ class _CoinCardState extends State<CoinCard> {
             showBack = !showBack;
           });
         },
-        onDoubleTap: _showImagePopup,
+        onLongPress: _showImagePopup,
         child: getCard());
   }
 
@@ -57,8 +57,15 @@ class _CoinCardState extends State<CoinCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: getCard(),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (widget.coin.special) Text(widget.coin.name, softWrap: true),
+                getCard(),
+              ],
+            ),
+          ),
         );
       },
     );
