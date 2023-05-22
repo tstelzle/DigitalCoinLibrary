@@ -35,8 +35,6 @@ class _CoinCardState extends State<CoinCard> {
                 ? const FittedBox(child: Icon(Icons.do_disturb))
                 : ClipOval(
                     child: Image.network(widget.coin.imagePath,
-                        width: 540,
-                        height: 540,
                         fit: BoxFit.cover, errorBuilder: (BuildContext context,
                             Object exception, StackTrace? stackTrace) {
                     return networkError();
@@ -44,8 +42,6 @@ class _CoinCardState extends State<CoinCard> {
             : Image.network(
                 generateUri("$frontImage${widget.coin.coinSize}", {})
                     .toString(),
-                width: 540,
-                height: 540,
                 fit: BoxFit.cover, errorBuilder: (BuildContext context,
                     Object exception, StackTrace? stackTrace) {
                 return networkError();
