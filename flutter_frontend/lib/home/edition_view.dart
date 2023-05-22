@@ -60,7 +60,7 @@ class _EditionViewState extends State<EditionView> {
                 (BuildContext context, AsyncSnapshot<List<Coin>> snapshot) {
               if (snapshot.hasData) {
                 return GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: const ScrollPhysics(),
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
