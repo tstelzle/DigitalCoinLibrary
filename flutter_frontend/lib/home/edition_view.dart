@@ -73,7 +73,7 @@ class _EditionViewState extends State<EditionView> {
                   },
                 );
               } else {
-                return const Text("Gathering Coins.");
+                return const CircularProgressIndicator(color: Colors.black);
               }
             },
           );

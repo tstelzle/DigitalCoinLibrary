@@ -35,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       return EditionView(edition: snapshot.data![index]);
                     });
               } else {
-                return const Text("Gathering Editions.");
+                return const CircularProgressIndicator();
               }
             }));
   }
