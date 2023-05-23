@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/core/coin_api.dart';
 
-import '../core/country_names.dart';
 import '../model/coin.dart';
 import '../model/edition.dart';
 import 'coin_card.dart';
@@ -14,30 +12,6 @@ class EditionView extends StatefulWidget {
 
   @override
   State<EditionView> createState() => _EditionViewState();
-
-  String getTitle() {
-    final CountryNames countryNames = CountryNames();
-
-    bool specialEdition = edition.edition == 0;
-    String special = specialEdition ? "Sondermünzen" : "${edition.edition}.";
-    String country = countryNames.getCountryName(edition.country);
-    String year = "";
-    if (!specialEdition) {
-      if (edition.yearTo.compareTo(2100) == 0 ||
-          edition.yearTo.compareTo(0) == 0) {
-        if (edition.yearFrom.compareTo(1800) == 0 ||
-            edition.yearFrom.compareTo(0) == 0) {
-          year = "ab 1999";
-        } else {
-          year = "ab ${edition.yearFrom}";
-        }
-      } else {
-        year = "${edition.yearFrom} bis ${edition.yearTo}";
-      }
-    }
-
-    return "$special $country $year";
-  }
 }
 
 class _EditionViewState extends State<EditionView> {
@@ -46,11 +20,11 @@ class _EditionViewState extends State<EditionView> {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      ListTile(title: Text(widget.getTitle())),
+      ListTile(title: Text(widget.edition.editionString)),
       LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final screenWidth = constraints.maxWidth;
-          final itemWidth =
+          const itemWidth =
               100.0; // Adjust this value based on your item's desired width
           final crossAxisCount = (screenWidth / itemWidth).floor();
 

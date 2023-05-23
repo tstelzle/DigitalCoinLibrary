@@ -1,5 +1,7 @@
 package com.coinlibrary.backend.model;
 
+import com.coinlibrary.backend.util.CountryLookUp;
+
 import javax.persistence.*;
 
 @Entity
@@ -54,5 +56,29 @@ public class Edition {
 
     public int getId() {
         return id;
+    }
+
+    public String getEditionString() {
+        boolean isSpecial = getEdition() == 0;
+        String editionString = isSpecial ? "Sondermünzen" : String.format("%d.", getEdition());
+        String countryString = CountryLookUp.getInstance()
+                .getCountryName(getCountry());
+
+        String year = "";
+        if (!isSpecial) {
+            if (getYearTo() == 2100 ||
+                   getYearTo() == 0) {
+                if (getYearFrom() == 1800 ||
+                        getYearFrom() == 0) {
+                    year = " ab 1999";
+                } else {
+                    year =  String.format(" ab %d", getYearFrom());
+                }
+            } else {
+                year = String.format(" %d bis %d", getYearFrom(), getYearTo());
+            }
+        }
+
+        return String.format("%s %s%s", editionString, countryString, year);
     }
 }

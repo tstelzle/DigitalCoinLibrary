@@ -8,7 +8,6 @@ class Coin {
   final String name;
   final int coinSize;
   final bool available;
-  final String editionString;
   final String imagePath;
 
   const Coin(
@@ -19,7 +18,6 @@ class Coin {
       required this.name,
       required this.coinSize,
       required this.available,
-      required this.editionString,
       required this.imagePath});
 
   factory Coin.fromJson(Map<String, dynamic> json) {
@@ -31,7 +29,6 @@ class Coin {
         name: json['name'] ?? "",
         coinSize: json['size'] ?? -1,
         available: json['available'] ?? false,
-        editionString: json['editionString'] ?? "",
         imagePath: json["imagePath"] ?? "");
   }
 

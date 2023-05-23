@@ -63,7 +63,7 @@ public class CoinService {
         Iterable<Coin> coinIterable = coinDao.findAll();
 
         return StreamSupport.stream(coinIterable.spliterator(), false)
-                .collect(Collectors.groupingBy(Coin::getEditionString));
+                .collect(Collectors.groupingBy(coin -> coin.getEdition().getEditionString()));
     }
 
     public List<Coin> listCoinsByEditionId(int editionId) {

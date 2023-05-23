@@ -60,16 +60,6 @@ public class Coin {
         this.edition = edition;
     }
 
-    public String getEditionString() {
-        if (edition.getYearFrom() == 0 && edition.getYearTo() == 0) {
-            return String.format("%d. %s", edition.getEdition(), edition.getCountry());
-        } else if (edition.getYearTo() == 0) {
-            return String.format("%d. %s (%d)", edition.getEdition(), edition.getCountry(), edition.getYearFrom());
-        } else {
-            return String.format("%d. %s (%d - %d)", edition.getEdition(), edition.getCountry(), edition.getYearFrom(), edition.getYearTo());
-        }
-    }
-
     public boolean isSpecial() {
         return special;
     }
