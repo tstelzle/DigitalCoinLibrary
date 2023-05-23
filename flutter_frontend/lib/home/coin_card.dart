@@ -28,24 +28,27 @@ class _CoinCardState extends State<CoinCard> {
   }
 
   Widget getCard() {
-    return Card(
-        color: widget.coin.available ? Colors.green : Colors.red,
-        child: showBack
-            ? widget.coin.imagePath.isEmpty
-                ? const FittedBox(child: Icon(Icons.do_disturb))
-                : ClipOval(
-                    child: Image.network(widget.coin.imagePath,
-                        fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                            Object exception, StackTrace? stackTrace) {
+    return AspectRatio(
+        aspectRatio: 1 / 1,
+        child: Card(
+            color: widget.coin.available ? Colors.green : Colors.red,
+            child: showBack
+                ? widget.coin.imagePath.isEmpty
+                    ? const FittedBox(child: Icon(Icons.do_disturb))
+                    : ClipOval(
+                        child: Image.network(widget.coin.imagePath,
+                            width: 540, height: 540, fit: BoxFit.cover,
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                        return networkError();
+                      }))
+                : Image.network(
+                    generateUri("$frontImage${widget.coin.coinSize}", {})
+                        .toString(),
+                    fit: BoxFit.cover, errorBuilder: (BuildContext context,
+                        Object exception, StackTrace? stackTrace) {
                     return networkError();
-                  }))
-            : Image.network(
-                generateUri("$frontImage${widget.coin.coinSize}", {})
-                    .toString(),
-                fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                    Object exception, StackTrace? stackTrace) {
-                return networkError();
-              }));
+                  })));
   }
 
   Widget networkError() {
@@ -57,15 +60,10 @@ class _CoinCardState extends State<CoinCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (widget.coin.special) Text(widget.coin.name, softWrap: true),
-                getCard(),
-              ],
-            ),
-          ),
+          content: getCard(),
+          title: widget.coin.special
+              ? Text(widget.coin.name, softWrap: true)
+              : null,
         );
       },
     );
