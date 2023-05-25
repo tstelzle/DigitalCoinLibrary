@@ -5,16 +5,16 @@ import com.coinlibrary.backend.model.Edition;
 import com.coinlibrary.backend.repository.CoinDao;
 import com.coinlibrary.backend.repository.EditionDao;
 import com.coinlibrary.backend.service.CoinService;
-import com.coinlibrary.backend.service.EditionService;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -40,15 +40,13 @@ public class EcbComponent extends SeleniumExtraction {
 
     private final CoinDao coinDao;
     private final CoinService coinService;
-    private final EditionService editionService;
     private final Map<String, String> countryAbbreviations = new HashMap<>();
     private final EditionDao editionDao;
 
     @Autowired
-    public EcbComponent(CoinService coinService, CoinDao coinDao, EditionService editionService, EditionDao editionDao) {
+    public EcbComponent(CoinService coinService, CoinDao coinDao, EditionDao editionDao) {
         this.coinDao = coinDao;
         this.coinService = coinService;
-        this.editionService = editionService;
         this.editionDao = editionDao;
     }
 
@@ -88,29 +86,23 @@ public class EcbComponent extends SeleniumExtraction {
             for (WebElement boxElement : boxElements) {
                 List<WebElement> pictureElements = boxElement.findElements(By.tagName("div")).get(0).findElements(By.tagName("picture"));
 
-                for (WebElement pictureElement : pictureElements) {
-                    String pictureUrl = pictureElement.findElement(By.tagName("img")).getAttribute("src");
-                    List<Integer> yearList = extractYearsFromText(pictureUrl);
-                    Edition edition = null;
-                    if (yearList.size() > 1) {
-                        log.debug("Too many years.");
-                        continue;
-                    }
-                    else if (yearList.size() == 0) {
-                        Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviation.getValue(), 1);
-                        if (optionalEdition.isPresent()) {
-                            edition = optionalEdition.get();
-                        }
-                    }
-                    else {
-                        Optional<Edition> optionalEdition = editionDao.findByCountryAndYearFromGreaterThanAndYearToLessThan(countryAbbreviation.getValue(), yearList.get(0), yearList.get(0));
-                        if (optionalEdition.isPresent()) {
-                            edition = optionalEdition.get();
-                        }
+                for (int index=0; index < pictureElements.size(); index++) {
+                    WebElement pictureElement = pictureElements.get(index);
+                    int editionIndex = index + 1;
+
+                    if (countryAbbreviation.getValue().equals("be") && editionIndex >= 2) {
+                        editionIndex += 1;
                     }
 
+                    Edition edition = null;
+                    Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviation.getValue(), editionIndex);
+                    if (optionalEdition.isPresent()) {
+                        edition = optionalEdition.get();
+                    }
+
+                    String pictureUrl = pictureElement.findElement(By.tagName("img")).getAttribute("src");
                     if (edition == null) {
-                        log.debug("Edition not found.");
+                        log.error("Edition not found.");
                         continue;
                     }
 
@@ -130,30 +122,14 @@ public class EcbComponent extends SeleniumExtraction {
                             coinService.updateOrInsertCoin(coin);
                         }
                         else {
-                            log.info("Coin is null: {};{}", edition.getCountry(), coinValueInteger);
+                            log.error("Coin is null: {};{}", edition.getCountry(), coinValueInteger);
                         }
                     }
                     else {
-                        log.info("Coin value not found: {}", pictureUrl);
+                        log.error("Coin value not found: {}", pictureUrl);
                     }
                 }
             }
         }
-    }
-
-    private List<Integer> extractYearsFromText(String text) {
-        Pattern integerPattern = Pattern.compile("-?\\d+");
-        Matcher matcher = integerPattern.matcher(text);
-
-        List<Integer> integerList = new ArrayList<>();
-
-        while (matcher.find()) {
-            int year = Integer.parseInt(matcher.group());
-            if (year >= 1999) {
-                integerList.add(year);
-            }
-        }
-
-        return integerList;
     }
 }
