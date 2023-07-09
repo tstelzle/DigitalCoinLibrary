@@ -65,7 +65,7 @@ public class WikipediaComponent extends SeleniumExtraction {
         init();
         getEditions(getEuroCountryLinks());
         addMissingYearsForEdition();
-        getSpecialCoins(getEuroCountryLinks());
+//        getSpecialCoins(getEuroCountryLinks());
         quit();
     }
 
@@ -225,7 +225,7 @@ public class WikipediaComponent extends SeleniumExtraction {
                 .toList();
 
         if (editionList.size() != 1) {
-            log.info("Multiple Special Edtions Found For Country");
+            log.info("Multiple Special Editions Found For Country");
             return;
         }
 
