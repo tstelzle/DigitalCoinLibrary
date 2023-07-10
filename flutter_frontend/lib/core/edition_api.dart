@@ -7,9 +7,9 @@ import '../core/constants.dart' as constants;
 import '../model/edition.dart';
 
 class EditionApi {
-  Future<List<Edition>> fetchEditions() async {
+  Future<List<Edition>> fetchEditions(int pageKey) async {
     List<Edition> editionList = [];
-    final Uri uri = constants.generateUri(constants.editionPath, {});
+    final Uri uri = constants.generateUri("${constants.editionPath}/$pageKey", {});
 
     final response = await http.get(uri, headers: {
       HttpHeaders.contentTypeHeader: 'application/json',
@@ -18,9 +18,9 @@ class EditionApi {
       throw Exception('Failed to load editions');
     }
 
-    final List<dynamic> editionJsonList = jsonDecode(response.body);
+    final Map<String, dynamic> editionMap = jsonDecode(response.body);
 
-    for (var value in editionJsonList) {
+    for (var value in editionMap["content"]) {
       editionList.add(Edition.fromJson(value));
     }
 

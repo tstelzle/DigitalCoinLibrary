@@ -3,7 +3,7 @@ const String port = String.fromEnvironment("API_PORT");
 final String domain = port.isEmpty ? ipAddress : "$ipAddress:$port";
 
 const String coinPath = "/api/coin";
-const String editionPath = "/api/edition";
+const String editionPath = "/api/edition/page";
 const String frontImage = "/api/frontImage/";
 
 Uri generateUri(String path, Map<String, String> queryParameters) {
