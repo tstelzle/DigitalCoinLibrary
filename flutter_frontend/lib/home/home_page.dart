@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/core/edition_api.dart';
 import 'package:flutter_frontend/home/edition_view.dart';
+import 'package:flutter_frontend/home/filter_bar.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../model/edition.dart';
@@ -31,9 +32,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
+        appBar: AppBar(title: Text(widget.title), actions: <Widget>[
+          IconButton(
+              icon: const Icon(Icons.filter_alt),
+              tooltip: "Filter",
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const FilterBar();
+                    });
+              })
+        ]),
         body: PagedListView<int, Edition>(
           pagingController: _pagingController,
           physics: const ScrollPhysics(),
