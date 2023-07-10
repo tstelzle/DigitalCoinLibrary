@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/edition_api.dart';
+
 class FilterBar extends StatefulWidget {
   const FilterBar({super.key});
 
@@ -8,6 +10,7 @@ class FilterBar extends StatefulWidget {
 }
 
 class _FilterBarState extends State<FilterBar> {
+  final EditionApi editionApi = EditionApi();
   bool isSpecial = false;
   int? coinValue;
   String? country;
@@ -53,20 +56,31 @@ class _FilterBarState extends State<FilterBar> {
             const Text("Land:"),
             Padding(
                 padding: const EdgeInsets.fromLTRB(10.0, 20.0, 20.0, 20.0),
-                child: DropdownButton<String>(
-                  value: country,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      country = newValue!;
-                    });
+                child: FutureBuilder<List<String>>(
+                  future: editionApi.fetchCountries(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<String>> snapshot) {
+                    if (snapshot.hasData) {
+                      return DropdownButton<String>(
+                        value: country,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            country = newValue!;
+                          });
+                        },
+                        items: snapshot.data
+                            ?.map<DropdownMenuItem<String>>((String? value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value != null ? value.toString() : '-'),
+                          );
+                        }).toList(),
+                      );
+                    } else {
+                      return const CircularProgressIndicator(
+                          color: Colors.black);
+                    }
                   },
-                  items: <String?>[null, 'USA', 'Canada', 'Mexico']
-                      .map<DropdownMenuItem<String>>((String? value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value != null ? value.toString() : '-'),
-                    );
-                  }).toList(),
                 ))
           ],
         ),

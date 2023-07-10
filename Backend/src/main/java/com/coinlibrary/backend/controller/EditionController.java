@@ -2,6 +2,7 @@ package com.coinlibrary.backend.controller;
 
 import com.coinlibrary.backend.model.Edition;
 import com.coinlibrary.backend.repository.EditionRepository;
+import com.coinlibrary.backend.service.EditionService;
 import com.coinlibrary.backend.specification.EditionSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,13 +15,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class EditionController {
 
+    private final EditionService editionService;
     private final EditionRepository<Edition, Integer> editionRepository;
 
     @Autowired
-    public EditionController(EditionRepository<Edition, Integer> editionRepository) {
+    public EditionController(EditionService editionService, EditionRepository<Edition, Integer> editionRepository) {
+        this.editionService = editionService;
         this.editionRepository = editionRepository;
     }
 
@@ -41,5 +46,10 @@ public class EditionController {
         Page<Edition> editions = editionRepository.findAll(spec, pageable);
 
         return new ResponseEntity<>(editions, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/edition/countries")
+    public ResponseEntity<List<String>> getEditionCountries() {
+        return new ResponseEntity<>(editionService.getCountries(), HttpStatus.OK);
     }
 }

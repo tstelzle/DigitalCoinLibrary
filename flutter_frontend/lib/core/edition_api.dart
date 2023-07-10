@@ -9,7 +9,8 @@ import '../model/edition.dart';
 class EditionApi {
   Future<List<Edition>> fetchEditions(int pageKey) async {
     List<Edition> editionList = [];
-    final Uri uri = constants.generateUri("${constants.editionPath}/$pageKey", {});
+    final Uri uri =
+        constants.generateUri("${constants.editionPath}/page/$pageKey", {});
 
     final response = await http.get(uri, headers: {
       HttpHeaders.contentTypeHeader: 'application/json',
@@ -24,7 +25,23 @@ class EditionApi {
       editionList.add(Edition.fromJson(value));
     }
 
-
     return editionList;
+  }
+
+  Future<List<String>> fetchCountries() async {
+    List<String> countries = [];
+    final Uri uri =
+        constants.generateUri("${constants.editionPath}/countries", {});
+
+    final response = await http.get(uri, headers: {
+      HttpHeaders.contentTypeHeader: 'application/json',
+    });
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load edition countries');
+    }
+
+    countries = List<String>.from(json.decode(response.body).cast<String>());
+
+    return countries;
   }
 }
