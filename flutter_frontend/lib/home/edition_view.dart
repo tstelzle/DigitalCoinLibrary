@@ -14,7 +14,10 @@ class EditionView extends StatefulWidget {
   State<EditionView> createState() => _EditionViewState();
 }
 
-class _EditionViewState extends State<EditionView> {
+class _EditionViewState extends State<EditionView>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   final CoinApi coinApi = CoinApi();
 
   @override
