@@ -1,7 +1,7 @@
 package com.coinlibrary.backend.service;
 
 import com.coinlibrary.backend.model.Edition;
-import com.coinlibrary.backend.repository.EditionDao;
+import com.coinlibrary.backend.repository.EditionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,30 +15,30 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class EditionService {
 
-    private final EditionDao editionDao;
+    private final EditionRepository<Edition, Integer> editionRepository;
 
     @Autowired
-    public EditionService(EditionDao editionDao) {
-        this.editionDao = editionDao;
+    public EditionService(EditionRepository<Edition, Integer> editionRepository) {
+        this.editionRepository = editionRepository;
     }
 
     public List<Edition> getEditions() {
-        return StreamSupport.stream(editionDao.findAll()
+        return StreamSupport.stream(editionRepository.findAll()
                                               .spliterator(), false)
                             .collect(Collectors.toList());
     }
 
     public void updateOrInsert(Edition edition) {
-        Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(edition.getCountry(), edition.getEdition());
+        Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(edition.getCountry(), edition.getEdition());
         if (optionalEdition.isPresent()) {
             Edition dbEdition = optionalEdition.get();
             dbEdition.setYearFrom(edition.getYearFrom());
             dbEdition.setYearTo(edition.getYearTo());
             log.info("Updating value: {}, {}, {}", edition.getCountry(), edition.getYearFrom(), edition.getYearTo());
-            editionDao.save(dbEdition);
+            editionRepository.save(dbEdition);
         } else {
             log.info("Inserting value: {}, {}, {}", edition.getCountry(), edition.getYearFrom(), edition.getYearTo());
-            editionDao.save(edition);
+            editionRepository.save(edition);
         }
     }
 }

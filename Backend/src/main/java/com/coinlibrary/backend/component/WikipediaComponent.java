@@ -2,7 +2,7 @@ package com.coinlibrary.backend.component;
 
 import com.coinlibrary.backend.model.Coin;
 import com.coinlibrary.backend.model.Edition;
-import com.coinlibrary.backend.repository.EditionDao;
+import com.coinlibrary.backend.repository.EditionRepository;
 import com.coinlibrary.backend.service.CoinService;
 import com.coinlibrary.backend.service.EditionService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,13 +49,13 @@ public class WikipediaComponent extends SeleniumExtraction {
     );
 
 
-    private final EditionDao editionDao;
+    private final EditionRepository<Edition, Integer> editionRepository;
     private final CoinService coinService;
     private final EditionService editionService;
 
     @Autowired
-    public WikipediaComponent(CoinService coinService, EditionDao editionDao, EditionService editionService) {
-        this.editionDao = editionDao;
+    public WikipediaComponent(CoinService coinService, EditionRepository editionRepository, EditionService editionService) {
+        this.editionRepository = editionRepository;
         this.coinService = coinService;
         this.editionService = editionService;
     }
@@ -153,7 +153,7 @@ public class WikipediaComponent extends SeleniumExtraction {
 
     public void addMissingYearsForEdition() {
         for (String countryAbbreviation : countryAbbreviations.values()) {
-            List<Edition> editionList = editionDao.findByCountry(countryAbbreviation);
+            List<Edition> editionList = editionRepository.findByCountry(countryAbbreviation);
 
             for (Edition edition : editionList) {
                 if (edition.getYearFrom() == 0) {
@@ -165,7 +165,7 @@ public class WikipediaComponent extends SeleniumExtraction {
                 }
 
                 if (edition.getYearTo() == 0 && edition.getEdition() != 0) {
-                    Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviation, edition.getEdition() + 1);
+                    Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(countryAbbreviation, edition.getEdition() + 1);
                     if (optionalEdition.isPresent()) {
                         edition.setYearTo(optionalEdition.get().getYearFrom() - 1);
                     } else {
@@ -219,7 +219,7 @@ public class WikipediaComponent extends SeleniumExtraction {
             tableRows.remove(1);
         }
 
-        List<Edition> editionList = StreamSupport.stream(editionDao.findAll().spliterator(), false)
+        List<Edition> editionList = StreamSupport.stream(editionRepository.findAll().spliterator(), false)
                 .filter(edition -> countryAbbreviations.get(getCountryNameFromUrl(countryUrl)).equals(edition.getCountry()))
                 .filter(edition -> edition.getEdition() == 0)
                 .toList();

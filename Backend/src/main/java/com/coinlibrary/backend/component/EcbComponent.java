@@ -2,8 +2,8 @@ package com.coinlibrary.backend.component;
 
 import com.coinlibrary.backend.model.Coin;
 import com.coinlibrary.backend.model.Edition;
-import com.coinlibrary.backend.repository.CoinDao;
-import com.coinlibrary.backend.repository.EditionDao;
+import com.coinlibrary.backend.repository.CoinRepository;
+import com.coinlibrary.backend.repository.EditionRepository;
 import com.coinlibrary.backend.service.CoinService;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -19,6 +19,7 @@ import java.util.Optional;
 @Component
 @Slf4j
 public class EcbComponent extends SeleniumExtraction {
+    private final CoinRepository<Coin, Long> coinRepository;
 
     private final String baseLink = "https://www.ecb.europa.eu/euro/coins/html/";
     private final String baseLinkEnd = ".de.html";
@@ -40,15 +41,15 @@ public class EcbComponent extends SeleniumExtraction {
             Map.entry("2e", 200)
     );
     private final Map<String, String> countryAbbreviations = new HashMap<>();
-    private final CoinDao coinDao;
     private final CoinService coinService;
-    private final EditionDao editionDao;
+    private final EditionRepository<Edition, Integer> editionRepository;
 
     @Autowired
-    public EcbComponent(CoinService coinService, CoinDao coinDao, EditionDao editionDao) {
-        this.coinDao = coinDao;
+    public EcbComponent(CoinService coinService, EditionRepository<Edition, Integer> editionRepository,
+                        CoinRepository<Coin, Long> coinRepository) {
         this.coinService = coinService;
-        this.editionDao = editionDao;
+        this.editionRepository = editionRepository;
+        this.coinRepository = coinRepository;
     }
 
     public void run() {
@@ -140,7 +141,7 @@ public class EcbComponent extends SeleniumExtraction {
                             coin.setName(name);
                             coin.setSize(200);
                             coin.setYear(i);
-                            Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(erasmusCountry, 0);
+                            Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(erasmusCountry, 0);
                             if (erasmusCountry.equals("de")) {
                                 coin.setImagePath(pictureElements.get(0));
                             } else {
@@ -156,7 +157,7 @@ public class EcbComponent extends SeleniumExtraction {
                     }
                 } else {
                     coin.setImagePath(pictureElements.get(0));
-                    Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviations.get(country), 0);
+                    Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(countryAbbreviations.get(country), 0);
                     if (optionalEdition.isPresent()) {
                         coin.setEdition(optionalEdition.get());
                         coinService.updateOrInsertCoin(coin);
@@ -200,7 +201,7 @@ public class EcbComponent extends SeleniumExtraction {
                         }
 
                         if (countryAbbreviation != null) {
-                            Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviation, 0);
+                            Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(countryAbbreviation, 0);
                             if (optionalEdition.isPresent()) {
                                 coin.setEdition(optionalEdition.get());
                                 coinService.updateOrInsertCoin(coin);
@@ -211,7 +212,7 @@ public class EcbComponent extends SeleniumExtraction {
                     }
                 } else {
                     coin.setImagePath(pictureElements.get(0));
-                    Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviations.get(country), 0);
+                    Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(countryAbbreviations.get(country), 0);
                     if (optionalEdition.isPresent()) {
                         coin.setEdition(optionalEdition.get());
                         coinService.updateOrInsertCoin(coin);
@@ -243,7 +244,7 @@ public class EcbComponent extends SeleniumExtraction {
                     }
 
                     Edition edition = null;
-                    Optional<Edition> optionalEdition = editionDao.findByCountryAndEdition(countryAbbreviation.getValue(), editionIndex);
+                    Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(countryAbbreviation.getValue(), editionIndex);
                     if (optionalEdition.isPresent()) {
                         edition = optionalEdition.get();
                     }
@@ -263,7 +264,7 @@ public class EcbComponent extends SeleniumExtraction {
                     }
 
                     if (coinValueInteger != -1) {
-                        Optional<Coin> optionalCoin = coinDao.findByEditionAndSizeAndSpecial(edition, coinValueInteger, false);
+                        Optional<Coin> optionalCoin = coinRepository.findByEditionAndSizeAndSpecial(edition, coinValueInteger, false);
                         if (optionalCoin.isPresent()) {
                             Coin coin = optionalCoin.get();
                             coin.setImagePath(pictureUrl);
