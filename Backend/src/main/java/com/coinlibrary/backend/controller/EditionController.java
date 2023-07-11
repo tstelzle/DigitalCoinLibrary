@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @RestController
 public class EditionController {
@@ -50,6 +51,6 @@ public class EditionController {
 
     @GetMapping("/api/edition/countries")
     public ResponseEntity<List<String>> getEditionCountries() {
-        return new ResponseEntity<>(editionService.getCountries(), HttpStatus.OK);
+        return new ResponseEntity<>(Stream.concat(Stream.of("all"), editionService.getCountries().stream()).toList(), HttpStatus.OK);
     }
 }

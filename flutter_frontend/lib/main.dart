@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'core/filter_state.dart';
 import 'home/home.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(
+      providers: [BlocProvider<FilterBloc>(create: (context) => FilterBloc())],
+      child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

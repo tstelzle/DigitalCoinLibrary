@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_frontend/core/edition_api.dart';
+import 'package:flutter_frontend/core/filter_state.dart';
 import 'package:flutter_frontend/home/edition_view.dart';
 import 'package:flutter_frontend/home/filter_bar.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -39,8 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 showModalBottomSheet(
                     context: context,
-                    builder: (BuildContext context) {
-                      return const FilterBar();
+                    builder: (context) {
+                      return BlocProvider.value(
+                          value: BlocProvider.of<FilterBloc>(context),
+                          child: const FilterBar());
                     });
               })
         ]),
