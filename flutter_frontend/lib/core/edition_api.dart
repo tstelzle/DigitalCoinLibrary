@@ -7,10 +7,18 @@ import '../core/constants.dart' as constants;
 import '../model/edition.dart';
 
 class EditionApi {
-  Future<List<Edition>> fetchEditions(int pageKey) async {
+  Future<List<Edition>> fetchEditions(int pageKey, String country, bool special) async {
+    var queryParameters = <String, String>{};
+    if (country != "all") {
+      queryParameters["country"] = country;
+    }
+    if (special == true) {
+      queryParameters["special"] = "true";
+    }
+
     List<Edition> editionList = [];
     final Uri uri =
-        constants.generateUri("${constants.editionPath}/page/$pageKey", {});
+        constants.generateUri("${constants.editionPath}/page/$pageKey", queryParameters);
 
     final response = await http.get(uri, headers: {
       HttpHeaders.contentTypeHeader: 'application/json',

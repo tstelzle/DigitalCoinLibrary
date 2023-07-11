@@ -88,27 +88,6 @@ class _FilterBarState extends State<FilterBar> {
                 }))
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Clear button logic
-                  },
-                  child: const Text('Clear'),
-                )),
-            Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Apply button logic
-                  },
-                  child: const Text('Apply'),
-                )),
-          ],
-        ),
       ],
     );
   }

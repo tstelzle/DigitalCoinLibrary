@@ -18,6 +18,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late FilterBloc filterBloc;
   final EditionApi editionApi = EditionApi();
   static const _pageSize = 5;
   final PagingController<int, Edition> _pagingController =
@@ -33,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    filterBloc = BlocProvider.of<FilterBloc>(context);
     return Scaffold(
         appBar: AppBar(title: Text(widget.title), actions: <Widget>[
           IconButton(
@@ -48,21 +50,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
               })
         ]),
-        body: PagedListView<int, Edition>(
-          pagingController: _pagingController,
-          physics: const ScrollPhysics(),
-          shrinkWrap: true,
-          builderDelegate: PagedChildBuilderDelegate<Edition>(
-            itemBuilder: (context, edition, index) {
-              return EditionView(edition: edition);
-            },
-          ),
-        ));
+        body: BlocBuilder<FilterBloc, FilterState>(builder: (context, state) {
+          return PagedListView<int, Edition>(
+            pagingController: _pagingController,
+            physics: const ScrollPhysics(),
+            shrinkWrap: true,
+            builderDelegate: PagedChildBuilderDelegate<Edition>(
+              itemBuilder: (context, edition, index) {
+                return EditionView(edition: edition);
+              },
+            ),
+          );
+        }));
   }
 
   Future<void> _fetchEditions(int pageKey) async {
     try {
-      final List<Edition> newEditions = await editionApi.fetchEditions(pageKey);
+      filterBloc.stream.listen((event) { _pagingController.refresh();});
+      final List<Edition> newEditions = await editionApi.fetchEditions(
+          pageKey, filterBloc.state.country, filterBloc.state.coinSize == -1);
       final isLastPage = newEditions.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newEditions);

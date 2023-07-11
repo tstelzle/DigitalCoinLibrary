@@ -7,33 +7,12 @@ import '../core/constants.dart' as constants;
 import '../model/coin.dart';
 
 class CoinApi {
-  Future<Map<String, List<Coin>>> fetchCoins() async {
-    Map<String, List<Coin>> coinMap = {};
-    final Uri uri = constants.generateUri(constants.coinPath, {});
-
-    final response = await http.get(uri, headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-    });
-    if (response.statusCode != 200) {
-      throw Exception('Failed to load coins');
+  Future<List<Coin>> fetchCoinsByEdition(int editionId, int size) async {
+    var queryParameters = {"editionId": "$editionId"};
+    if (size > 0) {
+      queryParameters["size"] = "$size";
     }
-
-    final Map<String, dynamic> countryMap = jsonDecode(response.body);
-
-    countryMap.forEach((key, value) {
-      coinMap.putIfAbsent(
-          key, () => List<Coin>.from(value.map((coin) => Coin.fromJson(coin))));
-    });
-
-    return coinMap;
-  }
-
-  Future<List<Coin>> fetchCoinsByEdition(int editionId) async {
-    final queryParameters = {"editionId": "$editionId"};
     final Uri uri = constants.generateUri(constants.coinPath, queryParameters);
-
-    // String uriString = "http://localhost:8080/api/coin?editionId=4";
-
     final response = await http.get(uri, headers: {
       HttpHeaders.contentTypeHeader: 'application/json',
     });

@@ -4,6 +4,7 @@ import com.coinlibrary.backend.model.Edition;
 import com.coinlibrary.backend.repository.EditionRepository;
 import com.coinlibrary.backend.service.EditionService;
 import com.coinlibrary.backend.specification.EditionSpecification;
+import com.coinlibrary.backend.util.CountryLookUp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,10 +38,11 @@ public class EditionController {
         Specification<Edition> spec = Specification.where(null);
 
         if (country != null) {
-            spec = spec.and(EditionSpecification.hasCountry(country));
+            String countrycode = CountryLookUp.getInstance().getCountryCode(country);
+            spec = spec.and(EditionSpecification.hasCountry(countrycode));
         }
 
-        if (special != null) {
+        if (special != null && special) {
             spec = spec.and(EditionSpecification.isSpecial());
         }
 

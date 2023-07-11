@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -21,12 +20,6 @@ public class EditionService {
     @Autowired
     public EditionService(EditionRepository<Edition, Integer> editionRepository) {
         this.editionRepository = editionRepository;
-    }
-
-    public List<Edition> getEditions() {
-        return StreamSupport.stream(editionRepository.findAll()
-                                              .spliterator(), false)
-                            .collect(Collectors.toList());
     }
 
     public List<String> getCountries() {

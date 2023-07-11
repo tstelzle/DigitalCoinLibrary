@@ -1,13 +1,11 @@
 package com.coinlibrary.backend.util;
 
-import org.checkerframework.checker.units.qual.C;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class CountryLookUp {
-    private final Map<String, String> countryCodeMap;
     private static CountryLookUp countryLookUpInstance;
+    private final Map<String, String> countryCodeMap;
 
     private CountryLookUp() {
         countryCodeMap = new HashMap<>();
@@ -51,5 +49,10 @@ public class CountryLookUp {
 
     public String getCountryName(String countryCode) {
         return countryCodeMap.get(countryCode);
+    }
+
+    public String getCountryCode(String countryName) {
+        String countryCode = countryCodeMap.entrySet().stream().filter(entry -> entry.getValue().equals(countryName)).map(Map.Entry::getKey).findFirst().get();
+        return countryCode;
     }
 }
