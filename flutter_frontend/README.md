@@ -14,3 +14,11 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Problems
+
+1. In case of changing github secrets for the frontend. Docker has to be forced to rebuild the container, so the secrets are available. Otherwise the cache will skip this step.
+```bash
+docker-compose --env-file coin_library.env build --no-cache frontend
+```
+Also do not forget to add it as a build arg in the frontend.Dockerfile
