@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_frontend/home/home_page.dart';
 
 import 'core/filter_state.dart';
 import 'home/home.dart';
@@ -16,11 +17,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Coin Library',
+      title: 'Digital Coin Library',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Coin Library'),
+      home: const HomePage(),
     );
   }
 }
