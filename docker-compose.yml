@@ -53,6 +53,7 @@ services:
       args:
         - API_URL=${API_URL}
         - API_PORT=${API_PORT}
+        - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
     ports:
       - "9013:80"
     networks:
