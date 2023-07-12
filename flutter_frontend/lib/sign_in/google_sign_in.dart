@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+const googleClientID = String.fromEnvironment("GOOGLE_CLIENT_ID");
+
 final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email'],
-    clientId: const String.fromEnvironment("GOOGLE_CLIENT_ID")
+    clientId: googleClientID
 );
 
 class GoogleSignInWidget extends StatelessWidget {
