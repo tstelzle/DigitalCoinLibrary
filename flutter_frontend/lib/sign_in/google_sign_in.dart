@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -19,13 +18,7 @@ class GoogleSignInWidget extends StatelessWidget {
       final GoogleSignInAuthentication googleAuth =
           await googleUser!.authentication;
 
-      // Create a new credential using the obtained token
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      print(credential.accessToken);
+      print(googleAuth.accessToken);
     } catch (error) {
       print('Error signing in with Google: $error');
     }
