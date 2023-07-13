@@ -6,8 +6,8 @@ import '../core/constants.dart' as constants;
 import '../model/coin.dart';
 
 class CoinApi {
-  Future<List<Coin>> fetchCoinsByEdition(
-      int editionId, int size, String userName) async {
+  Future<List<Coin>> fetchCoinsByEdition(int editionId, int size,
+      String userName) async {
     var queryParameters = {"editionId": "$editionId"};
     if (size > 0) {
       queryParameters["size"] = "$size";
@@ -24,5 +24,17 @@ class CoinApi {
     }
 
     return coinList;
+  }
+
+  Future<String> updateCoin(int coinId, String librarianName,
+      bool available) async {
+    var queryParameters = <String, String>{};
+    queryParameters["coinId"] = "$coinId";
+    queryParameters["librarianName"] = librarianName;
+    queryParameters["available"] = "$available";
+
+    String body = await post(constants.coinPath, queryParameters);
+
+    return body;
   }
 }
