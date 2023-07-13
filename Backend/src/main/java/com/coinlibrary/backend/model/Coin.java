@@ -32,6 +32,10 @@ public class Coin {
 
     }
 
+    public Set<Librarian> getLibrarians() {
+        return librarians;
+    }
+
     public String getImagePath() {
         return imagePath;
     }
@@ -96,4 +100,13 @@ public class Coin {
         this.year = year;
     }
 
+    public void addLibrarian(Librarian librarian) {
+        librarians.add(librarian);
+        librarian.getCoins().add(this);
+    }
+
+    public void removeLibrarian(Librarian librarian) {
+        librarians.remove(librarian);
+        librarian.getCoins().remove(this);
+    }
 }

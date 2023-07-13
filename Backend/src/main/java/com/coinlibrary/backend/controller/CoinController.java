@@ -71,9 +71,8 @@ public class CoinController {
     }
 
     @PostMapping("/api/coin")
-    public ResponseEntity<Void> postCoin(@RequestParam Long coinId) {
-        //TODO wrong now
-        long status = coinService.setAvailable(coinId);
+    public ResponseEntity<Void> postCoin(@RequestParam Long coinId, @RequestParam String librarianName, @RequestParam boolean available) {
+        long status = coinService.setAvailable(coinId, librarianName, available);
 
         if (status == -1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

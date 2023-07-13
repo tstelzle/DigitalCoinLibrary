@@ -54,4 +54,14 @@ public class Librarian {
     public void setCoins(Set<Coin> coins) {
         this.coins = coins;
     }
+
+    public void addCoin(Coin coin) {
+        coins.add(coin);
+        coin.getLibrarians().add(this);
+    }
+
+    public void removeCoin(Coin coin) {
+        coins.remove(coin);
+        coin.getLibrarians().remove(this);
+    }
 }
