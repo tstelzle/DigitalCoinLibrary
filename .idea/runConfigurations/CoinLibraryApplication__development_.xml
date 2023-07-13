@@ -2,11 +2,12 @@
   <configuration default="false" name="CoinLibraryApplication (development)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <envs>
       <env name="FRONTEND_URL" value="*" />
+      <env name="GOOGLE_CLIENT_ID" value="302848483780-8o8ld5rhr856u203u4l5j2annk0es44l.apps.googleusercontent.com" />
       <env name="MARIADB_PASSWORD" value="testpw" />
       <env name="MARIADB_USER" value="testuser" />
       <env name="SPRING_CONFIG_LOCATION" value="./Backend/src/main/resources/" />
-      <env name="SPRING_USERNAME" value="admin" />
       <env name="SPRING_PASSWORD" value="admin" />
+      <env name="SPRING_USERNAME" value="admin" />
     </envs>
     <module name="Backend" />
     <option name="PROGRAM_PARAMETERS" value="--spring.config.name=application-dev" />
