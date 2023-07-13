@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/core/authentication.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 const googleClientID = String.fromEnvironment("GOOGLE_CLIENT_ID");
 
-final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email'],
-    clientId: googleClientID
-);
+final GoogleSignIn _googleSignIn =
+    GoogleSignIn(scopes: ['email'], clientId: googleClientID);
 
 class GoogleSignInWidget extends StatelessWidget {
   const GoogleSignInWidget({super.key});
+
 
   Future<void> _signInWithGoogle() async {
     try {
@@ -20,6 +20,11 @@ class GoogleSignInWidget extends StatelessWidget {
       final GoogleSignInAuthentication googleAuth =
           await googleUser!.authentication;
 
+      if (googleAuth.idToken != null) {
+        bool verified =
+            await authenticateUser(googleAuth.idToken!);
+        if (verified) {}
+      } else {}
       print(googleAuth.accessToken);
     } catch (error) {
       print('Error signing in with Google: $error');

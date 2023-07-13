@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_frontend/core/user_state.dart';
 import 'package:flutter_frontend/home/home_page.dart';
 
 import 'core/filter_state.dart';
-import 'home/home.dart';
 
 void main() {
-  runApp(MultiBlocProvider(
-      providers: [BlocProvider<FilterBloc>(create: (context) => FilterBloc())],
-      child: MyApp()));
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider<FilterBloc>(create: (context) => FilterBloc()),
+    BlocProvider<UserBloc>(create: (context) => UserBloc())
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

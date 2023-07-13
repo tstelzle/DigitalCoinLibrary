@@ -53,7 +53,7 @@ public class CoinController {
 
         List<Coin> coins = coinRepository.findAll(spec);
 
-        if (librarianName != null) {
+        if (!"".equals(librarianName)) {
             Optional<List<Long>> coinsAvailableOptional = librarianService.getAvailableCoinIds(librarianName);
 
             if (coinsAvailableOptional.isPresent()) {

@@ -60,7 +60,16 @@ class _CoinCardState extends State<CoinCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: getCard(),
+          content: Wrap(children: [
+            Column(children: <Widget>[
+              getCard(),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+                  child: ElevatedButton(
+                      onPressed: () => {print('Test')},
+                      child: const Text("Available")))
+            ])
+          ]),
           title: widget.coin.special
               ? Text(widget.coin.name, softWrap: true)
               : null,

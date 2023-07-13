@@ -1,28 +1,23 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:flutter_frontend/core/api.dart';
 
 import '../core/constants.dart' as constants;
 import '../model/coin.dart';
 
 class CoinApi {
-  Future<List<Coin>> fetchCoinsByEdition(int editionId, int size) async {
+  Future<List<Coin>> fetchCoinsByEdition(
+      int editionId, int size, String userName) async {
     var queryParameters = {"editionId": "$editionId"};
     if (size > 0) {
       queryParameters["size"] = "$size";
     }
-    final Uri uri = constants.generateUri(constants.coinPath, queryParameters);
-    final response = await http.get(uri, headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-    });
-    if (response.statusCode != 200) {
-      throw Exception('Failed to load coins');
-    }
+    queryParameters["librarianName"] = userName;
+
+    String body = await get(constants.coinPath, queryParameters);
 
     List<Coin> coinList = [];
-
-    final List<dynamic> coinMap = jsonDecode(response.body);
+    final List<dynamic> coinMap = jsonDecode(body);
 
     for (var value in coinMap) {
       coinList.add(Coin.fromJson(value));
