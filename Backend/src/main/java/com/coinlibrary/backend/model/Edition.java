@@ -17,7 +17,6 @@ public class Edition {
     private int edition;
     private int yearFrom;
     private int yearTo;
-
     public Edition() {
 
     }
@@ -58,6 +57,10 @@ public class Edition {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getEditionString() {
         boolean isSpecial = getEdition() == 0;
         String editionString = isSpecial ? "Sondermünzen" : String.format("%d.", getEdition());
@@ -67,12 +70,12 @@ public class Edition {
         String year = "";
         if (!isSpecial) {
             if (getYearTo() == 2100 ||
-                   getYearTo() == 0) {
+                    getYearTo() == 0) {
                 if (getYearFrom() == 1800 ||
                         getYearFrom() == 0) {
                     year = " ab 1999";
                 } else {
-                    year =  String.format(" ab %d", getYearFrom());
+                    year = String.format(" ab %d", getYearFrom());
                 }
             } else {
                 year = String.format(" %d bis %d", getYearFrom(), getYearTo());

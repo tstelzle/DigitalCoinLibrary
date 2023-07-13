@@ -22,4 +22,36 @@ public class Librarian {
             inverseJoinColumns = @JoinColumn(name = "coin_id")
     )
     private Set<Coin> coins = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getLibrarianName() {
+        return librarianName;
+    }
+
+    public void setLibrarianName(String librarianName) {
+        this.librarianName = librarianName;
+    }
+
+    public Set<Coin> getCoins() {
+        return coins;
+    }
+
+    public void setCoins(Set<Coin> coins) {
+        this.coins = coins;
+    }
 }
