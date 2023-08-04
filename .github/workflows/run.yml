@@ -7,9 +7,10 @@ on:
         required: true
         type: string
 
-run_application:
-  name: Run Application
-  runs-on: runner
-  steps:
-    - name: Run Application
-      run: docker-compose --env-file coin_library.env up -d
+jobs:
+  run_application:
+    name: Run Application
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Run Application
+        run: docker-compose --env-file coin_library.env up -d

@@ -7,16 +7,17 @@ on:
         required: true
         type: string
 
-build_backend:
-  name: Build Backend
-  runs-on: runner
-  steps:
-    - name: Build Dockerfile
-      run: docker-compose --env-file coin_library.env build --no-cache backend
+jobs:
+  build_backend:
+    name: Build Backend
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Build Dockerfile
+        run: docker-compose --env-file coin_library.env build --no-cache backend
 
-build_frontend:
-  name: Build Frontend
-  runs-on: runner
-  steps:
-    - name: Build Dockerfile
-      run: docker-compose --env-file coin_library.env build --no-cache frontend
+  build_frontend:
+    name: Build Frontend
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Build Dockerfile
+        run: docker-compose --env-file coin_library.env build --no-cache frontend

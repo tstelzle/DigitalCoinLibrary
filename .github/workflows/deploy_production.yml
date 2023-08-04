@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Run Create Environment File
         run: ./.github/workflows/create_env.yml
+        with:
+          runner: prod
+          env: production
 
   call-build-file:
     needs: [ call-create-file ]
@@ -28,6 +31,8 @@ jobs:
     steps:
       - name: Run Build
         run: ./.github/workflows/build.yml
+        with:
+          runner: prod
 
   call-run-file:
     needs: [ call-build-file ]
@@ -36,6 +41,8 @@ jobs:
     steps:
       - name: Run Run
         run: ./.github/workflows/run.yml
+        with:
+          runner: prod
 
 
 
