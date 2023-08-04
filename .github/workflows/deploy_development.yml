@@ -18,31 +18,28 @@ jobs:
     name: Call Create Environment File
     runs-on: develop
     steps:
-      - name: Run Create Environment File
-        run: ./.github/workflows/create_env.yml
-        with:
-          runner: develop
-          env: development
+        - uses: ./.github/workflows/create_env.yml
+          with:
+            runner: develop
+            env: development
 
   call-build-file:
     needs: [ call-create-file ]
     name: Call Build File
     runs-on: develop
     steps:
-      - name: Run Build
-        run: ./.github/workflows/build.yml
-        with:
-          runner: develop
+        - uses: ./.github/workflows/build.yml
+          with:
+            runner: develop
 
   call-run-file:
     needs: [ call-build-file ]
     name: Call Run File
     runs-on: develop
     steps:
-      - name: Run Run
-        run: ./.github/workflows/run.yml
-        with:
-          runner: develop
+        - uses: ./.github/workflows/run.yml
+          with:
+            runner: develop
 
 
 
