@@ -6,40 +6,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  checkout-repository:
-    name: Checkout Repository
+  deploy:
+    name: Deploy Development
     runs-on: develop
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
-  call-create-file:
-    needs: [ checkout-repository ]
-    name: Call Create Environment File
-    runs-on: develop
-    steps:
-        - uses: ./.github/workflows/create_env.yml
-          with:
-            runner: develop
-            env: development
-
-  call-build-file:
-    needs: [ call-create-file ]
-    name: Call Build File
-    runs-on: develop
-    steps:
-        - uses: ./.github/workflows/build.yml
-          with:
-            runner: develop
-
-  call-run-file:
-    needs: [ call-build-file ]
-    name: Call Run File
-    runs-on: develop
-    steps:
-        - uses: ./.github/workflows/run.yml
-          with:
-            runner: develop
+      - name: Create Environment File
+        uses: ./.github/workflows/create_env.yml
+        with:
+          runner: develop
+          env: development
+      - name: Builder Containers
+        uses: ./.github/workflows/build.yml
+        with:
+          runner: develop
+      - name: Run Development
+        uses: ./.github/workflows/run.yml
+        with:
+          runner: develop
 
 
 
