@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  checkout_repository:
+  checkout-repository:
     name: Checkout Repository
     runs-on: develop
     steps:
