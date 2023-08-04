@@ -4,7 +4,6 @@ on:
   workflow_call:
 
 create_env_file:
-  needs: [ checkout_repository ]
   name: Create Environment File
 #  environment: ${{ env }}
 #  runs-on: ${{ runner }}
