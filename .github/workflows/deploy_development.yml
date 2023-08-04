@@ -1,0 +1,44 @@
+name: Deploy Development
+
+on:
+  push:
+    branches: [ develop ]
+  workflow_dispatch:
+
+env:
+  PRODUCTION_RUNNER: develop
+  
+jobs:
+
+  checkout_repository:
+    name: Checkout Repository
+    runs-on: ${{ env.PRODUCTION_RUNNER }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+  call-create-file:
+    name: Call Create Environment File
+    runs-on: ${{ env.PRODUCTION_RUNNER }}
+    steps:
+      - name: Run Create Environment File
+        run: ./.github/workflows/create_env.yml
+
+  call-build-file:
+    name: Call Build File
+    runs-on: ${{ env.PRODUCTION_RUNNER }}
+    steps:
+      - name: Run Build
+        run: ./.github/workflows/build.yml
+
+  call-run-file:
+    name: Call Run File
+    runs-on: ${{ env.PRODUCTION_RUNNER }}
+    steps:
+      - name: Run Run
+        run: ./.github/workflows/run.yml
+
+
+
+
+

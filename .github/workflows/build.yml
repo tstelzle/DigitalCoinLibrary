@@ -1,0 +1,24 @@
+name: Build Application
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        required: true
+        type: string
+
+build_backend:
+  needs: [ checkout_repository, create_env_file ]
+  name: Build Backend
+  runs-on: runner
+  steps:
+    - name: Build Dockerfile
+      run: docker-compose --env-file coin_library.env build --no-cache backend
+
+build_frontend:
+  needs: [ checkout_repository, create_env_file ]
+  name: Build Frontend
+  runs-on: runner
+  steps:
+    - name: Build Dockerfile
+      run: docker-compose --env-file coin_library.env build --no-cache frontend

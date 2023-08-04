@@ -1,0 +1,24 @@
+letsencrypt:
+  image: linuxserver/swag
+  container_name: dcl-dev-swag
+  volumes:
+    - ./letsencryptPi/config:/config/
+  ports:
+    - "443:443"
+  environment:
+    - PUID=1000
+    - PGID=1000
+    - TZ=Europe/Berlin
+    - URL=dcl-dev.duckdns.org
+    - DUCKDNSTOKEN=${DUCKDNSTOKEN}
+    - SUBDOMAINS=wildcard
+    - VALIDATION=duckdns
+  depends_on:
+    - duckdns
+
+duckdns:
+  image: linuxserver/duckdns
+  container_name: dcl-dev-duckdns
+  environment:
+    - SUBDOMAINS=dcl-dev.duckdns.org
+    - TOKEN=${DUCKDNSTOKEN}
