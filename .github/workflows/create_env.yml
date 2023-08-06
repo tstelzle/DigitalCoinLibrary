@@ -3,16 +3,12 @@ name: Create Env File
 on:
   workflow_call:
     with:
-      runner:
-        required: true
-        type: string
       env:
         required: true
         type: string
 
 jobs:
   create_env_file:
-    runs-on: ${{ inputs.runner }}
     name: Create Environment File
     environment: ${{ inputs.env }}
     steps:

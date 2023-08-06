@@ -2,15 +2,10 @@ name: Run Application
 
 on:
   workflow_call:
-    inputs:
-      runner:
-        required: true
-        type: string
 
 jobs:
   run_application:
     name: Run Application
-    runs-on: ${{ inputs.runner }}
     steps:
       - name: Run Application
         run: docker-compose --env-file coin_library.env up -d
