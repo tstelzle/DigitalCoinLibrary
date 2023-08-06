@@ -1,50 +1,113 @@
-name: Deploy Production
+name: Deploy
 
 on:
   push:
-    branches: [ prod ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  checkout-repository:
+
+  checkout_repository:
     name: Checkout Repository
     runs-on: prod
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-  call-create-file:
-    needs: [ checkout-repository ]
-    name: Call Create Environment File
+  create_env_file:
+    needs: [ checkout_repository ]
+    name: Create Environment File
+    environment: production
     runs-on: prod
     steps:
-      - name: Run Create Environment File
-        run: ./.github/workflows/create_env.yml
-        with:
-          runner: prod
-          env: production
+      - name: Create Environment File
+        run: touch coin_library.env
 
-  call-build-file:
-    needs: [ call-create-file ]
-    name: Call Build File
+      - name: Add DB User
+        env:
+          MARIADB_USER: ${{ secrets.MARIADB_USER }}
+        run: echo "MARIADB_USER=$MARIADB_USER" >> coin_library.env
+
+      - name: Add DB Password
+        env:
+          MARIADB_PASSWORD: ${{ secrets.MARIADB_PASSWORD }}
+        run: echo "MARIADB_PASSWORD=$MARIADB_PASSWORD" >> coin_library.env
+
+      - name: Add DB Root Password
+        env:
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+        run: echo "MARIADB_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD" >> coin_library.env
+
+      - name: Add API URL
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: echo "API_URL=$API_URL" >> coin_library.env
+
+      - name: Add API PORT
+        env:
+          API_PORT: ${{ secrets.API_PORT }}
+        run: echo "API_PORT=$API_PORT" >> coin_library.env
+
+      - name: Add DB Database
+        env:
+          MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
+        run: echo "MARIADB_DATABASE=$MARIADB_DATABASE" >> coin_library.env
+
+      - name: Add DATABASE MOUNT
+        env:
+          DATABASE_MOUNT: ${{ secrets.DATABASE_MOUNT }}
+        run: echo "DATABASE_MOUNT=$DATABASE_MOUNT" >> coin_library.env
+
+      - name: Add PROXY NETWORK
+        env:
+          PROXY_NETWORK: ${{ secrets.PROXY_NETWORK }}
+        run: echo "PROXY_NETWORK=$PROXY_NETWORK" >> coin_library.env
+
+      - name: Add SPRING USERNAME
+        env:
+          SPRING_USERNAME: ${{ secrets.SPRING_USERNAME }}
+        run: echo "SPRING_USERNAME=$SPRING_USERNAME" >> coin_library.env
+
+      - name: Add SPRING PASSWORD
+        env:
+          SPRING_PASSWORD: ${{ secrets.SPRING_PASSWORD }}
+        run: echo "SPRING_PASSWORD=$SPRING_PASSWORD" >> coin_library.env
+
+      - name: Add FRONTEND URL
+        env:
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+        run: echo "FRONTEND_URL=$FRONTEND_URL" >> coin_library.env
+
+      - name: Create DATABASE MOUNT
+        env:
+          DATABASE_MOUNT: ${{ secrets.DATABASE_MOUNT }}
+        run: mkdir -p $DATABASE_MOUNT/data && mkdir -p $DATABASE_MOUNT/conf
+
+      - name: Add GOOGLE ClIENT ID
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        run: echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> coin_library.env
+
+  build_backend:
+    needs: [ checkout_repository, create_env_file]
+    name: Build Backend
     runs-on: prod
     steps:
-      - name: Run Build
-        run: ./.github/workflows/build.yml
-        with:
-          runner: prod
+      - name: Build Dockerfile
+        run: docker-compose --env-file coin_library.env build --no-cache backend
 
-  call-run-file:
-    needs: [ call-build-file ]
-    name: Call Run File
+  build_frontend:
+    needs: [ checkout_repository, create_env_file]
+    name: Build Frontend
     runs-on: prod
     steps:
-      - name: Run Run
-        run: ./.github/workflows/run.yml
-        with:
-          runner: prod
+      - name: Build Dockerfile
+        run: docker-compose --env-file coin_library.env build --no-cache frontend
 
-
-
-
-
+  run_application:
+    needs: [ build_backend, build_frontend ]
+    name: Run Application
+    runs-on: prod
+    steps:
+      - name: Run Application
+        run: docker-compose --env-file coin_library.env up -d
