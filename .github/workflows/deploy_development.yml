@@ -6,20 +6,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  checkout:
+  deploy:
     name: Deploy Development
     runs-on: develop
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Create Environment File
-        uses: ./.github/workflows/create_env.yml
+        uses: ./.github/workflows/create_env
         with:
+          runner: develop
           env: development
       - name: Build Containers
-        uses: ./.github/workflows/build.yml
+        uses: ./.github/workflows/build
+        with:
+          runner: develop
       - name: Run Development
-        uses: ./.github/workflows/run.yml
+        uses: ./.github/workflows/run
+        with:
+          runner: develop
+
+
 
 
 

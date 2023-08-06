@@ -2,16 +2,22 @@ name: Build Application
 
 on:
   workflow_call:
+    inputs:
+      runner:
+        required: true
+        type: string
 
 jobs:
   build_backend:
     name: Build Backend
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Build Dockerfile
         run: docker-compose --env-file coin_library.env build --no-cache backend
 
   build_frontend:
     name: Build Frontend
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Build Dockerfile
         run: docker-compose --env-file coin_library.env build --no-cache frontend
