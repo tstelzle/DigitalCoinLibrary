@@ -1,4 +1,4 @@
-name: Create Env File
+name: Deploy
 
 on:
   workflow_call:
@@ -11,10 +11,19 @@ on:
         type: string
 
 jobs:
-  create_env_file:
+
+  checkout_repository:
+    name: Checkout Repository
     runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+  create_env_file:
+    needs: [ checkout_repository ]
     name: Create Environment File
     environment: ${{ inputs.env }}
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Create Environment File
         run: touch coin_library.env
@@ -83,3 +92,27 @@ jobs:
         env:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         run: echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> coin_library.env
+
+  build_backend:
+    needs: [ checkout_repository, create_env_file]
+    name: Build Backend
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Build Dockerfile
+        run: docker-compose --env-file coin_library.env build --no-cache backend
+
+  build_frontend:
+    needs: [ checkout_repository, create_env_file]
+    name: Build Frontend
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Build Dockerfile
+        run: docker-compose --env-file coin_library.env build --no-cache frontend
+
+  run_application:
+    needs: [ build_backend, build_frontend ]
+    name: Run Application
+    runs-on: self-hosted
+    steps:
+      - name: Run Application
+        run: docker-compose --env-file coin_library.env up -d
