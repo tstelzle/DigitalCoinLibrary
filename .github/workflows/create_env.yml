@@ -2,7 +2,7 @@ name: Create Env File
 
 on:
   workflow_call:
-    with:
+    inputs:
       runner:
         required: true
         type: string

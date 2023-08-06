@@ -13,16 +13,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Create Environment File
-        uses: ./.github/workflows/create_env
+        uses: ./.github/workflows/create_env.yml
         with:
           runner: develop
           env: development
       - name: Build Containers
-        uses: ./.github/workflows/build
+        uses: ./.github/workflows/build.yml
         with:
           runner: develop
       - name: Run Development
-        uses: ./.github/workflows/run
+        uses: ./.github/workflows/run.yml
         with:
           runner: develop
 
