@@ -14,6 +14,8 @@ ADD flutter_frontend frontend
 WORKDIR frontend
 
 RUN flutter config --enable-web
+RUN flutter clean
+RUN flutter pub get
 RUN flutter build web --web-renderer html --release --dart-define=API_URL=${API_URL} --dart-define=API_PORT=${API_PORT} --dart-define=GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
 
 FROM nginx:latest as DEPLOY_STAGE
