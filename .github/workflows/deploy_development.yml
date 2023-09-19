@@ -125,7 +125,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           platforms: linux/arm64
-          context: https://github.com/tstelzle/DigitalCoinLibrary.git#develop:flutter_frontend
           file: ./frontend.Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USER }}/dcl_frontend:latest
