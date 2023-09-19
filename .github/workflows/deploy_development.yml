@@ -90,7 +90,7 @@ jobs:
 
       - name: Add DOCKERHUB USER
         env:
-          GOOGLE_CLIENT_ID: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
         run: echo "DOCKERHUB_USER=$DOCKERHUB_USER" >> coin_library.env
 
   build_backend:
@@ -140,7 +140,9 @@ jobs:
     runs-on: develop
     steps:
       - name: Pull Frontend Docker Container
-        run: docker pull ${{ secrets.DOCKERHUB_USER }}/dcl_frontend:latest
+        env:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+        run: docker pull $DOCKERHUB_USER/dcl_frontend:latest
 
       - name: Run Application
         run: docker-compose --env-file coin_library.env -f docker-compose-develop.yml up -d
