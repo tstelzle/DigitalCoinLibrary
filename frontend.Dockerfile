@@ -8,9 +8,9 @@ ENV API_URL $API_URL
 ENV API_PORT $API_PORT
 ENV GOOGLE_CLIENT_ID $GOOGLE_CLIENT_ID
 
-WORKDIR frontend
-
 COPY --chmod=0755 flutter_frontend frontend
+
+WORKDIR frontend
 
 RUN flutter config --enable-web
 RUN flutter clean
