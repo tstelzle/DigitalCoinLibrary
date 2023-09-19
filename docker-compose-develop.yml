@@ -1,0 +1,65 @@
+version: "3.7"
+
+networks:
+  proxy-network:
+    name: ${PROXY_NETWORK}
+    external: true
+  coin-library-network:
+    name: coin-library-network
+    external: false
+
+services:
+  backend:
+    container_name: coin_library_backend
+    build:
+      dockerfile: backend.Dockerfile
+      context: .
+    ports:
+      - "9010:8080"
+    depends_on:
+      - database
+    environment:
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - SPRING_USERNAME=${SPRING_USERNAME}
+      - SPRING_PASSWORD=${SPRING_PASSWORD}
+      - FRONTEND_URL=${FRONTEND_URL}
+    networks:
+      - coin-library-network
+      - proxy-network
+
+  database:
+    container_name: coin_library_database
+    image: mariadb:10.9.3
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+    volumes:
+      - ${DATABASE_MOUNT}/data:/var/lib/mysql
+      - ${DATABASE_MOUNT}/conf:/etc/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - coin-library-network
+
+  frontend:
+    container_name: coin_library_frontend
+    image: ${DOCKERHUB_USER}/dcl_frontend:latest
+    ports:
+      - "9013:80"
+    networks:
+      -  proxy-network
+
+  selenium:
+    container_name: coin_library_selenium
+    image: selenium/standalone-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "4445:4444"
+      - "7900:7900"
+    networks:
+      - coin-library-network
