@@ -8,14 +8,9 @@ ENV API_URL $API_URL
 ENV API_PORT $API_PORT
 ENV GOOGLE_CLIENT_ID $GOOGLE_CLIENT_ID
 
-RUN useradd -ms /bin/bash flutteruser
-
 WORKDIR frontend
 
-ADD flutter_frontend frontend
-
-RUN chown -R flutteruser: /app
-USER flutteruser
+COPY --chmod=0755 flutter_frontend frontend
 
 RUN flutter config --enable-web
 RUN flutter clean
