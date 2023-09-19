@@ -1,4 +1,4 @@
-FROM fischerscode/flutter:master as BUILD_STAGE
+FROM cirrusci/flutter:stable as BUILD_STAGE
 
 ARG API_URL
 ARG API_PORT
@@ -8,7 +8,7 @@ ENV API_URL $API_URL
 ENV API_PORT $API_PORT
 ENV GOOGLE_CLIENT_ID $GOOGLE_CLIENT_ID
 
-COPY --chmod=0777 flutter_frontend frontend
+COPY flutter_frontend frontend
 
 WORKDIR frontend
 
