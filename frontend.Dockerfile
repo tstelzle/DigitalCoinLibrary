@@ -7,11 +7,15 @@ ARG GOOGLE_CLIENT_ID
 ENV API_URL $API_URL
 ENV API_PORT $API_PORT
 ENV GOOGLE_CLIENT_ID $GOOGLE_CLIENT_ID
-ENV HTTP_TIMEOUT 5000
+
+RUN useradd -ms /bin/bash flutteruser
+
+WORKDIR frontend
 
 ADD flutter_frontend frontend
 
-WORKDIR frontend
+RUN chown -R flutteruser: /app
+USER flutteruser
 
 RUN flutter config --enable-web
 RUN flutter clean
