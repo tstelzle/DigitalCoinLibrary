@@ -8,7 +8,7 @@ ENV API_URL $API_URL
 ENV API_PORT $API_PORT
 ENV GOOGLE_CLIENT_ID $GOOGLE_CLIENT_ID
 
-COPY --chmod=0755 flutter_frontend frontend
+COPY --chmod=0777 flutter_frontend frontend
 
 WORKDIR frontend
 
