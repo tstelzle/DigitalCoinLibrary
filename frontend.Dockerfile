@@ -1,4 +1,4 @@
-FROM cirrusci/flutter:master as BUILD_STAGE
+FROM fischerscode/flutter:master as BUILD_STAGE
 
 ARG API_URL
 ARG API_PORT
