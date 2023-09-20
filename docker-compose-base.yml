@@ -16,13 +16,6 @@ services:
       - "9010:8080"
     depends_on:
       - database
-    environment:
-      - MARIADB_USER=${MARIADB_USER}
-      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
-      - MARIADB_DATABASE=${MARIADB_DATABASE}
-      - SPRING_USERNAME=${SPRING_USERNAME}
-      - SPRING_PASSWORD=${SPRING_PASSWORD}
-      - FRONTEND_URL=${FRONTEND_URL}
     networks:
       - coin-library-network
       - proxy-network

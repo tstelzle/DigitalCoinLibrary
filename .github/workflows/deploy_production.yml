@@ -166,7 +166,7 @@ jobs:
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
 
   run_application:
-    needs: [ build_backend, build_frontend ]
+    needs: [ build_backend, build_frontend, create_env_file ]
     name: Run Application
     environment: production
     runs-on: prod
