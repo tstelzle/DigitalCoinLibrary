@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Frontend (development)" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--web-renderer html --dart-define=API_URL=localhost --dart-define=API_PORT=8080 --dart-define=GOOGLE_CLIENT_ID=test" />
+    <option name="envs">
+      <entry key="API_PORT" value="8080" />
+      <entry key="API_URL" value="http://localhost" />
+      <entry key="GOOGLE_CLIENT_ID" value="test" />
+    </option>
+    <option name="filePath" value="$PROJECT_DIR$/flutter_frontend/lib/main.dart" />
+    <method v="2" />
+  </configuration>
+</component>

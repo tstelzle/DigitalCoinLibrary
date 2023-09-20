@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_frontend/core/coin_api.dart';
 import 'package:flutter_frontend/core/constants.dart';
 
+import '../core/user_state.dart';
 import '../model/coin.dart';
 
 class CoinCard extends StatefulWidget {
@@ -14,6 +17,7 @@ class CoinCard extends StatefulWidget {
 
 class _CoinCardState extends State<CoinCard> {
   bool showBack = true;
+  CoinApi coinApi = CoinApi();
 
   @override
   Widget build(BuildContext context) {
@@ -28,27 +32,33 @@ class _CoinCardState extends State<CoinCard> {
   }
 
   Widget getCard() {
-    return AspectRatio(
-        aspectRatio: 1 / 1,
-        child: Card(
-            color: widget.coin.available ? Colors.green : Colors.red,
-            child: showBack
-                ? widget.coin.imagePath.isEmpty
-                    ? const FittedBox(child: Icon(Icons.do_disturb))
-                    : ClipOval(
-                        child: Image.network(widget.coin.imagePath,
-                            width: 540, height: 540, fit: BoxFit.cover,
-                            errorBuilder: (BuildContext context,
-                                Object exception, StackTrace? stackTrace) {
-                        return networkError();
-                      }))
-                : Image.network(
-                    generateUri("$frontImage${widget.coin.coinSize}", {})
-                        .toString(),
-                    fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                        Object exception, StackTrace? stackTrace) {
-                    return networkError();
-                  })));
+    return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
+      return AspectRatio(
+          aspectRatio: 1 / 1,
+          child: Card(
+              color: userState.user == ""
+                  ? Colors.blue
+                  : widget.coin.available
+                      ? Colors.green
+                      : Colors.red,
+              child: showBack
+                  ? widget.coin.imagePath.isEmpty
+                      ? const FittedBox(child: Icon(Icons.do_disturb))
+                      : ClipOval(
+                          child: Image.network(widget.coin.imagePath,
+                              width: 540, height: 540, fit: BoxFit.cover,
+                              errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                          return networkError();
+                        }))
+                  : Image.network(
+                      generateUri("$frontImage${widget.coin.coinSize}", {})
+                          .toString(),
+                      fit: BoxFit.cover, errorBuilder: (BuildContext context,
+                          Object exception, StackTrace? stackTrace) {
+                      return networkError();
+                    })));
+    });
   }
 
   Widget networkError() {
@@ -59,12 +69,38 @@ class _CoinCardState extends State<CoinCard> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          content: getCard(),
-          title: widget.coin.special
-              ? Text(widget.coin.name, softWrap: true)
-              : null,
-        );
+        return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
+          return AlertDialog(
+            content: Wrap(children: [
+              Column(children: <Widget>[
+                getCard(),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+                    child: userState.loggedIn == false
+                        ? ElevatedButton(
+                            onPressed: () => {print("TODO Open Email")},
+                            child: const Text("Benachrichtigen"))
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: widget.coin.available
+                                    ? Colors.red
+                                    : Colors.green),
+                            onPressed: () => {
+                                  // TODO alert if update was or was not successful
+                                  // TODO update Coin Value to available or not available
+                                  coinApi.updateCoin(widget.coin.id,
+                                      userState.user, widget.coin.available)
+                                },
+                            child: widget.coin.available
+                                ? const Text("Entfernen")
+                                : const Text("Hinzufügen")))
+              ])
+            ]),
+            title: widget.coin.special
+                ? Text(widget.coin.name, softWrap: true)
+                : null,
+          );
+        });
       },
     );
   }
