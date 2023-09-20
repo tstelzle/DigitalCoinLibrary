@@ -125,13 +125,6 @@ jobs:
           file: ./backend.Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USER }}/dcl_backend:${{ secrets.ENVIRONMENT }}
-          build-args: |
-            MARIADB_USER=${{ secrets.MARIADB_USER }}
-            MARIADB_PASSWORD=${{ secrets.MARIADB_PASSWORD }}
-            MARIADB_DATABASE=${{ secrets.MARIADB_DATABASE }}
-            SPRING_USERNAME=${{ secrets.SPRING_USERNAME }}
-            SPRING_PASSWORD=${{ secrets.SPRING_PASSWORD }}
-            FRONTEND_URL=${{ secrets.FRONTEND_URL }}
 
   build_frontend:
     name: Build And Push Frontend
