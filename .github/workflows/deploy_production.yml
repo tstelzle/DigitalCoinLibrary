@@ -88,26 +88,100 @@ jobs:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         run: echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> coin_library.env
 
+      - name: Add DOCKERHUB USER
+        env:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+        run: echo "DOCKERHUB_USER=$DOCKERHUB_USER" >> coin_library.env
+
+      - name: ADD Environment
+        env:
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        run: echo "ENVIRONMENT=$ENVIRONMENT" >> coin_library.env
+
   build_backend:
-    needs: [ checkout_repository, create_env_file]
-    name: Build Backend
-    runs-on: prod
+    name: Build And Push Backend
+    runs-on: ubuntu-latest
+    environment: production
     steps:
-      - name: Build Dockerfile
-        run: docker-compose --env-file coin_library.env build --no-cache backend
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build Backend Docker Container
+        uses: docker/build-push-action@v2
+        with:
+          platforms: linux/arm64,linux/amd64
+          file: ./backend.Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USER }}/dcl_backend:${{ secrets.ENVIRONMENT }}
+          build-args: |
+            MARIADB_USER=${{ secrets.MARIADB_USER }}
+            MARIADB_PASSWORD=${{ secrets.MARIADB_PASSWORD }}
+            MARIADB_DATABASE=${{ secrets.MARIADB_DATABASE }}
+            SPRING_USERNAME=${{ secrets.SPRING_USERNAME }}
+            SPRING_PASSWORD=${{ secrets.SPRING_PASSWORD }}
+            FRONTEND_URL=${{ secrets.FRONTEND_URL }}
 
   build_frontend:
-    needs: [ checkout_repository, create_env_file]
-    name: Build Frontend
-    runs-on: prod
+    name: Build And Push Frontend
+    runs-on: ubuntu-latest
+    environment: production
     steps:
-      - name: Build Dockerfile
-        run: docker-compose --env-file coin_library.env build --no-cache frontend
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build Frontend Docker Container
+        uses: docker/build-push-action@v2
+        with:
+          platforms: linux/arm64,linux/amd64
+          file: ./frontend.Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USER }}/dcl_frontend:${{ secrets.ENVIRONMENT }}
+          build-args: |
+            API_URL=${{ secrets.API_URL }}
+            API_PORT=${{ secrets.API_PORT }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
 
   run_application:
     needs: [ build_backend, build_frontend ]
     name: Run Application
+    environment: production
     runs-on: prod
     steps:
+      - name: Pull Frontend Docker Container
+        env:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        run: docker pull $DOCKERHUB_USER/dcl_frontend:$ENVIRONMENT
+
+      - name: Pull Backend Docker Container
+        env:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        run: docker pull $DOCKERHUB_USER/dcl_backend:$ENVIRONMENT
+
       - name: Run Application
         run: docker-compose --env-file coin_library.env up -d

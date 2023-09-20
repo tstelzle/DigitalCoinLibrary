@@ -11,9 +11,7 @@ networks:
 services:
   backend:
     container_name: coin_library_backend
-    build:
-      dockerfile: backend.Dockerfile
-      context: .
+    image: ${DOCKERHUB_USER}/dcl_backend:${ENVIRONMENT}
     ports:
       - "9010:8080"
     depends_on:
@@ -47,19 +45,8 @@ services:
 
   frontend:
     container_name: coin_library_frontend
-    image: ${DOCKERHUB_USER}/dcl_frontend:latest
+    image: ${DOCKERHUB_USER}/dcl_frontend:${ENVIRONMENT}
     ports:
       - "9013:80"
     networks:
       -  proxy-network
-
-  selenium:
-    container_name: coin_library_selenium
-    image: seleniarm/standalone-chromium:latest
-    volumes:
-      - /dev/shm:/dev/shm
-    ports:
-      - "4445:4444"
-      - "7900:7900"
-    networks:
-      - coin-library-network

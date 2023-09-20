@@ -6,7 +6,7 @@ include:
 services:
   selenium:
     container_name: coin_library_selenium
-    image: selenium/standalone-chrome
+    image: seleniarm/standalone-chromium:latest
     volumes:
       - /dev/shm:/dev/shm
     ports:
