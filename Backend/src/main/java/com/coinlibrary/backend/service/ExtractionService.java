@@ -28,7 +28,7 @@ public class ExtractionService {
         this.editionRepository = editionRepository;
     }
 
-    @Scheduled(initialDelay = 0, fixedRate = 24 * 60 * 60 * 1000)
+    @Scheduled(initialDelay = 6 * 60 * 60 * 1000, fixedRate = 24 * 60 * 60 * 1000)
     public void run() {
         wikipediaComponent.run();
         generateAllCoins();
