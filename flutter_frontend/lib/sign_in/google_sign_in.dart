@@ -23,8 +23,12 @@ class GoogleSignInWidget extends StatelessWidget {
       if (googleAuth.idToken != null) {
         bool verified =
             await authenticateUser(googleAuth.idToken!);
-        if (verified) {}
-      } else {}
+        if (verified) {
+          print("VERIFIED");
+        }
+      } else {
+        print("NO ID TOKEN");
+      }
       print(googleAuth.accessToken);
     } catch (error) {
       print('Error signing in with Google: $error');

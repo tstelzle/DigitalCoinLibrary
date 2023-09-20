@@ -53,16 +53,20 @@ public class GoogleTokenVerifier {
                 String familyName = (String) payload.get("family_name");
                 String givenName = (String) payload.get("given_name");
 
+                log.info("VALID ID TOKEN");
+
                 return true;
 
                 // Use or store profile information
                 // ...
 
             } else {
+                log.error("INVALID ID TOKEN");
                 System.out.println("Invalid ID token.");
                 return false;
             }
         } catch (GeneralSecurityException | IOException exception) {
+            log.error(exception.getMessage());
             return false;
         }
     }
