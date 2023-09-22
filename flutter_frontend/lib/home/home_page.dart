@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
               const Padding(
-                  padding: EdgeInsets.all(20.0), child: GoogleSignInWidget()),
+                  padding: EdgeInsets.all(20.0), child: GoogleSignInPage()),
               Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: ElevatedButton(
