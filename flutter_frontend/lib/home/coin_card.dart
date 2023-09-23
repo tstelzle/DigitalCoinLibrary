@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_frontend/core/coin_api.dart';
 import 'package:flutter_frontend/core/constants.dart';
+import 'package:http/http.dart';
 
 import '../core/user_state.dart';
 import '../model/coin.dart';
@@ -85,11 +86,8 @@ class _CoinCardState extends State<CoinCard> {
                                 backgroundColor: widget.coin.available
                                     ? Colors.red
                                     : Colors.green),
-                            onPressed: () => {
-                                  // TODO alert if update was or was not successful
-                                  // TODO update Coin Value to available or not available
-                                  coinApi.updateCoin(widget.coin.id,
-                                      userState.user, widget.coin.available)
+                            onPressed: () async => {
+                                 await _updateCoin(userState.userId)
                                 },
                             child: widget.coin.available
                                 ? const Text("Entfernen")
@@ -103,5 +101,16 @@ class _CoinCardState extends State<CoinCard> {
         });
       },
     );
+  }
+
+  _updateCoin(String userId) async {
+    Response response = await coinApi.updateCoin(widget.coin.id,
+        userId, !widget.coin.available);
+
+    if (response.statusCode == 200) {
+      widget.coin.available = response.body as bool;
+    } else {
+      // TODO alert if update was or was not successful
+    }
   }
 }

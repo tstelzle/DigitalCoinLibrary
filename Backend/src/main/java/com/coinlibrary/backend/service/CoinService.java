@@ -39,9 +39,9 @@ public class CoinService {
         }
     }
 
-    public long setAvailable(long coinId, String librarianName, boolean available) {
+    public long setAvailable(long coinId, String librarianEmail, boolean available) {
         Optional<Coin> coinOptional = coinRepository.findById(coinId);
-        Optional<Librarian> librarianOptional = librarianRepository.findByLibrarianName(librarianName);
+        Optional<Librarian> librarianOptional = librarianRepository.findByLibrarianEmail(librarianEmail);
 
         if (coinOptional.isPresent() && librarianOptional.isPresent()) {
             Coin coin = coinOptional.get();

@@ -1,20 +1,21 @@
 import 'dart:convert';
 
-import 'package:flutter_frontend/core/api.dart';
+import 'package:flutter_frontend/core/api.dart' as coin_api;
+import 'package:http/http.dart';
 
 import '../core/constants.dart' as constants;
 import '../model/coin.dart';
 
 class CoinApi {
   Future<List<Coin>> fetchCoinsByEdition(int editionId, int size,
-      String userName) async {
+      String userEmail) async {
     var queryParameters = {"editionId": "$editionId"};
     if (size > 0) {
       queryParameters["size"] = "$size";
     }
-    queryParameters["librarianName"] = userName;
+    queryParameters["librarianEmail"] = userEmail;
 
-    String body = await get(constants.coinPath, queryParameters);
+    String body = await coin_api.get(constants.coinPath, queryParameters);
 
     List<Coin> coinList = [];
     final List<dynamic> coinMap = jsonDecode(body);
@@ -26,15 +27,15 @@ class CoinApi {
     return coinList;
   }
 
-  Future<String> updateCoin(int coinId, String librarianName,
+  Future<Response> updateCoin(int coinId, String librarianName,
       bool available) async {
     var queryParameters = <String, String>{};
     queryParameters["coinId"] = "$coinId";
-    queryParameters["librarianName"] = librarianName;
+    queryParameters["librarianEmail"] = librarianName;
     queryParameters["available"] = "$available";
 
-    String body = await post(constants.coinPath, queryParameters);
+    Response response = await coin_api.post(constants.coinPath, queryParameters);
 
-    return body;
+    return response;
   }
 }

@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface LibrarianRepository<T, S> extends PagingAndSortingRepository<Librarian, Long>, JpaSpecificationExecutor<Librarian> {
 
-    public Optional<Librarian> findByLibrarianName(String librarianName);
+    public Optional<Librarian> findByLibrarianEmail(String librarianEmail);
 }

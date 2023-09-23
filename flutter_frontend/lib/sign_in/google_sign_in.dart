@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart' as web;
 
 import '../core/authentication.dart';
+import '../core/user_state.dart';
 
 const googleClientID = String.fromEnvironment("GOOGLE_CLIENT_ID");
 
@@ -39,26 +41,34 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
       return FutureBuilder<GoogleSignInAuthentication>(
           future: user!.authentication,
           builder: (context, auth) {
-            return Column(
-              children: [
-                const ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('ID Token'),
-                ),
-                SelectableText(auth.data?.idToken ?? ''),
-                const ListTile(
-                  leading: Icon(Icons.lock),
-                  title: Text('Access Token'),
-                ),
-                SelectableText(auth.data?.accessToken ?? ''),
-                FutureBuilder(
-                    future: authenticateUser(auth.data!.idToken!),
-                    builder: (context, verified) {
-                      return Text(
-                          verified.data! == true ? "Verified" : "Error");
-                    })
-              ],
-            );
+            return BlocBuilder<UserBloc, UserState>(
+                builder: (context, userState) {
+              return Center(
+                  child: FutureBuilder(
+                      // TODO spams backend
+                      future: authenticateUser(auth.data!.idToken!),
+                      builder: (context, verified) {
+                        if (verified.data! == true) {
+                          context
+                              .read<UserBloc>()
+                              .add(LoggedInUserEvent(verified.data!));
+                          context
+                              .read<UserBloc>()
+                              .add(UserUserEvent(user!.displayName!));
+                          context
+                              .read<UserBloc>()
+                              .add(IdUserEvent(user!.email));
+                          return GoogleUserCircleAvatar(identity: user!);
+                        } else {
+                          user == null;
+                          // TODO AlertDialog for failed login
+                          return const Icon(
+                            Icons.error,
+                            color: Colors.red,
+                          );
+                        }
+                      }));
+            });
           });
     }
   }

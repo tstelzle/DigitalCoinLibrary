@@ -36,7 +36,7 @@ class _EditionViewState extends State<EditionView>
           final crossAxisCount = (screenWidth / itemWidth).floor();
           return FutureBuilder<List<Coin>>(
               future: coinApi.fetchCoinsByEdition(
-                  widget.edition.id, filterState.coinSize, userState.user),
+                  widget.edition.id, filterState.coinSize, userState.userId),
               builder:
                   (BuildContext context, AsyncSnapshot<List<Coin>> snapshot) {
                 if (snapshot.hasData) {
@@ -61,7 +61,7 @@ class _EditionViewState extends State<EditionView>
                     return const SizedBox();
                   }
                 } else {
-                  return Column(children: const <Widget>[
+                  return const Column(children: <Widget>[
                     CircularProgressIndicator(color: Colors.black)
                   ]);
                 }

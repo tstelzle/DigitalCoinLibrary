@@ -16,7 +16,7 @@ Future<String> get(String api, Map<String, String> queryParameters) async {
   return response.body;
 }
 
-Future<String> post(String api, Map<String, String> queryParameters) async {
+Future<http.Response> post(String api, Map<String, String> queryParameters) async {
   final Uri uri = constants.generateUri(api, queryParameters);
   final response = await http.post(uri, headers: {
     HttpHeaders.contentTypeHeader: 'application/json',
@@ -25,6 +25,6 @@ Future<String> post(String api, Map<String, String> queryParameters) async {
     throw Exception('Failed to load coins');
   }
 
-  return response.body;
+  return response;
 }
 

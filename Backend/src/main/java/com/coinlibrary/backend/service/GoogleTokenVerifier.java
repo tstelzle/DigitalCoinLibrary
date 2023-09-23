@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -28,7 +29,7 @@ public class GoogleTokenVerifier {
         this.jsonFactory = GsonFactory.getDefaultInstance();
     }
 
-    public boolean verify(String idTokenString) {
+    public Optional<Payload> verify(String idTokenString) {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
                     .setAudience(Collections.singletonList(googleClientId))
@@ -38,36 +39,22 @@ public class GoogleTokenVerifier {
 
             GoogleIdToken idToken = verifier.verify(idTokenString);
             if (idToken != null) {
-                Payload payload = idToken.getPayload();
-
-                // Print user identifier
-                String userId = payload.getSubject();
-                System.out.println("User ID: " + userId);
-
-                // Get profile information from payload
-                String email = payload.getEmail();
-                boolean emailVerified = payload.getEmailVerified();
-                String name = (String) payload.get("name");
-                String pictureUrl = (String) payload.get("picture");
-                String locale = (String) payload.get("locale");
-                String familyName = (String) payload.get("family_name");
-                String givenName = (String) payload.get("given_name");
-
-                log.info("VALID ID TOKEN");
-
-                return true;
-
-                // Use or store profile information
-                // ...
-
+                return Optional.of(idToken.getPayload());
+//                String userId = payload.getSubject();
+//                String email = payload.getEmail();
+//                boolean emailVerified = payload.getEmailVerified();
+//                String name = (String) payload.get("name");
+//                String pictureUrl = (String) payload.get("picture");
+//                String locale = (String) payload.get("locale");
+//                String familyName = (String) payload.get("family_name");
+//                String givenName = (String) payload.get("given_name");
             } else {
                 log.error("INVALID ID TOKEN");
-                System.out.println("Invalid ID token.");
-                return false;
+                return Optional.empty();
             }
         } catch (GeneralSecurityException | IOException exception) {
             log.error(exception.getMessage());
-            return false;
+            return Optional.empty();
         }
     }
 }
