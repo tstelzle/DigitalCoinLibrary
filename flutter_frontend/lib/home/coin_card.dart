@@ -37,7 +37,7 @@ class _CoinCardState extends State<CoinCard> {
       return AspectRatio(
           aspectRatio: 1 / 1,
           child: Card(
-              color: userState.user == ""
+              color: userState.user == null
                   ? Colors.blue
                   : widget.coin.available
                       ? Colors.green
@@ -77,7 +77,7 @@ class _CoinCardState extends State<CoinCard> {
                 getCard(),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-                    child: userState.loggedIn == false
+                    child: userState.user == null
                         ? ElevatedButton(
                             onPressed: () => {print("TODO Open Email")},
                             child: const Text("Benachrichtigen"))
@@ -87,7 +87,7 @@ class _CoinCardState extends State<CoinCard> {
                                     ? Colors.red
                                     : Colors.green),
                             onPressed: () async => {
-                                 await _updateCoin(userState.userId)
+                                 await _updateCoin(userState.user!.email)
                                 },
                             child: widget.coin.available
                                 ? const Text("Entfernen")

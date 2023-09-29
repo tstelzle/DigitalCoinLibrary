@@ -16,8 +16,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
       var title = "Digital Coin Library";
-      if (userState.user != "") {
-        title = "${userState.user!}'s $title";
+      if (userState.user != null) {
+        title = "${userState.user!.displayName}'s $title";
       }
       return Scaffold(body: LibraryPage(title: title));
     });

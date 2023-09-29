@@ -4,6 +4,7 @@ import 'package:flutter_frontend/core/edition_api.dart';
 import 'package:flutter_frontend/core/filter_state.dart';
 import 'package:flutter_frontend/home/edition_view.dart';
 import 'package:flutter_frontend/home/filter_bar.dart';
+import 'package:flutter_frontend/sign_in/google_sign_in.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../model/edition.dart';
@@ -48,7 +49,8 @@ class _LibraryPageState extends State<LibraryPage> {
                           value: BlocProvider.of<FilterBloc>(context),
                           child: const FilterBar());
                     });
-              })
+              }),
+          const GoogleSignInPage()
         ]),
         body: BlocBuilder<FilterBloc, FilterState>(builder: (context, state) {
           return PagedListView<int, Edition>(

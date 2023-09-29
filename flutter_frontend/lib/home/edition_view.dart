@@ -36,7 +36,7 @@ class _EditionViewState extends State<EditionView>
           final crossAxisCount = (screenWidth / itemWidth).floor();
           return FutureBuilder<List<Coin>>(
               future: coinApi.fetchCoinsByEdition(
-                  widget.edition.id, filterState.coinSize, userState.userId),
+                  widget.edition.id, filterState.coinSize, userState.user?.email ?? ""),
               builder:
                   (BuildContext context, AsyncSnapshot<List<Coin>> snapshot) {
                 if (snapshot.hasData) {
