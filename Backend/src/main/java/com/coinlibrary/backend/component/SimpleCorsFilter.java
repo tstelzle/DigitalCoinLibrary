@@ -1,5 +1,6 @@
 package com.coinlibrary.backend.component;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class SimpleCorsFilter implements Filter {
 
     @Value("${app.frontend.url}")
@@ -22,6 +24,8 @@ public class SimpleCorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With,observe");
         response.setHeader("Access-Control-Max-Age", "3600");
+
+        log.info("Applying CORS Filter. " + request.getMethod());
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);

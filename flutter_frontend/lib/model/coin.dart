@@ -7,10 +7,10 @@ class Coin {
   final bool special;
   final String name;
   final int coinSize;
-  final bool available;
+  late bool available;
   final String imagePath;
 
-  const Coin(
+  Coin(
       {required this.id,
       required this.edition,
       required this.year,

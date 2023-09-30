@@ -1,34 +1,42 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-abstract class UserEvent {}
+import 'authentication.dart';
 
-class LoggedInUserEvent extends UserEvent {
-  final bool value;
-
-  LoggedInUserEvent(this.value);
-}
-
-class UserUserEvent extends UserEvent {
-  final String value;
-
-  UserUserEvent(this.value);
-}
+const googleClientID = String.fromEnvironment("GOOGLE_CLIENT_ID");
 
 // State
 class UserState {
-  // final bool special;
-  final bool loggedIn;
-  final String user;
+  GoogleSignInAccount? user;
 
-  UserState(this.loggedIn, this.user);
+  UserState(this.user);
 }
 
 // Bloc
-class UserBloc extends Bloc<UserEvent, UserState> {
-  UserBloc() : super(UserState(false, "")) {
-    on<LoggedInUserEvent>(
-        (event, emit) => emit(UserState(event.value, state.user)));
-    on<UserUserEvent>(
-        (event, emit) => emit(UserState(state.loggedIn, event.value)));
+class UserBloc extends Cubit<UserState> {
+  UserBloc() : super(UserState(null)) {
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      if (account != null) {
+        login(account);
+      }
+    });
+  }
+
+  final GoogleSignIn _googleSignIn =
+      GoogleSignIn(scopes: ['email', 'profile'], clientId: googleClientID);
+
+  void login(GoogleSignInAccount account) async {
+    final authentication = await account.authentication;
+    final idToken = authentication.idToken;
+    if (idToken != null) {
+      // TODO inject backend https://bloclibrary.dev/#/architecture
+      final backendAuthentication = await authenticateUser(idToken);
+
+      if (backendAuthentication != true) {
+        emit(UserState(null));
+      } else {
+        emit(UserState(account));
+      }
+    }
   }
 }

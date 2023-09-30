@@ -40,7 +40,7 @@ public class CoinController {
     }
 
     @GetMapping("/api/coin")
-    public ResponseEntity<?> getCoins(@RequestParam(required = false) Integer editionId, @RequestParam(required = false) Integer size, @RequestParam String librarianName) {
+    public ResponseEntity<?> getCoins(@RequestParam(required = false) Integer editionId, @RequestParam(required = false) Integer size, @RequestParam String librarianEmail) {
         Specification<Coin> spec = Specification.where(null);
 
         if (editionId != null) {
@@ -53,8 +53,8 @@ public class CoinController {
 
         List<Coin> coins = coinRepository.findAll(spec);
 
-        if (!"".equals(librarianName)) {
-            Optional<List<Long>> coinsAvailableOptional = librarianService.getAvailableCoinIds(librarianName);
+        if (!"".equals(librarianEmail)) {
+            Optional<List<Long>> coinsAvailableOptional = librarianService.getAvailableCoinIds(librarianEmail);
 
             if (coinsAvailableOptional.isPresent()) {
                 List<Long> coinsAvailable = coinsAvailableOptional.get();
@@ -70,14 +70,16 @@ public class CoinController {
         return new ResponseEntity<>(coins, HttpStatus.OK);
     }
 
+    // TODO CORS Error with post mapping
+    // https://stackoverflow.com/questions/64621885/spring-boot-cors-working-with-get-request-but-not-post-request
     @PostMapping("/api/coin")
-    public ResponseEntity<Void> postCoin(@RequestParam Long coinId, @RequestParam String librarianName, @RequestParam boolean available) {
-        long status = coinService.setAvailable(coinId, librarianName, available);
+    public ResponseEntity<Boolean> postCoin(@RequestParam Long coinId, @RequestParam String librarianEmail, @RequestParam boolean available) {
+        long status = coinService.setAvailable(coinId, librarianEmail, available);
 
         if (status == -1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(available, HttpStatus.OK);
     }
 }

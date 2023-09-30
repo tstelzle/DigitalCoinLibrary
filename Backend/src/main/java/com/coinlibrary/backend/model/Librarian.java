@@ -14,7 +14,7 @@ public class Librarian {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private UUID uuid;
-    private String librarianName;
+    private String librarianEmail;
     @ManyToMany
     @JoinTable(
             name = "librarian_coin",
@@ -22,6 +22,14 @@ public class Librarian {
             inverseJoinColumns = @JoinColumn(name = "coin_id")
     )
     private Set<Coin> coins = new HashSet<>();
+
+    public String getLibrarianEmail() {
+        return librarianEmail;
+    }
+
+    public void setLibrarianEmail(String librarianEmail) {
+        this.librarianEmail = librarianEmail;
+    }
 
     public Long getId() {
         return id;
@@ -37,14 +45,6 @@ public class Librarian {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    public String getLibrarianName() {
-        return librarianName;
-    }
-
-    public void setLibrarianName(String librarianName) {
-        this.librarianName = librarianName;
     }
 
     public Set<Coin> getCoins() {

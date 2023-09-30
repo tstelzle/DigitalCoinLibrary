@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_frontend/home/home.dart';
 import 'package:flutter_frontend/sign_in/google_sign_in.dart';
+
+import '../core/user_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,25 +15,30 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text("Digital Coin Library")),
-        body: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-              const Padding(
-                  padding: EdgeInsets.all(20.0), child: GoogleSignInWidget()),
-              Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const LibraryPage(title: "Alle Münzen")));
-                      },
-                      child: const Text("Alle Münzen")))
-            ])));
+    return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
+      return Scaffold(
+          body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GoogleSignInPage(userState: userState),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            LibraryPage(userState: userState)));
+                  },
+                  child: const Text("Bibliothek")),
+            )
+          ],
+        ),
+      ));
+    });
   }
 }
