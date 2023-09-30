@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_frontend/core/coin_api.dart';
@@ -37,6 +38,7 @@ class _CoinCardState extends State<CoinCard> {
       return AspectRatio(
           aspectRatio: 1 / 1,
           child: Card(
+              shape: const CircleBorder(),
               color: userState.user == null
                   ? Colors.blue
                   : widget.coin.available
@@ -45,13 +47,16 @@ class _CoinCardState extends State<CoinCard> {
               child: showBack
                   ? widget.coin.imagePath.isEmpty
                       ? const FittedBox(child: Icon(Icons.do_disturb))
-                      : ClipOval(
-                          child: Image.network(widget.coin.imagePath,
-                              width: 540, height: 540, fit: BoxFit.cover,
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace) {
-                          return networkError();
-                        }))
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                                fit: BoxFit.fitWidth,
+                                imageUrl: widget.coin.imagePath,
+                                width: 540,
+                                height: 540),
+                          ),
+                        )
                   : Image.network(
                       generateUri("$frontImage${widget.coin.coinSize}", {})
                           .toString(),
@@ -86,9 +91,8 @@ class _CoinCardState extends State<CoinCard> {
                                 backgroundColor: widget.coin.available
                                     ? Colors.red
                                     : Colors.green),
-                            onPressed: () async => {
-                                 await _updateCoin(userState.user!.email)
-                                },
+                            onPressed: () async =>
+                                {await _updateCoin(userState.user!.email)},
                             child: widget.coin.available
                                 ? const Text("Entfernen")
                                 : const Text("Hinzufügen")))
@@ -104,8 +108,8 @@ class _CoinCardState extends State<CoinCard> {
   }
 
   _updateCoin(String userId) async {
-    Response response = await coinApi.updateCoin(widget.coin.id,
-        userId, !widget.coin.available);
+    Response response = await coinApi.updateCoin(
+        widget.coin.id, userId, !widget.coin.available);
 
     if (response.statusCode == 200) {
       widget.coin.available = response.body as bool;
