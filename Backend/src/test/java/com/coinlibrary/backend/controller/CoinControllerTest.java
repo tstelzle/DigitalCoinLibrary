@@ -66,16 +66,16 @@ class CoinControllerTest {
         Librarian testUser = new Librarian();
         testUser.setId(1L);
         testUser.setUuid(UUID.randomUUID());
-        testUser.setLibrarianName("testUser");
+        testUser.setLibrarianEmail("testUser@testuser.de");
 
 
         when(coinRepository.findAll((Specification<Coin>) ArgumentMatchers.any())).thenReturn(List.of(coin1, coin2));
         when(coinRepository.findCoinsByLibrarians(testUser)).thenReturn(List.of(coin1));
-        when(librarianRepository.findByLibrarianName("testUser")).thenReturn(Optional.of(testUser));
+        when(librarianRepository.findByLibrarianEmail("testUser@testuser.de")).thenReturn(Optional.of(testUser));
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/coin")
                         .param("editionId", String.valueOf(1))
-                        .param("librarianName", "testUser"))
+                        .param("librarianEmail", "testUser@testuser.de"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
