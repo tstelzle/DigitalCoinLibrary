@@ -56,17 +56,18 @@ class _CoinCardState extends State<CoinCard> {
                               height: 540),
                         ),
                       )
-                : Image.network(
-                    generateUri("$frontImage${widget.coin.coinSize}", {})
-                        .toString(),
-                    fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                        Object exception, StackTrace? stackTrace) {
-                    return networkError();
-                  })));
-  }
-
-  Widget networkError() {
-    return const FittedBox(child: Icon(Icons.wifi_off));
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                        imageUrl: generateUri(
+                                "$frontImage${widget.coin.coinSize}", {})
+                            .toString(),
+                        fit: BoxFit.fitWidth,
+                        errorWidget: (context, url, error) =>
+                            const FittedBox(child: Icon(Icons.wifi_off)),
+                        width: 540,
+                        height: 540),
+                  )));
   }
 
   void _showImagePopup() {
