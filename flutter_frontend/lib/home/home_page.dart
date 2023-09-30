@@ -19,14 +19,23 @@ class _HomePageState extends State<HomePage> {
       return Scaffold(
           body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            GoogleSignInPage(userState: userState),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LibraryPage(userState: userState)));
-                },
-                child: const Text("Bibliothek"))
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GoogleSignInPage(userState: userState),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            LibraryPage(userState: userState)));
+                  },
+                  child: const Text("Bibliothek")),
+            )
           ],
         ),
       ));
