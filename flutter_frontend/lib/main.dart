@@ -7,7 +7,7 @@ import 'core/filter_state.dart';
 
 void main() {
   runApp(MultiBlocProvider(providers: [
-    BlocProvider<FilterBloc>(create: (context) => FilterBloc()),
+    BlocProvider<FilterCubit>(create: (context) => FilterCubit()),
     BlocProvider<UserBloc>(create: (context) => UserBloc())
   ], child: const MyApp()));
 }
