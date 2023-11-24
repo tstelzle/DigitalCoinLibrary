@@ -1,15 +1,19 @@
-name: Deploy Development
+name: Deploy
 
 on:
-  push:
-    branches: [ develop ]
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      environment-var:
+        required: true
+        type: string
+      secrets_environment-var:
+        required: true
+        type: string
 
 jobs:
-
   checkout_repository:
     name: Checkout Repository
-    runs-on: develop
+    runs-on: environment-var
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -17,8 +21,8 @@ jobs:
   create_env_file:
     needs: [ checkout_repository ]
     name: Create Environment File
-    environment: development
-    runs-on: develop
+    environment: secrets_environment-var
+    runs-on: environment-var
     steps:
       - name: Create Environment File
         run: touch coin_library.env
@@ -101,7 +105,7 @@ jobs:
   build_backend:
     name: Build And Push Backend
     runs-on: ubuntu-latest
-    environment: development
+    environment: secrets_environment-var
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -129,7 +133,7 @@ jobs:
   build_frontend:
     name: Build And Push Frontend
     runs-on: ubuntu-latest
-    environment: development
+    environment: secrets_environment-var
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -161,8 +165,8 @@ jobs:
   run_application:
     needs: [ build_backend, build_frontend, create_env_file ]
     name: Run Application
-    environment: development
-    runs-on: develop
+    environment: secrets_environment-var
+    runs-on: environment-var
     steps:
       - name: Pull Frontend Docker Container
         env:
@@ -177,4 +181,4 @@ jobs:
         run: docker pull $DOCKERHUB_USER/dcl_backend:$ENVIRONMENT
 
       - name: Run Application
-        run: docker-compose --env-file coin_library.env -f docker-compose-arm.yml up -d
+        run: docker-compose --env-file coin_library.env up -d
