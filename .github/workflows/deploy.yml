@@ -3,6 +3,9 @@ name: Deploy
 on:
   workflow_call:
     inputs:
+      runner:
+        required: true
+        type: string
       environment:
         required: true
         type: string
@@ -10,7 +13,8 @@ on:
 jobs:
   checkout_repository:
     name: Checkout Repository
-    runs-on: { { inputs.environment } }
+    runs-on: ${{ inputs.runner }}
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -18,7 +22,8 @@ jobs:
   create_env_file:
     needs: [ checkout_repository ]
     name: Create Environment File
-    runs-on: { { inputs.environment } }
+    runs-on: ${{ inputs.runner }}
+    environment: ${{ inputs.environment }}
     steps:
       - name: Create Environment File
         run: touch coin_library.env
@@ -101,6 +106,7 @@ jobs:
   build_backend:
     name: Build And Push Backend
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -128,6 +134,7 @@ jobs:
   build_frontend:
     name: Build And Push Frontend
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -159,7 +166,8 @@ jobs:
   run_application:
     needs: [ build_backend, build_frontend, create_env_file ]
     name: Run Application
-    runs-on: { { inputs.environment } }
+    runs-on: ${{ inputs.runner }}
+    environment: ${{ inputs.environment }}
     steps:
       - name: Pull Frontend Docker Container
         env:

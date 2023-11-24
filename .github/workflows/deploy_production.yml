@@ -8,9 +8,8 @@ on:
 jobs:
   deploy_production:
     name: Deploy Production
-    environment: production
     uses:
       tstelzle/DigitalCoinLibrary/.github/workflows/deploy.yml@main
     with:
-      environment: prod
-    secrets: inherit
+      runner: prod
+      environment: production
