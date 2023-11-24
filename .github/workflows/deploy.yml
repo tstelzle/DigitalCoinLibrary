@@ -3,17 +3,14 @@ name: Deploy
 on:
   workflow_call:
     inputs:
-      environment-var:
-        required: true
-        type: string
-      secrets_environment-var:
+      environment:
         required: true
         type: string
 
 jobs:
   checkout_repository:
     name: Checkout Repository
-    runs-on: environment-var
+    runs-on: { { inputs.environment } }
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -21,8 +18,7 @@ jobs:
   create_env_file:
     needs: [ checkout_repository ]
     name: Create Environment File
-    environment: secrets_environment-var
-    runs-on: environment-var
+    runs-on: { { inputs.environment } }
     steps:
       - name: Create Environment File
         run: touch coin_library.env
@@ -105,7 +101,6 @@ jobs:
   build_backend:
     name: Build And Push Backend
     runs-on: ubuntu-latest
-    environment: secrets_environment-var
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -133,7 +128,6 @@ jobs:
   build_frontend:
     name: Build And Push Frontend
     runs-on: ubuntu-latest
-    environment: secrets_environment-var
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -165,8 +159,7 @@ jobs:
   run_application:
     needs: [ build_backend, build_frontend, create_env_file ]
     name: Run Application
-    environment: secrets_environment-var
-    runs-on: environment-var
+    runs-on: { { inputs.environment } }
     steps:
       - name: Pull Frontend Docker Container
         env:

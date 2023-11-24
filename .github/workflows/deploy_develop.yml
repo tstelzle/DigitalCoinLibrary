@@ -8,8 +8,9 @@ on:
 jobs:
   deploy_develop:
     name: Deploy Develop
+    environment: development
     uses:
       tstelzle/DigitalCoinLibrary/.github/workflows/deploy.yml@develop
     with:
-      environment-var: develop
-      secrets_environment-var: development
+      environment: develop
+    secrets: inherit
