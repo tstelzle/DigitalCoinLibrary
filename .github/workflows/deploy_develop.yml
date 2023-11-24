@@ -13,3 +13,4 @@ jobs:
     with:
       runner: develop
       environment: development
+    secrets: inherit

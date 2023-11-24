@@ -13,3 +13,4 @@ jobs:
     with:
       runner: prod
       environment: production
+    secrets: inherit
