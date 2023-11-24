@@ -103,6 +103,11 @@ jobs:
           ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
         run: echo "ENVIRONMENT=$ENVIRONMENT" >> coin_library.env
 
+      - name: ADD DUCKDNSTOKEN
+        env:
+          ENVIRONMENT: ${{ secrets.DUCKDNSTOKEN }}
+        run: echo "DUCKDNSTOKEN=$DUCKDNSTOKEN" >> coin_library.env
+
   build_backend:
     name: Build And Push Backend
     runs-on: ubuntu-latest
