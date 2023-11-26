@@ -17,7 +17,7 @@ services:
     image: linuxserver/swag:1.26.0-ls123
     container_name: dcl-dev-swag
     volumes:
-      - ./letsencryptPi/config:/config/
+      - ./environment/config/nginx/proxy-confs:/config/nginx/proxy-confs
     ports:
       - "443:443"
     environment:
