@@ -16,6 +16,7 @@ services:
       - "9010:8080"
     depends_on:
       - database
+      - selenium
     environment:
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
@@ -54,7 +55,7 @@ services:
 
   selenium:
     container_name: coin_library_selenium
-    image: selenium/standalone-chrome
+    image: selenium/standalone-chrome:4.5.3
     volumes:
       - /dev/shm:/dev/shm
     ports:
