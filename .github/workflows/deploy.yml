@@ -187,4 +187,4 @@ jobs:
         run: docker pull $DOCKERHUB_USER/dcl_backend:$ENVIRONMENT
 
       - name: Run Application
-        run: docker-compose --env-file coin_library.env up -d
+        run: docker compose --env-file coin_library.env up -d

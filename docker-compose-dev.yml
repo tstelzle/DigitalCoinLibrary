@@ -14,7 +14,7 @@ services:
       - TOKEN=${DUCKDNSTOKEN}
 
   letsencrypt:
-    image: linuxserver/swag
+    image: linuxserver/swag:1.26.0-ls123
     container_name: dcl-dev-swag
     volumes:
       - ./letsencryptPi/config:/config/
@@ -30,3 +30,5 @@ services:
       - VALIDATION=duckdns
     depends_on:
       - duckdns
+    networks:
+      - proxy-network
