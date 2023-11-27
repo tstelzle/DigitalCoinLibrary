@@ -105,7 +105,7 @@ jobs:
 
       - name: ADD DUCKDNSTOKEN
         env:
-          ENVIRONMENT: ${{ secrets.DUCKDNSTOKEN }}
+          DUCKDNSTOKEN: ${{ secrets.DUCKDNSTOKEN }}
         run: echo "DUCKDNSTOKEN=$DUCKDNSTOKEN" >> coin_library.env
 
   build_backend:
