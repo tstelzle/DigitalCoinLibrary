@@ -30,8 +30,7 @@ public abstract class SeleniumExtraction {
         try {
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.setHeadless(true);
-            log.info("Connecting To Remote Selenium With: {}:{}", seleniumUrl, seleniumPort);
-            setWebDriver(new RemoteWebDriver(new URL(seleniumUrl + ":" + seleniumPort), chromeOptions));
+            setWebDriver(new RemoteWebDriver(new URL(seleniumUrl + ":" + seleniumPort + "/wd/hub"), chromeOptions));
         } catch (MalformedURLException ex) {
             log.info(ex.getMessage(), ex);
         }
