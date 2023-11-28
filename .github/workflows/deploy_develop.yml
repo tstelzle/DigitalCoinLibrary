@@ -6,10 +6,48 @@ on:
       - develop
 
 jobs:
-  deploy_develop:
-    name: Deploy Develop
+  create_env:
+    name: Create Environment
     uses:
-      tstelzle/DigitalCoinLibrary/.github/workflows/deploy.yml@develop
+      tstelzle/DigitalCoinLibrary/.github/workflows/add_env_variable.yml@develop
+    with:
+      runner: develop
+      environment: development
+      env_var_list: "[
+      MARIADB_USER,
+      MARIADB_PASSWORD,
+      MARIADB_ROOT_PASSWORD,
+      API_URL,
+      API_PORT,
+      MARIADB_DATABASE,
+      DATABASE_MOUNT,
+      PROXY_NETWORK,
+      SPRING_USERNAME,
+      SPRING_PASSWORD,
+      FRONTEND_URL,
+      DATABASE_MOUNT,
+      GOOGLE_CLIENT_ID,
+      DOCKERHUB_USER,
+      ENVIRONMENT,
+      DUCKDNSTOKEN
+      ]"
+    secrets: inherit
+
+  build_images:
+    name: Build Images
+    uses:
+      tstelzle/DigitalCoinLibrary/.github/workflows/build_images.yml@develop
+    with:
+      environment: development
+    secrets: inherit
+
+  start_application:
+    needs:
+      - create_env
+      - build_images
+    name: Start Application
+    uses:
+      tstelzle/DigitalCoinLibrary/.github/workflows/startup.yml@develop
     with:
       runner: develop
       environment: development
