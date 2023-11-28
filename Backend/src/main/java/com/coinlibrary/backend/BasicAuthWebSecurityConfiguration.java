@@ -1,4 +1,4 @@
-package com.coinlibrary.backend.security;
+package com.coinlibrary.backend;
 
 
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +66,8 @@ public class BasicAuthWebSecurityConfiguration {
     public CorsConfigurationSource apiConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList(this.frontendURL));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
