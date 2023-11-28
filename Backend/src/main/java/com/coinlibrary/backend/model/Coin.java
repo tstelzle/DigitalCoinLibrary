@@ -1,10 +1,12 @@
 package com.coinlibrary.backend.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
 @Entity
 @Table(name = "coin")
 public class Coin {
@@ -33,68 +35,32 @@ public class Coin {
 
     }
 
-    public Set<Librarian> getLibrarians() {
-        return librarians;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
-    }
-
-    public boolean isAvailable() {
-        return available;
     }
 
     public void setAvailable(boolean available) {
         this.available = available;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Edition getEdition() {
-        return edition;
     }
 
     public void setEdition(Edition edition) {
         this.edition = edition;
     }
 
-    public boolean isSpecial() {
-        return special;
-    }
-
     public void setSpecial(boolean special) {
         this.special = special;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public int getSize() {
-        return size;
-    }
-
     public void setSize(int size) {
         this.size = size;
-    }
-
-    public int getYear() {
-        return year;
     }
 
     public void setYear(int year) {

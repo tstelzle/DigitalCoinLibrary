@@ -1,11 +1,13 @@
 package com.coinlibrary.backend.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "librarians")
 public class Librarian {
@@ -24,32 +26,16 @@ public class Librarian {
     )
     private Set<Coin> coins = new HashSet<>();
 
-    public String getLibrarianEmail() {
-        return librarianEmail;
-    }
-
     public void setLibrarianEmail(String librarianEmail) {
         this.librarianEmail = librarianEmail;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    public Set<Coin> getCoins() {
-        return coins;
     }
 
     public void setCoins(Set<Coin> coins) {

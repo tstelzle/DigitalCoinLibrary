@@ -1,5 +1,6 @@
 package com.coinlibrary.backend.component;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -12,15 +13,12 @@ import java.net.URL;
 @Slf4j
 public abstract class SeleniumExtraction {
 
+    @Getter
     private WebDriver webDriver;
     @Value("${app.selenium.url}")
     private String seleniumUrl;
     @Value("${app.selenium.port}")
     private String seleniumPort;
-
-    public WebDriver getWebDriver() {
-        return webDriver;
-    }
 
     public void setWebDriver(WebDriver webDriver) {
         this.webDriver = webDriver;

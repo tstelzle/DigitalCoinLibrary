@@ -2,8 +2,10 @@ package com.coinlibrary.backend.model;
 
 import com.coinlibrary.backend.util.CountryLookUp;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 
+@Getter
 @Entity
 @Table(name = "edition")
 @Embeddable
@@ -22,40 +24,20 @@ public class Edition {
 
     }
 
-    public String getCountry() {
-        return country;
-    }
-
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public int getEdition() {
-        return edition;
     }
 
     public void setEdition(int edition) {
         this.edition = edition;
     }
 
-    public int getYearFrom() {
-        return yearFrom;
-    }
-
     public void setYearFrom(int year_from) {
         this.yearFrom = year_from;
     }
 
-    public int getYearTo() {
-        return yearTo;
-    }
-
     public void setYearTo(int year_to) {
         this.yearTo = year_to;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public void setId(int id) {
