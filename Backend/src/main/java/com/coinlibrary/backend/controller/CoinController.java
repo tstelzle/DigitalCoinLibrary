@@ -33,7 +33,7 @@ public class CoinController {
     }
 
     @GetMapping("/api/coin/page/{pageKey}")
-    public ResponseEntity<?> getPagedCoins(@PathVariable Integer pageKey) {
+    public ResponseEntity<?> getPagedCoins(@PathVariable("pageKey") Integer pageKey) {
         org.springframework.data.domain.Pageable pageable = PageRequest.of(pageKey, 50);
         Page<Coin> coins = coinRepository.findAll(pageable);
 

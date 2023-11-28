@@ -30,7 +30,7 @@ public class EditionController {
     }
 
     @GetMapping("/api/edition/page/{pageKey}")
-    public ResponseEntity<?> getPagedEditions(@PathVariable Integer pageKey, @RequestParam(required = false) String country, @RequestParam(required = false) Boolean special) {
+    public ResponseEntity<?> getPagedEditions(@PathVariable("pageKey") Integer pageKey, @RequestParam(required = false) String country, @RequestParam(required = false) Boolean special) {
         org.springframework.data.domain.Pageable pageable = PageRequest.of(pageKey, 5);
 
         Specification<Edition> spec = Specification.where(null);

@@ -18,7 +18,7 @@ import java.io.InputStream;
 public class FrontImageController {
 
     @GetMapping("/api/frontImage/{name}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String name) throws IOException {
+    public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {
         InputStream in = getClass().getResourceAsStream("/coin_fronts/" + name + ".png");
         if (in == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
