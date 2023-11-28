@@ -55,7 +55,7 @@ services:
 
   selenium:
     container_name: coin_library_selenium
-    image: selenium/standalone-chrome:110.0-chromedriver-110.0-grid-4.8.1-20230306
+    image: selenium/standalone-chrome:4.15.0
     volumes:
       - /dev/shm:/dev/shm
     ports:
