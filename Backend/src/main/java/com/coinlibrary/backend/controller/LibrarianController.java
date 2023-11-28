@@ -23,7 +23,7 @@ public class LibrarianController {
     }
 
     @GetMapping("/api/user")
-    public ResponseEntity<List<Long>> getAvailableCoins(@RequestParam String librarianName) {
+    public ResponseEntity<List<Long>> getAvailableCoins(@RequestParam(name = "librarianName") String librarianName) {
         Optional<List<Long>> availableCoinIdsOptionals = librarianService.getAvailableCoinIds(librarianName);
         return availableCoinIdsOptionals.map(integers -> new ResponseEntity<>(integers, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST));
     }

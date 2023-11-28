@@ -41,7 +41,7 @@ public class CoinController {
     }
 
     @GetMapping("/api/coin")
-    public ResponseEntity<?> getCoins(@RequestParam(required = false) Integer editionId, @RequestParam(required = false) Integer size, @RequestParam String librarianEmail) {
+    public ResponseEntity<?> getCoins(@RequestParam(name = "editionId", required = false) Integer editionId, @RequestParam(name = "size", required = false) Integer size, @RequestParam(name = "librarianEmail") String librarianEmail) {
         Specification<Coin> spec = Specification.where(null);
 
         if (editionId != null) {

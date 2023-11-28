@@ -27,7 +27,7 @@ public class GoogleSignInController {
 
 
     @GetMapping("/api/authenticate")
-    public ResponseEntity<?> signInWithGoogle(@RequestParam String idToken) {
+    public ResponseEntity<?> signInWithGoogle(@RequestParam(name = "idToken") String idToken) {
         Optional<Payload> optionalPayload = googleTokenVerifier.verify(idToken);
         if (optionalPayload.isPresent()) {
             Payload payload = optionalPayload.get();
