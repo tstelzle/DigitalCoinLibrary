@@ -12,7 +12,7 @@ on:
 
 jobs:
   run_application:
-    name: Run Application
+    name: Start Application
     runs-on: ${{ inputs.runner }}
     environment: ${{ inputs.environment }}
     steps:

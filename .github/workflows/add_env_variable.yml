@@ -24,7 +24,7 @@ jobs:
 
   create_env_file:
     needs: checkout_repository
-    name: Create Environment File
+    name: Create File
     runs-on: ${{ inputs.runner }}
     steps:
     - name: Create Environment File
@@ -32,10 +32,11 @@ jobs:
 
   add_env_variable:
     needs: create_env_file
-    name: Add Environment Variable
+    name: Add Variable
     runs-on: ${{ inputs.runner }}
     environment: ${{ inputs.environment }}
     strategy:
+      max-parallel: 5
       matrix:
         env_var: ${{ fromJSON(inputs.env_var_list) }}
     steps:
