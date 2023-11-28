@@ -1,6 +1,7 @@
 package com.coinlibrary.backend.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -57,11 +58,13 @@ public class Librarian {
 
     public void addCoin(Coin coin) {
         coins.add(coin);
-        coin.getLibrarians().add(this);
+        coin.getLibrarians()
+                .add(this);
     }
 
     public void removeCoin(Coin coin) {
         coins.remove(coin);
-        coin.getLibrarians().remove(this);
+        coin.getLibrarians()
+                .remove(this);
     }
 }

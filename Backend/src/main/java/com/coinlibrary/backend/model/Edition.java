@@ -1,8 +1,8 @@
 package com.coinlibrary.backend.model;
 
 import com.coinlibrary.backend.util.CountryLookUp;
+import jakarta.persistence.*;
 
-import javax.persistence.*;
 
 @Entity
 @Table(name = "edition")
@@ -17,6 +17,7 @@ public class Edition {
     private int edition;
     private int yearFrom;
     private int yearTo;
+
     public Edition() {
 
     }
@@ -69,10 +70,8 @@ public class Edition {
 
         String year = "";
         if (!isSpecial) {
-            if (getYearTo() == 2100 ||
-                    getYearTo() == 0) {
-                if (getYearFrom() == 1800 ||
-                        getYearFrom() == 0) {
+            if (getYearTo() == 2100 || getYearTo() == 0) {
+                if (getYearFrom() == 1800 || getYearFrom() == 0) {
                     year = " ab 1999";
                 } else {
                     year = String.format(" ab %d", getYearFrom());

@@ -11,6 +11,10 @@ import java.util.Optional;
 
 public interface CoinRepository<T, S> extends PagingAndSortingRepository<Coin, Long>, JpaSpecificationExecutor<Coin> {
 
+    Coin save(Coin coin);
+
+    Optional<Coin> findById(long id);
+
     public Optional<Coin> findByEditionAndSizeAndSpecialAndName(Edition edition, int size, boolean special, String name);
 
     public Optional<Coin> findByEditionAndSizeAndSpecial(Edition edition, int size, boolean special);
