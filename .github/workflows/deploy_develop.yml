@@ -13,24 +13,24 @@ jobs:
     with:
       runner: develop
       environment: development
-      env_var_list: "[
-      MARIADB_USER,
-      MARIADB_PASSWORD,
-      MARIADB_ROOT_PASSWORD,
-      API_URL,
-      API_PORT,
-      MARIADB_DATABASE,
-      DATABASE_MOUNT,
-      PROXY_NETWORK,
-      SPRING_USERNAME,
-      SPRING_PASSWORD,
-      FRONTEND_URL,
-      DATABASE_MOUNT,
-      GOOGLE_CLIENT_ID,
-      DOCKERHUB_USER,
-      ENVIRONMENT,
-      DUCKDNSTOKEN
-      ]"
+      env_var_list: '[
+      "MARIADB_USER",
+      "MARIADB_PASSWORD",
+      "MARIADB_ROOT_PASSWORD",
+      "API_URL",
+      "API_PORT",
+      "MARIADB_DATABASE",
+      "DATABASE_MOUNT",
+      "PROXY_NETWORK",
+      "SPRING_USERNAME",
+      "SPRING_PASSWORD",
+      "FRONTEND_URL",
+      "DATABASE_MOUNT",
+      "GOOGLE_CLIENT_ID",
+      "DOCKERHUB_USER",
+      "ENVIRONMENT",
+      "DUCKDNSTOKEN"
+      ]'
     secrets: inherit
 
   build_images:
