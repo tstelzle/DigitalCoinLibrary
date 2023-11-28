@@ -36,7 +36,6 @@ jobs:
     runs-on: ${{ inputs.runner }}
     environment: ${{ inputs.environment }}
     strategy:
-      max-parallel: 5
       matrix:
         env_var: ${{ fromJSON(inputs.env_var_list) }}
     steps:
