@@ -74,7 +74,7 @@ public class CoinController {
     // TODO CORS Error with post mapping
     // https://stackoverflow.com/questions/64621885/spring-boot-cors-working-with-get-request-but-not-post-request
     @PostMapping("/api/coin")
-    public ResponseEntity<Boolean> postCoin(@RequestParam Long coinId, @RequestParam String librarianEmail, @RequestParam boolean available) {
+    public ResponseEntity<Boolean> postCoin(@RequestParam(name = "coinID") Long coinId, @RequestParam(name = "librarianEmail") String librarianEmail, @RequestParam(name = "available") boolean available) {
         long status = coinService.setAvailable(coinId, librarianEmail, available);
 
         if (status == -1) {
