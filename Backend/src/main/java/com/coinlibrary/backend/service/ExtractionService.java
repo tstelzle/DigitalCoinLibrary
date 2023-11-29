@@ -47,7 +47,7 @@ public class ExtractionService {
                     coin.setSize(coinSize);
                     coin.setSpecial(false);
 
-                    coinService.updateOrInsertCoin(coin);
+                    coinService.updateOrInsert(coin);
                 }
             }
         }

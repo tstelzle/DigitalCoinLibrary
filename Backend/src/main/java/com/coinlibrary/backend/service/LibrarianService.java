@@ -24,7 +24,7 @@ public class LibrarianService {
         this.coinRepository = coinRepository;
     }
 
-    public void updateOrInsertLibrarian(Librarian librarian) {
+    public void updateOrInsert(Librarian librarian) {
         Optional<Librarian> optionalLibrarian = librarianRepository.findByLibrarianEmail(librarian.getLibrarianEmail());
         if (optionalLibrarian.isPresent()) {
             Librarian dbLibrarian = optionalLibrarian.get();

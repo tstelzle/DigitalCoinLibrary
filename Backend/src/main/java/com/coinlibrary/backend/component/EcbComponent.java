@@ -149,7 +149,7 @@ public class EcbComponent extends SeleniumExtraction {
                             }
                             if (optionalEdition.isPresent()) {
                                 coin.setEdition(optionalEdition.get());
-                                coinService.updateOrInsertCoin(coin);
+                                coinService.updateOrInsert(coin);
                             }
                         }
                     } else {
@@ -160,7 +160,7 @@ public class EcbComponent extends SeleniumExtraction {
                     Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(countryAbbreviations.get(country), 0);
                     if (optionalEdition.isPresent()) {
                         coin.setEdition(optionalEdition.get());
-                        coinService.updateOrInsertCoin(coin);
+                        coinService.updateOrInsert(coin);
                     } else {
                         log.info("Edition not found.");
                     }
@@ -204,7 +204,7 @@ public class EcbComponent extends SeleniumExtraction {
                             Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(countryAbbreviation, 0);
                             if (optionalEdition.isPresent()) {
                                 coin.setEdition(optionalEdition.get());
-                                coinService.updateOrInsertCoin(coin);
+                                coinService.updateOrInsert(coin);
                             }
                         } else {
                             log.info("Country in pictureElement String not found: {}", pictureElement);
@@ -215,7 +215,7 @@ public class EcbComponent extends SeleniumExtraction {
                     Optional<Edition> optionalEdition = editionRepository.findByCountryAndEdition(countryAbbreviations.get(country), 0);
                     if (optionalEdition.isPresent()) {
                         coin.setEdition(optionalEdition.get());
-                        coinService.updateOrInsertCoin(coin);
+                        coinService.updateOrInsert(coin);
                     } else {
                         log.info("Edition not found.");
                     }
@@ -268,7 +268,7 @@ public class EcbComponent extends SeleniumExtraction {
                         if (optionalCoin.isPresent()) {
                             Coin coin = optionalCoin.get();
                             coin.setImagePath(pictureUrl);
-                            coinService.updateOrInsertCoin(coin);
+                            coinService.updateOrInsert(coin);
                         } else {
                             log.error("Coin is null: {};{}", edition.getCountry(), coinValueInteger);
                         }

@@ -54,7 +54,7 @@ public class WikipediaComponent extends SeleniumExtraction {
     private final EditionService editionService;
 
     @Autowired
-    public WikipediaComponent(CoinService coinService, EditionRepository editionRepository, EditionService editionService) {
+    public WikipediaComponent(CoinService coinService, EditionRepository<Edition, Integer> editionRepository, EditionService editionService) {
         this.editionRepository = editionRepository;
         this.coinService = coinService;
         this.editionService = editionService;
@@ -65,7 +65,10 @@ public class WikipediaComponent extends SeleniumExtraction {
         init();
         getEditions(getEuroCountryLinks());
         addMissingYearsForEdition();
-//        getSpecialCoins(getEuroCountryLinks());
+        /*
+        Done with the @EcbComponent
+        getSpecialCoins(getEuroCountryLinks());
+         */
         quit();
     }
 
@@ -257,7 +260,7 @@ public class WikipediaComponent extends SeleniumExtraction {
                     }
                     specialCoin.setName(tableRowEntries.get(3).getText());
                 }
-                coinService.updateOrInsertCoin(specialCoin);
+                coinService.updateOrInsert(specialCoin);
             }
         }
     }

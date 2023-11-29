@@ -23,7 +23,7 @@ public class CoinService {
         this.librarianRepository = librarianRepository;
     }
 
-    public void updateOrInsertCoin(Coin coin) {
+    public void updateOrInsert(Coin coin) {
         Optional<Coin> optionalCoin = coinRepository.findByEditionAndSizeAndSpecialAndName(coin.getEdition(), coin.getSize(), coin.isSpecial(), coin.getName());
         if (optionalCoin.isPresent()) {
             Coin dbCoin = optionalCoin.get();

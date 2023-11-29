@@ -34,7 +34,7 @@ public class GoogleSignInController {
             Librarian librarian = new Librarian();
             librarian.setLibrarianEmail(payload.getEmail());
 
-            librarianService.updateOrInsertLibrarian(librarian);
+            librarianService.updateOrInsert(librarian);
 
             return new ResponseEntity<>(true, HttpStatus.OK);
         } else {
