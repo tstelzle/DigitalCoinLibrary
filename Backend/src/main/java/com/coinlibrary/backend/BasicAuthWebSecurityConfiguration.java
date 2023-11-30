@@ -35,8 +35,8 @@ public class BasicAuthWebSecurityConfiguration {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors((cors) -> cors.configurationSource(apiConfigurationSource()))
+    public SecurityFilterChain securityfilterChain(HttpSecurity http) throws Exception {
+        return http.cors((cors) -> cors.configurationSource(apiConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET)
                         .permitAll()
@@ -44,8 +44,8 @@ public class BasicAuthWebSecurityConfiguration {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .oauth2Login(Customizer.withDefaults());
-        return http.build();
+                .oauth2Login(Customizer.withDefaults())
+                .build();
     }
 
     @Bean
