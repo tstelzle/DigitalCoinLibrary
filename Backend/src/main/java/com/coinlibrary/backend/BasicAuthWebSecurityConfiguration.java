@@ -65,7 +65,7 @@ public class BasicAuthWebSecurityConfiguration {
 
     public CorsConfigurationSource apiConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList(this.frontendURL));
+        configuration.setAllowedOrigins(Arrays.asList(this.frontendURL, "https://accounts.google.com"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
