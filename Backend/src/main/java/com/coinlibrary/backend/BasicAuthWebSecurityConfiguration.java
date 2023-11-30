@@ -44,7 +44,7 @@ public class BasicAuthWebSecurityConfiguration {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .httpBasic(Customizer.withDefaults());
+                .oauth2Login(Customizer.withDefaults());
         return http.build();
     }
 

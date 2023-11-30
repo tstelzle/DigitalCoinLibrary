@@ -27,6 +27,7 @@ jobs:
       "FRONTEND_URL",
       "DATABASE_MOUNT",
       "GOOGLE_CLIENT_ID",
+      "GOOGLE_CLIENT_SECRET",
       "DOCKERHUB_USER",
       "ENVIRONMENT"
       ]'

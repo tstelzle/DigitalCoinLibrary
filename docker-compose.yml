@@ -25,6 +25,7 @@ services:
       - SPRING_PASSWORD=${SPRING_PASSWORD}
       - FRONTEND_URL=${FRONTEND_URL}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     networks:
       - coin-library-network
       - proxy-network
