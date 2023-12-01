@@ -1,5 +1,6 @@
 package com.coinlibrary.backend.controller;
 
+import com.coinlibrary.backend.model.Librarian;
 import com.coinlibrary.backend.service.LibrarianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,17 @@ public class LibrarianController {
         this.librarianService = librarianService;
     }
 
+
+    // TODO change api to librarian
     @GetMapping("/api/user")
     public ResponseEntity<List<Long>> getAvailableCoins(@RequestParam(name = "librarianName") String librarianName) {
         Optional<List<Long>> availableCoinIdsOptionals = librarianService.getAvailableCoinIds(librarianName);
-        return availableCoinIdsOptionals.map(integers -> new ResponseEntity<>(integers, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST));
+        return availableCoinIdsOptionals.map(integers -> new ResponseEntity<>(integers, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST));
+    }
+
+    @GetMapping("/api/user/info/")
+    public ResponseEntity<Optional<Librarian>> getLibrarianInfo(@RequestParam(name = "librarianName") String librarianName) {
+        return new ResponseEntity<>(librarianService.getLibrarianInfo(librarianName), HttpStatus.OK);
     }
 }

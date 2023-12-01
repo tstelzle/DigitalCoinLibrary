@@ -51,4 +51,10 @@ public class LibrarianService {
             return Optional.empty();
         }
     }
+
+    public Optional<Librarian> getLibrarianInfo(String librarianEmail) {
+        Optional<Librarian> optionalLibrarian = librarianRepository.findByLibrarianEmail(librarianEmail);
+
+        return optionalLibrarian;
+    }
 }
