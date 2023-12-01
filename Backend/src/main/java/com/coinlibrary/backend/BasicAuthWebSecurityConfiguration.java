@@ -36,6 +36,10 @@ public class BasicAuthWebSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityfilterChain(HttpSecurity http) throws Exception {
         return http.cors((cors) -> cors.configurationSource(apiConfigurationSource()))
+                /* TODO
+                    CSRF Should be enabled (random token at the end of each updating message)
+                    https://www.baeldung.com/spring-security-csrf
+                 */
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST)
                         .authenticated()
@@ -73,26 +77,4 @@ public class BasicAuthWebSecurityConfiguration {
 
         return source;
     }
-
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository() {
-//        return new InMemoryClientRegistrationRepository(this.googleClientRegistration());
-//    }
-//
-//    private ClientRegistration googleClientRegistration() {
-//        return ClientRegistration.withRegistrationId("google")
-//                .clientId("google-client-id")
-//                .clientSecret("google-client-secret")
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-//                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
-//                .scope("openid", "profile", "email", "address", "phone")
-//                .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")
-//                .tokenUri("https://www.googleapis.com/oauth2/v4/token")
-//                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
-//                .userNameAttributeName(IdTokenClaimNames.SUB)
-//                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
-//                .clientName("Google")
-//                .build();
-//    }
 }
