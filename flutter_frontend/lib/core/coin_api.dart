@@ -8,12 +8,12 @@ import '../model/coin.dart';
 
 class CoinApi {
   Future<List<Coin>> fetchCoinsByEdition(int editionId, int size,
-      String userEmail) async {
+      String librarianIdentification) async {
     var queryParameters = {"editionId": "$editionId"};
     if (size > 0) {
       queryParameters["size"] = "$size";
     }
-    queryParameters["librarianEmail"] = userEmail;
+    queryParameters["librarianIdentification"] = librarianIdentification;
 
     String body = await coin_api.get(constants.coinPath, queryParameters);
 
@@ -27,11 +27,11 @@ class CoinApi {
     return coinList;
   }
 
-  Future<Response> updateCoin(int coinId, String librarianName,
+  Future<Response> updateCoin(int coinId, String librarianIdentification,
       bool available) async {
     var queryParameters = <String, String>{};
     queryParameters["coinId"] = "$coinId";
-    queryParameters["librarianEmail"] = librarianName;
+    queryParameters["librarianIdentification"] = librarianIdentification;
     queryParameters["available"] = "$available";
 
     Response response = await coin_api.post(constants.coinPath, queryParameters);

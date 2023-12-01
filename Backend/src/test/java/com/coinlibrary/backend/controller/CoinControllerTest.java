@@ -75,7 +75,7 @@ class CoinControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/coin")
                         .param("editionId", String.valueOf(1))
-                        .param("librarianEmail", "testUser@testuser.de"))
+                        .param("librarianIdentification", "testUser@testuser.de"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 

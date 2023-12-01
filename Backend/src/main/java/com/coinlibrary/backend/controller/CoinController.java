@@ -40,7 +40,7 @@ public class CoinController {
     }
 
     @GetMapping("/api/coin")
-    public ResponseEntity<?> getCoins(@RequestParam(name = "editionId", required = false) Integer editionId, @RequestParam(name = "size", required = false) Integer size, @RequestParam(name = "librarianEmail") String librarianEmail) {
+    public ResponseEntity<?> getCoins(@RequestParam(name = "editionId", required = false) Integer editionId, @RequestParam(name = "size", required = false) Integer size, @RequestParam(name = "librarianIdentification") String librarianIdentification) {
         Specification<Coin> spec = Specification.where(null);
 
         if (editionId != null) {
@@ -53,8 +53,8 @@ public class CoinController {
 
         List<Coin> coins = coinRepository.findAll(spec);
 
-        if (!"".equals(librarianEmail)) {
-            Optional<List<Long>> coinsAvailableOptional = librarianService.getAvailableCoinIds(librarianEmail);
+        if (!"".equals(librarianIdentification)) {
+            Optional<List<Long>> coinsAvailableOptional = librarianService.getAvailableCoinIds(librarianIdentification);
 
             if (coinsAvailableOptional.isPresent()) {
                 List<Long> coinsAvailable = coinsAvailableOptional.get();
@@ -73,8 +73,8 @@ public class CoinController {
     // TODO CORS Error with post mapping
     // https://stackoverflow.com/questions/64621885/spring-boot-cors-working-with-get-request-but-not-post-request
     @PostMapping("/api/coin")
-    public ResponseEntity<Boolean> postCoin(@RequestParam(name = "coinID") Long coinId, @RequestParam(name = "librarianEmail") String librarianEmail, @RequestParam(name = "available") boolean available) {
-        long status = coinService.setAvailable(coinId, librarianEmail, available);
+    public ResponseEntity<Boolean> postCoin(@RequestParam(name = "coinID") Long coinId, @RequestParam(name = "librarianIdentification") String librarianIdentification, @RequestParam(name = "available") boolean available) {
+        long status = coinService.setAvailable(coinId, librarianIdentification, available);
 
         if (status == -1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

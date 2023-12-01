@@ -24,16 +24,15 @@ public class LibrarianController {
     }
 
 
-    // TODO change api to librarian
-    @GetMapping("/api/user")
-    public ResponseEntity<List<Long>> getAvailableCoins(@RequestParam(name = "librarianName") String librarianName) {
-        Optional<List<Long>> availableCoinIdsOptionals = librarianService.getAvailableCoinIds(librarianName);
+    @GetMapping("/api/librarian/coins")
+    public ResponseEntity<List<Long>> getAvailableCoins(@RequestParam(name = "librarianIdentification") String librarianIdentification) {
+        Optional<List<Long>> availableCoinIdsOptionals = librarianService.getAvailableCoinIds(librarianIdentification);
         return availableCoinIdsOptionals.map(integers -> new ResponseEntity<>(integers, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST));
     }
 
-    @GetMapping("/api/user/info/")
-    public ResponseEntity<Optional<Librarian>> getLibrarianInfo(@RequestParam(name = "librarianName") String librarianName) {
-        return new ResponseEntity<>(librarianService.getLibrarianInfo(librarianName), HttpStatus.OK);
+    @GetMapping("/api/librarian/info")
+    public ResponseEntity<Optional<Librarian>> getLibrarianInfo(@RequestParam(name = "librarianIdentification") String librarianIdentification) {
+        return new ResponseEntity<>(librarianService.getLibrarianInfo(librarianIdentification), HttpStatus.OK);
     }
 }
