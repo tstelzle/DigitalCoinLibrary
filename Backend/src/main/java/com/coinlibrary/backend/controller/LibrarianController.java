@@ -30,9 +30,4 @@ public class LibrarianController {
         return availableCoinIdsOptionals.map(integers -> new ResponseEntity<>(integers, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST));
     }
-
-    @GetMapping("/api/librarian/info")
-    public ResponseEntity<Optional<Librarian>> getLibrarianInfo(@RequestParam(name = "librarianIdentification") String librarianIdentification) {
-        return new ResponseEntity<>(librarianService.getLibrarianInfo(librarianIdentification), HttpStatus.OK);
-    }
 }
