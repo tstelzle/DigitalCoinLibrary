@@ -16,11 +16,13 @@ public class CoinService {
 
     private final CoinRepository<Coin, Long> coinRepository;
     private final LibrarianRepository<Librarian, Long> librarianRepository;
+    private final LibrarianService librarianService;
 
     @Autowired
-    public CoinService(CoinRepository<Coin, Long> coinRepository, LibrarianRepository<Librarian, Long> librarianRepository) {
+    public CoinService(CoinRepository<Coin, Long> coinRepository, LibrarianRepository<Librarian, Long> librarianRepository, LibrarianService librarianService) {
         this.coinRepository = coinRepository;
         this.librarianRepository = librarianRepository;
+        this.librarianService = librarianService;
     }
 
     public void updateOrInsert(Coin coin) {
@@ -51,6 +53,8 @@ public class CoinService {
             } else {
                 coin.removeLibrarian(librarian);
             }
+
+            librarianService.updateOrInsert(librarian);
 
             return coin.getId();
         }
