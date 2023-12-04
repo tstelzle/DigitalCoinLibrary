@@ -4,7 +4,6 @@ package com.coinlibrary.backend;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,16 +38,12 @@ public class BasicAuthWebSecurityConfiguration {
                 /* TODO
                     CSRF Should be enabled (random token at the end of each updating message)
                     https://www.baeldung.com/spring-security-csrf
-                 */
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST)
-                        .authenticated()
-                        .requestMatchers("/api/user/info")
+                 */.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/librarian/coins")
                         .authenticated()
                         .anyRequest()
-                        .permitAll()
-                )
-                .oauth2Login(Customizer.withDefaults())
+                        .permitAll())
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()))
                 .build();
     }
 
