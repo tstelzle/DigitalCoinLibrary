@@ -3,9 +3,6 @@ package com.coinlibrary.backend.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Getter
 @Entity
 @Table(name = "coin")
@@ -28,8 +25,6 @@ public class Coin {
     @Lob
     @Column(columnDefinition = "TEXT COLLATE utf8mb4_unicode_ci")
     private String imagePath;
-    @ManyToMany(mappedBy = "coins")
-    private Set<Librarian> librarians = new HashSet<>();
 
     public Coin() {
 
@@ -65,17 +60,5 @@ public class Coin {
 
     public void setYear(int year) {
         this.year = year;
-    }
-
-    public void addLibrarian(Librarian librarian) {
-        librarians.add(librarian);
-        librarian.getCoins()
-                .add(this);
-    }
-
-    public void removeLibrarian(Librarian librarian) {
-        librarians.remove(librarian);
-        librarian.getCoins()
-                .remove(this);
     }
 }

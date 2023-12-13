@@ -43,6 +43,8 @@ public class CoinController {
     public ResponseEntity<?> getCoins(@RequestParam(name = "editionId", required = false) Integer editionId, @RequestParam(name = "size", required = false) Integer size, @RequestParam(name = "librarianIdentification") String librarianIdentification) {
         Specification<Coin> spec = Specification.where(null);
 
+        // TODO not return librarians
+
         if (editionId != null) {
             spec = spec.and(CoinSpecification.isEdition(editionId));
         }

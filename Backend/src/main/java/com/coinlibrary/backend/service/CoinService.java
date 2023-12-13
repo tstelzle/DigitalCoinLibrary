@@ -49,9 +49,9 @@ public class CoinService {
             Coin coin = coinOptional.get();
             Librarian librarian = librarianOptional.get();
             if (available) {
-                coin.addLibrarian(librarian);
+                librarian.addCoin(coin);
             } else {
-                coin.removeLibrarian(librarian);
+                librarian.removeCoin(coin);
             }
 
             librarianService.updateOrInsert(librarian);

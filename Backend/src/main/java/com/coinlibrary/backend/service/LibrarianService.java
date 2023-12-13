@@ -42,9 +42,8 @@ public class LibrarianService {
     public Optional<List<Long>> getAvailableCoinIds(String librarianEmail) {
         Optional<Librarian> librarianOptional = librarianRepository.findByLibrarianEmail(librarianEmail);
         if (librarianOptional.isPresent()) {
-            List<Coin> availableCoins = coinRepository.findCoinsByLibrarians(librarianOptional.get());
-
-            List<Long> availableCoinIds = availableCoins.stream().map(Coin::getId).toList();
+            Librarian librarian = librarianOptional.get();
+            List<Long> availableCoinIds = librarian.getCoins().stream().map(Coin::getId).toList();
 
             return Optional.of(availableCoinIds);
         } else {

@@ -18,7 +18,7 @@ public class Librarian {
     private Long id;
     private UUID uuid;
     private String librarianEmail;
-    @ManyToMany
+    @OneToMany
     @JoinTable(
             name = "librarian_coin",
             joinColumns = @JoinColumn(name = "librarian_id"),
@@ -44,13 +44,9 @@ public class Librarian {
 
     public void addCoin(Coin coin) {
         coins.add(coin);
-        coin.getLibrarians()
-                .add(this);
     }
 
     public void removeCoin(Coin coin) {
         coins.remove(coin);
-        coin.getLibrarians()
-                .remove(this);
     }
 }
