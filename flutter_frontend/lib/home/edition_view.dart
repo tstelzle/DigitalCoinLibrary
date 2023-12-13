@@ -7,15 +7,13 @@ import 'package:flutter_frontend/model/coin.dart';
 import 'package:flutter_frontend/model/edition.dart';
 
 class EditionView extends StatefulWidget {
+
+  const EditionView(
+      {required this.edition, required this.userState, required this.filterState, required this.librarianID, super.key,});
   final Edition edition;
   final UserState userState;
   final FilterState filterState;
-
-  const EditionView(
-      {super.key,
-      required this.edition,
-      required this.userState,
-      required this.filterState});
+  final String? librarianID;
 
   @override
   State<EditionView> createState() => _EditionViewState();
@@ -37,7 +35,7 @@ class _EditionViewState extends State<EditionView>
       final crossAxisCount = (screenWidth / itemWidth).floor();
       return FutureBuilder<List<Coin>>(
           future: coinApi.fetchCoinsByEdition(widget.edition.id,
-              widget.filterState.coinSize, widget.userState.user?.email ?? '',),
+              widget.filterState.coinSize, widget.librarianID ?? '',),
           builder: (BuildContext context, AsyncSnapshot<List<Coin>> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
@@ -53,7 +51,7 @@ class _EditionViewState extends State<EditionView>
                     ),
                     itemCount: snapshot.data?.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return CoinCard(coin: snapshot.data![index], userState: widget.userState,);
+                      return CoinCard(coin: snapshot.data![index], userState: widget.userState, librarianAvailable: widget.librarianID != null);
                     },
                   ),
                 ],);

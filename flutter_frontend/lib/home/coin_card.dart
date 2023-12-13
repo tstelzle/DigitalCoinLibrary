@@ -7,9 +7,10 @@ import 'package:flutter_frontend/model/coin.dart';
 
 class CoinCard extends StatefulWidget {
 
-  const CoinCard({required this.coin, required this.userState, super.key});
+  const CoinCard({required this.coin, required this.userState, super.key, required this.librarianAvailable});
   final Coin coin;
   final UserState userState;
+  final bool librarianAvailable;
 
   @override
   State<CoinCard> createState() => _CoinCardState();
@@ -36,11 +37,11 @@ class _CoinCardState extends State<CoinCard> {
         aspectRatio: 1 / 1,
         child: Card(
             shape: const CircleBorder(),
-            color: widget.userState.user == null
-                ? Colors.blue
-                : widget.coin.available
-                    ? Colors.green
-                    : Colors.red,
+            color: widget.librarianAvailable
+              ? widget.coin.available
+                ? Colors.green
+                : Colors.red
+              : Colors.blue,
             child: showBack
                 ? widget.coin.imagePath.isEmpty
                     ? const FittedBox(child: Icon(Icons.do_disturb))
