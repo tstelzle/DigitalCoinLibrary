@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/core/user_state.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart' as web;
 
-import '../core/user_state.dart';
-
 class GoogleSignInPage extends StatefulWidget {
-  final UserState userState;
 
-  const GoogleSignInPage({super.key, required this.userState});
+  const GoogleSignInPage({required this.userState, super.key});
+  final UserState userState;
 
   @override
   State<GoogleSignInPage> createState() => _GoogleSignInPageState();
@@ -23,6 +22,6 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
     }
 
     return Center(
-        child: GoogleUserCircleAvatar(identity: widget.userState.user!));
+        child: GoogleUserCircleAvatar(identity: widget.userState.user!),);
   }
 }

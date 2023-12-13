@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/core/coin_api.dart';
-
-import '../core/filter_state.dart';
-import '../core/user_state.dart';
-import '../model/coin.dart';
-import '../model/edition.dart';
-import 'coin_card.dart';
+import 'package:flutter_frontend/core/filter_state.dart';
+import 'package:flutter_frontend/core/user_state.dart';
+import 'package:flutter_frontend/home/coin_card.dart';
+import 'package:flutter_frontend/model/coin.dart';
+import 'package:flutter_frontend/model/edition.dart';
 
 class EditionView extends StatefulWidget {
   final Edition edition;
@@ -38,10 +37,10 @@ class _EditionViewState extends State<EditionView>
       final crossAxisCount = (screenWidth / itemWidth).floor();
       return FutureBuilder<List<Coin>>(
           future: coinApi.fetchCoinsByEdition(widget.edition.id,
-              widget.filterState.coinSize, widget.userState.user?.email ?? ""),
+              widget.filterState.coinSize, widget.userState.user?.email ?? '',),
           builder: (BuildContext context, AsyncSnapshot<List<Coin>> snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data?.length != 0) {
+              if (snapshot.data!.isNotEmpty) {
                 return Column(children: <Widget>[
                   ListTile(title: Text(widget.edition.editionString)),
                   GridView.builder(
@@ -49,24 +48,24 @@ class _EditionViewState extends State<EditionView>
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 5.0,
-                      mainAxisSpacing: 5.0,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
                     ),
                     itemCount: snapshot.data?.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CoinCard(coin: snapshot.data![index], userState: widget.userState,);
                     },
-                  )
-                ]);
+                  ),
+                ],);
               } else {
                 return const SizedBox();
               }
             } else {
               return const Column(children: <Widget>[
-                CircularProgressIndicator(color: Colors.black)
-              ]);
+                CircularProgressIndicator(color: Colors.black),
+              ],);
             }
-          });
-    });
+          },);
+    },);
   }
 }

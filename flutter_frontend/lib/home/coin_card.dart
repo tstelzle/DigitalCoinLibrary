@@ -2,16 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/core/coin_api.dart';
 import 'package:flutter_frontend/core/constants.dart';
-import 'package:http/http.dart';
-
-import '../core/user_state.dart';
-import '../model/coin.dart';
+import 'package:flutter_frontend/core/user_state.dart';
+import 'package:flutter_frontend/model/coin.dart';
 
 class CoinCard extends StatefulWidget {
+
+  const CoinCard({required this.coin, required this.userState, super.key});
   final Coin coin;
   final UserState userState;
-
-  const CoinCard({super.key, required this.coin, required this.userState});
 
   @override
   State<CoinCard> createState() => _CoinCardState();
@@ -30,7 +28,7 @@ class _CoinCardState extends State<CoinCard> {
           });
         },
         onLongPress: _showImagePopup,
-        child: getCard());
+        child: getCard(),);
   }
 
   Widget getCard() {
@@ -47,27 +45,27 @@ class _CoinCardState extends State<CoinCard> {
                 ? widget.coin.imagePath.isEmpty
                     ? const FittedBox(child: Icon(Icons.do_disturb))
                     : Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8),
                         child: ClipOval(
                           child: CachedNetworkImage(
                               fit: BoxFit.fitWidth,
                               imageUrl: widget.coin.imagePath,
                               width: 540,
-                              height: 540),
+                              height: 540,),
                         ),
                       )
                 : Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8),
                     child: CachedNetworkImage(
                         imageUrl: generateUri(
-                                "$frontImage${widget.coin.coinSize}", {})
+                                "$frontImage${widget.coin.coinSize}", {},)
                             .toString(),
                         fit: BoxFit.fitWidth,
                         errorWidget: (context, url, error) =>
                             const FittedBox(child: Icon(Icons.wifi_off)),
                         width: 540,
-                        height: 540),
-                  )));
+                        height: 540,),
+                  ),),);
   }
 
   void _showImagePopup() {
@@ -79,23 +77,24 @@ class _CoinCardState extends State<CoinCard> {
             Column(children: <Widget>[
               getCard(),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                  // TODO compare if logged in user is equal to user on route
                   child: widget.userState.user == null
                       ? ElevatedButton(
-                          onPressed: () => {print("TODO Open Email")},
-                          child: const Text("Benachrichtigen"))
+                          onPressed: () => {print('TODO Open Email')},
+                          child: const Text('Benachrichtigen'),)
                       : ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: widget.coin.available
                                   ? Colors.red
-                                  : Colors.green),
+                                  : Colors.green,),
                           onPressed: () async =>
                               {await _updateCoin(widget.userState.user!.email)},
                           child: widget.coin.available
-                              ? const Text("Entfernen")
-                              : const Text("Hinzufügen")))
-            ])
-          ]),
+                              ? const Text('Entfernen')
+                              : const Text('Hinzufügen'),),),
+            ],),
+          ],),
           title: widget.coin.special
               ? Text(widget.coin.name, softWrap: true)
               : null,
@@ -105,8 +104,8 @@ class _CoinCardState extends State<CoinCard> {
   }
 
   _updateCoin(String userId) async {
-    Response response = await coinApi.updateCoin(
-        widget.coin.id, userId, !widget.coin.available);
+    final response = await coinApi.updateCoin(
+        widget.coin.id, userId, !widget.coin.available,);
 
     if (response.statusCode == 200) {
       widget.coin.available = response.body as bool;

@@ -1,40 +1,39 @@
 import 'dart:convert';
 
 import 'package:flutter_frontend/core/api.dart' as coin_api;
+import 'package:flutter_frontend/core/constants.dart' as constants;
+import 'package:flutter_frontend/model/coin.dart';
 import 'package:http/http.dart';
-
-import '../core/constants.dart' as constants;
-import '../model/coin.dart';
 
 class CoinApi {
   Future<List<Coin>> fetchCoinsByEdition(int editionId, int size,
-      String librarianIdentification) async {
-    var queryParameters = {"editionId": "$editionId"};
+      String librarianIdentification,) async {
+    final queryParameters = {'editionId': '$editionId'};
     if (size > 0) {
-      queryParameters["size"] = "$size";
+      queryParameters['size'] = '$size';
     }
-    queryParameters["librarianIdentification"] = librarianIdentification;
+    queryParameters['librarianIdentification'] = librarianIdentification;
 
-    String body = await coin_api.get(constants.coinPath, queryParameters);
+    final body = await coin_api.get(constants.coinPath, queryParameters);
 
-    List<Coin> coinList = [];
-    final List<dynamic> coinMap = jsonDecode(body);
+    final coinList = <Coin>[];
+    final coinMap = jsonDecode(body) as List<dynamic>;
 
-    for (var value in coinMap) {
-      coinList.add(Coin.fromJson(value));
+    for (final value in coinMap) {
+      coinList.add(Coin.fromJson(value as Map<String, dynamic>));
     }
 
     return coinList;
   }
 
   Future<Response> updateCoin(int coinId, String librarianIdentification,
-      bool available) async {
-    var queryParameters = <String, String>{};
-    queryParameters["coinId"] = "$coinId";
-    queryParameters["librarianIdentification"] = librarianIdentification;
-    queryParameters["available"] = "$available";
+      bool available,) async {
+    final queryParameters = <String, String>{};
+    queryParameters['coinId'] = '$coinId';
+    queryParameters['librarianIdentification'] = librarianIdentification;
+    queryParameters['available'] = '$available';
 
-    Response response = await coin_api.post(constants.coinPath, queryParameters);
+    final response = await coin_api.post(constants.coinPath, queryParameters);
 
     return response;
   }

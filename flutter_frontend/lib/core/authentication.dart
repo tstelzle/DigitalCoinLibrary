@@ -1,10 +1,10 @@
-import 'api.dart';
+import 'package:flutter_frontend/core/api.dart';
 
 Future<bool>
 authenticateUser(String idToken) async {
-  String body = await get("/api/authenticate", {"idToken": idToken});
+  final body = await get('/api/authenticate', {'idToken': idToken});
 
-  if (body == "true") {
+  if (body == 'true') {
     return true;
   } else {
     return false;

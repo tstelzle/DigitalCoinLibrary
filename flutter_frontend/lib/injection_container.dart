@@ -4,5 +4,5 @@ import 'package:get_it/get_it.dart';
 final GetIt serviceLocator = GetIt.instance;
 
 void init() {
-  serviceLocator.registerLazySingleton(() => CoinApi());
+  serviceLocator.registerLazySingleton(CoinApi.new);
 }

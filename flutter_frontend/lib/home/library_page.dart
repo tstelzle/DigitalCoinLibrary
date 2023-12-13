@@ -5,9 +5,8 @@ import 'package:flutter_frontend/core/filter_state.dart';
 import 'package:flutter_frontend/core/user_state.dart';
 import 'package:flutter_frontend/home/edition_view.dart';
 import 'package:flutter_frontend/home/filter_bar.dart';
+import 'package:flutter_frontend/model/edition.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
-import '../model/edition.dart';
 
 class LibraryPage extends StatefulWidget {
   final UserState userState;
@@ -27,16 +26,14 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchEditions(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchEditions);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     filterBloc = BlocProvider.of<FilterCubit>(context);
-    var title = "Digital Coin Library";
+    var title = 'Digital Coin Library';
     if (widget.userState.user != null) {
       title = "${widget.userState.user!.displayName}'s $title";
     }
@@ -44,7 +41,7 @@ class _LibraryPageState extends State<LibraryPage> {
         appBar: AppBar(title: Text(title), actions: <Widget>[
           IconButton(
               icon: const Icon(Icons.filter_alt),
-              tooltip: "Filter",
+              tooltip: 'Filter',
               onPressed: () {
                 showModalBottomSheet(
                     context: context,
@@ -52,10 +49,10 @@ class _LibraryPageState extends State<LibraryPage> {
                       return BlocBuilder<FilterCubit, FilterState>(
                           builder: (context, filterState) {
                         return FilterBar(filterState: filterState);
-                      });
-                    });
-              })
-        ]),
+                      },);
+                    },);
+              },),
+        ],),
         body: PagedListView<int, Edition>(
           pagingController: _pagingController,
           physics: const ScrollPhysics(),
@@ -67,10 +64,10 @@ class _LibraryPageState extends State<LibraryPage> {
               return EditionView(
                   edition: edition,
                   userState: widget.userState,
-                  filterState: filterState);
-            });
-          }),
-        ));
+                  filterState: filterState,);
+            },);
+          },),
+        ),);
   }
 
   Future<void> _fetchEditions(int pageKey) async {
@@ -78,8 +75,8 @@ class _LibraryPageState extends State<LibraryPage> {
       filterBloc.stream.listen((event) {
         _pagingController.refresh();
       });
-      final List<Edition> newEditions = await editionApi.fetchEditions(
-          pageKey, filterBloc.state.country, filterBloc.state.coinSize == -1);
+      final newEditions = await editionApi.fetchEditions(
+          pageKey, filterBloc.state.country, filterBloc.state.coinSize == -1,);
       final isLastPage = newEditions.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newEditions);
