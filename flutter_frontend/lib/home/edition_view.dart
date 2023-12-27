@@ -7,15 +7,12 @@ import 'package:flutter_frontend/model/coin.dart';
 import 'package:flutter_frontend/model/edition.dart';
 
 class EditionView extends StatefulWidget {
+
+  const EditionView(
+      {required this.edition, required this.userState, required this.filterState, super.key,});
   final Edition edition;
   final UserState userState;
   final FilterState filterState;
-
-  const EditionView(
-      {super.key,
-      required this.edition,
-      required this.userState,
-      required this.filterState});
 
   @override
   State<EditionView> createState() => _EditionViewState();
