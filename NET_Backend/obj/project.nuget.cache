@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "dys9R6xnASG+xVyiyr7TzwWFz43QEkdbS3wu2z3bE80WZ+wvX2LBcSmkWCTpvEHtcSS1GgNkXVOplaqb6975gg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\TarekStelzle\\Documents\\GitHub\\DigitalCoinLibrary\\NET_Backend\\NET_Backend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\TarekStelzle\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\TarekStelzle\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\TarekStelzle\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.19.5\\microsoft.visualstudio.azure.containers.tools.targets.1.19.5.nupkg.sha512",
+    "C:\\Users\\TarekStelzle\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
+    "C:\\Users\\TarekStelzle\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
+    "C:\\Users\\TarekStelzle\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
+    "C:\\Users\\TarekStelzle\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.4.0\\swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512"
+  ],
+  "logs": []
+}
