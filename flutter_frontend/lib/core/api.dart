@@ -4,7 +4,7 @@ import 'package:flutter_frontend/core/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 
 Future<String> get(String api, Map<String, String> queryParameters) async {
-  final uri = constants.generateUri(api, queryParameters);
+  final Uri uri = constants.generateUri(api, queryParameters);
   final response = await http.get(uri, headers: {
     HttpHeaders.contentTypeHeader: 'application/json',
   },);
@@ -15,11 +15,11 @@ Future<String> get(String api, Map<String, String> queryParameters) async {
   return response.body;
 }
 
-Future<http.Response> post(String api, Map<String, String> queryParameters) async {
-  // todo login
-  final uri = constants.generateUri(api, queryParameters);
+Future<http.Response> postWithAccess(String api, Map<String, String> queryParameters, String accessToken) async {
+  final Uri uri = constants.generateUri(api, queryParameters);
   final response = await http.post(uri, headers: {
     HttpHeaders.contentTypeHeader: 'application/json',
+    HttpHeaders.authorizationHeader: accessToken,
   },);
   if (response.statusCode != 200) {
     throw Exception('Failed to send update');
