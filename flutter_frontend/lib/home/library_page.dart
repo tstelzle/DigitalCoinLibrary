@@ -9,9 +9,9 @@ import 'package:flutter_frontend/model/edition.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class LibraryPage extends StatefulWidget {
-  final UserState userState;
 
-  const LibraryPage({super.key, required this.userState});
+  const LibraryPage({required this.userState, super.key});
+  final UserState userState;
 
   @override
   State<LibraryPage> createState() => _LibraryPageState();
