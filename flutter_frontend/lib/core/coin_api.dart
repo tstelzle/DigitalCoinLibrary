@@ -28,13 +28,13 @@ class CoinApi {
   }
 
   Future<Response> updateCoin(int coinId, String librarianIdentification,
-      bool available) async {
+      bool available, String? accessToken) async {
     var queryParameters = <String, String>{};
     queryParameters["coinId"] = "$coinId";
     queryParameters["librarianIdentification"] = librarianIdentification;
     queryParameters["available"] = "$available";
 
-    Response response = await coin_api.post(constants.coinPath, queryParameters);
+    Response response = await coin_api.postWithAccess(constants.coinPath, queryParameters, accessToken!);
 
     return response;
   }

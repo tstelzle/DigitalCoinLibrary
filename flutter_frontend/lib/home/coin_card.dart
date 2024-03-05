@@ -106,7 +106,7 @@ class _CoinCardState extends State<CoinCard> {
 
   _updateCoin(String userId) async {
     Response response = await coinApi.updateCoin(
-        widget.coin.id, userId, !widget.coin.available);
+        widget.coin.id, userId, !widget.coin.available, widget.userState.authentication?.accessToken);
 
     if (response.statusCode == 200) {
       widget.coin.available = response.body as bool;

@@ -8,13 +8,14 @@ const googleClientID = String.fromEnvironment("GOOGLE_CLIENT_ID");
 // State
 class UserState {
   GoogleSignInAccount? user;
+  GoogleSignInAuthentication? authentication;
 
-  UserState(this.user);
+  UserState(this.user, this.authentication);
 }
 
 // Bloc
 class UserBloc extends Cubit<UserState> {
-  UserBloc() : super(UserState(null)) {
+  UserBloc() : super(UserState(null, null)) {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       if (account != null) {
         login(account);
@@ -33,9 +34,9 @@ class UserBloc extends Cubit<UserState> {
       final backendAuthentication = await authenticateUser(idToken);
 
       if (backendAuthentication != true) {
-        emit(UserState(null));
+        emit(UserState(null, null));
       } else {
-        emit(UserState(account));
+        emit(UserState(account, authentication));
       }
     }
   }
