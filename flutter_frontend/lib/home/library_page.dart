@@ -9,7 +9,6 @@ import 'package:flutter_frontend/model/edition.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class LibraryPage extends StatefulWidget {
-
   const LibraryPage({required this.userState, super.key});
   final UserState userState;
 
@@ -38,36 +37,46 @@ class _LibraryPageState extends State<LibraryPage> {
       title = "${widget.userState.user!.displayName}'s $title";
     }
     return Scaffold(
-        appBar: AppBar(title: Text(title), actions: <Widget>[
+      appBar: AppBar(
+        title: Text(title),
+        actions: <Widget>[
           IconButton(
-              icon: const Icon(Icons.filter_alt),
-              tooltip: 'Filter',
-              onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return BlocBuilder<FilterCubit, FilterState>(
-                          builder: (context, filterState) {
-                        return FilterBar(filterState: filterState);
-                      },);
-                    },);
-              },),
-        ],),
-        body: PagedListView<int, Edition>(
-          pagingController: _pagingController,
-          physics: const ScrollPhysics(),
-          shrinkWrap: true,
-          builderDelegate: PagedChildBuilderDelegate<Edition>(
-              itemBuilder: (context, edition, index) {
+            icon: const Icon(Icons.filter_alt),
+            tooltip: 'Filter',
+            onPressed: () {
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (context) {
+                  return BlocBuilder<FilterCubit, FilterState>(
+                    builder: (context, filterState) {
+                      return FilterBar(filterState: filterState);
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+      body: PagedListView<int, Edition>(
+        pagingController: _pagingController,
+        physics: const ScrollPhysics(),
+        shrinkWrap: true,
+        builderDelegate: PagedChildBuilderDelegate<Edition>(
+          itemBuilder: (context, edition, index) {
             return BlocBuilder<FilterCubit, FilterState>(
-                builder: (context, filterState) {
-              return EditionView(
+              builder: (context, filterState) {
+                return EditionView(
                   edition: edition,
                   userState: widget.userState,
-                  filterState: filterState,);
-            },);
-          },),
-        ),);
+                  filterState: filterState,
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 
   Future<void> _fetchEditions(int pageKey) async {
@@ -76,7 +85,10 @@ class _LibraryPageState extends State<LibraryPage> {
         _pagingController.refresh();
       });
       final newEditions = await editionApi.fetchEditions(
-          pageKey, filterBloc.state.country, filterBloc.state.coinSize == -1,);
+        pageKey,
+        filterBloc.state.country,
+        filterBloc.state.coinSize == -1,
+      );
       final isLastPage = newEditions.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newEditions);
