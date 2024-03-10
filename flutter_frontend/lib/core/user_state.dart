@@ -29,7 +29,7 @@ class UserBloc extends Cubit<UserState> {
     final authentication = await account.authentication;
     final idToken = authentication.idToken;
     if (idToken != null) {
-      // TODO inject backend https://bloclibrary.dev/#/architecture
+      // TODO(tarek): inject backend https://bloclibrary.dev/#/architecture
       final backendAuthentication = await authenticateUser(idToken);
 
       if (backendAuthentication != true) {
