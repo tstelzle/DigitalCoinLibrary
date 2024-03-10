@@ -4,39 +4,40 @@ import 'package:flutter_frontend/core/user_state.dart';
 import 'package:flutter_frontend/home/home.dart';
 import 'package:flutter_frontend/sign_in/google_sign_in.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
-      return Scaffold(
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, userState) {
+        return Scaffold(
           body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
+            child: Padding(
               padding: const EdgeInsets.all(8),
-              child: GoogleSignInPage(userState: userState),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GoogleSignInPage(userState: userState),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () => _navigateToLibraryPage(userState, context),
+                    child: const Text('Bibliothek'),
+                  ),
+                ],
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            LibraryPage(userState: userState),),);
-                  },
-                  child: const Text('Bibliothek'),),
-            ),
-          ],
-        ),
-      ),);
-    },);
+          ),
+        );
+      },
+    );
+  }
+
+  void _navigateToLibraryPage(UserState userState, BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<LibraryPage>(
+        builder: (context) => LibraryPage(userState: userState),
+      ),
+    );
   }
 }
