@@ -6,6 +6,13 @@ on:
       - main
 
 jobs:
+  checkout_repository:
+    name: Checkout Repository
+    uses: tstelzle/DigitalCoinLibrary/.github/workflows/checkout.yml@develop
+    with:
+      runner: develop
+      ref: ${{ github.head_ref }}
+
   create_env:
     name: Create Environment
     uses:
