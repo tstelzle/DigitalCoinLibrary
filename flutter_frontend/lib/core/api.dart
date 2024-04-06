@@ -21,15 +21,13 @@ Future<String> get(String api, Map<String, String> queryParameters) async {
 Future<http.Response> postWithAccess(
   String api,
   Map<String, String> queryParameters,
-  String accessToken,
+  Map<String, String> authHeaders,
 ) async {
   final uri = constants.generateUri(api, queryParameters);
+  authHeaders.addAll({HttpHeaders.contentTypeHeader: 'application/json'});
   final response = await http.post(
     uri,
-    headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader: accessToken,
-    },
+    headers: authHeaders,
   );
   if (response.statusCode != 200) {
     throw Exception('Failed to send update');

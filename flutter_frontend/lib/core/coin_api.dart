@@ -33,7 +33,7 @@ class CoinApi {
     int coinId,
     String librarianIdentification,
     bool available,
-    String? accessToken,
+      Map<String, String> authHeaders
   ) async {
     final queryParameters = <String, String>{};
     queryParameters['coinId'] = '$coinId';
@@ -43,7 +43,7 @@ class CoinApi {
     final response = await coin_api.postWithAccess(
       constants.coinPath,
       queryParameters,
-      accessToken!,
+      authHeaders,
     );
 
     return response;

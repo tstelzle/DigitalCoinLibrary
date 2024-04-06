@@ -22,8 +22,10 @@ class UserBloc extends Cubit<UserState> {
     });
   }
 
-  final GoogleSignIn _googleSignIn =
-      GoogleSignIn(scopes: ['email', 'profile'], clientId: googleClientID);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile', 'openid'],
+    clientId: googleClientID,
+  );
 
   Future<void> login(GoogleSignInAccount account) async {
     final authentication = await account.authentication;
@@ -31,6 +33,13 @@ class UserBloc extends Cubit<UserState> {
     if (idToken != null) {
       // TODO(tarek): inject backend https://bloclibrary.dev/#/architecture
       final backendAuthentication = await authenticateUser(idToken);
+
+      // TODO extract to method -> ask when needed
+      final authorized =
+      await _googleSignIn.canAccessScopes(_googleSignIn.scopes);
+      if (!authorized) {
+        await _googleSignIn.requestScopes(_googleSignIn.scopes);
+      }
 
       if (backendAuthentication != true) {
         emit(UserState(null, null));
