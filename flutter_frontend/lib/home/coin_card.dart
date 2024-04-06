@@ -121,13 +121,13 @@ class _CoinCardState extends State<CoinCard> {
   }
 
   Future<void> _updateCoin(String userId) async {
-    var authHeaders = await widget.userState.user?.authHeaders;
+    final authHeaders = await widget.userState.user?.authHeaders;
 
     final response = await coinApi.updateCoin(
       widget.coin.id,
       userId,
       !widget.coin.available,
-      authHeaders!
+      authHeaders!,
     );
 
     if (response.statusCode == 200) {
