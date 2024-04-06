@@ -11,7 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -73,12 +74,14 @@ public class CoinController {
         return new ResponseEntity<>(coins, HttpStatus.OK);
     }
 
-    // TODO CORS Error with post mapping
-    // https://stackoverflow.com/questions/64621885/spring-boot-cors-working-with-get-request-but-not-post-request
     @PostMapping("/api/coin")
-    //@PreAuthorize("hasAuthority('GOOGLE_ACCESS_TOKEN')")
-//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> postCoin(@RequestParam(name = "coinId") Long coinId, @RequestParam(name = "librarianIdentification") String librarianIdentification, @RequestParam(name = "available") boolean available) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!auth.getName().equals(librarianIdentification)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         long status = coinService.setAvailable(coinId, librarianIdentification, available);
 
         if (status == -1) {
