@@ -6,10 +6,6 @@ on:
       environment:
         required: true
         type: string
-      refToBuild:
-        required: false
-        type: string
-        default: ${{ github.head_ref }}
 
 jobs:
   build_backend:
