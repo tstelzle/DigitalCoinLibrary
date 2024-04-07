@@ -18,6 +18,7 @@ class HomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Text('Digital Coin Library'),
                   GoogleSignInPage(userState: userState),
                   ElevatedButton(
                     onPressed: () => _navigateToLibraryPage(userState, context),
