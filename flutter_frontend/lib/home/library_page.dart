@@ -37,7 +37,9 @@ class _LibraryPageState extends State<LibraryPage> {
       title = "${widget.userState.user!.displayName}'s $title";
     }
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: Text(title),
         actions: <Widget>[
           IconButton(
