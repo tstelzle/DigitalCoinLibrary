@@ -50,6 +50,8 @@ jobs:
     secrets: inherit
 
   build_images:
+    needs:
+      - checkout_repository
     name: Build Images
     uses:
       tstelzle/DigitalCoinLibrary/.github/workflows/build_images.yml@develop
