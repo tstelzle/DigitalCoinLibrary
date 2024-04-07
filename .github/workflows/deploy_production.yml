@@ -10,8 +10,7 @@ jobs:
     name: Checkout Repository
     uses: tstelzle/DigitalCoinLibrary/.github/workflows/checkout.yml@develop
     with:
-      runner: develop
-      ref: ${{ github.head_ref }}
+      runner: prod
 
   create_env:
     name: Create Environment
