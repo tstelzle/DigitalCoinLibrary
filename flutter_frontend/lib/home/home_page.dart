@@ -19,7 +19,6 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GoogleSignInPage(userState: userState),
-                  const SizedBox(height: 8),
                   ElevatedButton(
                     onPressed: () => _navigateToLibraryPage(userState, context),
                     child: const Text('Bibliothek'),
