@@ -7,7 +7,6 @@ on:
         description: 'Branch, tag or commit SHA1 to build'
         required: true
         type: string
-        default: ${{ github.head_ref }}
   push:
     branches:
       - develop
@@ -21,6 +20,8 @@ jobs:
       ref: ${{ inputs.refToBuild }}
 
   create_env:
+    needs:
+      - checkout_repository
     name: Create Environment
     uses:
       tstelzle/DigitalCoinLibrary/.github/workflows/add_env_variable.yml@develop
