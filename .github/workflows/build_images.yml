@@ -6,6 +6,10 @@ on:
       environment:
         required: true
         type: string
+      refToBuild:
+        required: false
+        type: string
+        default: ${{ github.head_ref }}
 
 jobs:
   build_backend:
@@ -13,6 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.refToBuild }}
+
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
@@ -32,6 +41,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.refToBuild }}
+
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:

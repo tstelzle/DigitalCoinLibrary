@@ -13,9 +13,24 @@ on:
       environment:
         required: true
         type: string
+      refToBuild:
+        required: false
+        type: string
+        default: ${{ github.head_ref }}
 
 jobs:
+  checkout_repository:
+    name: Checkout Repository
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.refToBuild }}
+
   create_env_file:
+    needs:
+      - checkout_repository
     name: Create File
     runs-on: ${{ inputs.runner }}
     steps:

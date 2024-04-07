@@ -12,20 +12,12 @@ on:
       - develop
 
 jobs:
-  checkout_repository:
-    name: Checkout Repository
-    uses: tstelzle/DigitalCoinLibrary/.github/workflows/checkout.yml@develop
-    with:
-      runner: develop
-      ref: ${{ inputs.refToBuild }}
-
   create_env:
-    needs:
-      - checkout_repository
     name: Create Environment
     uses:
       tstelzle/DigitalCoinLibrary/.github/workflows/add_env_variable.yml@develop
     with:
+      refToBuild: ${{ inputs.refToBuild }}
       runner: develop
       environment: development
       env_var_list: '[
@@ -50,13 +42,12 @@ jobs:
     secrets: inherit
 
   build_images:
-    needs:
-      - checkout_repository
     name: Build Images
     uses:
       tstelzle/DigitalCoinLibrary/.github/workflows/build_images.yml@develop
     with:
       environment: development
+      refToBuild: ${{ inputs.refToBuild }}
     secrets: inherit
 
   start_application:
