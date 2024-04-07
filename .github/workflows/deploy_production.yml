@@ -6,15 +6,7 @@ on:
       - main
 
 jobs:
-  checkout_repository:
-    name: Checkout Repository
-    uses: tstelzle/DigitalCoinLibrary/.github/workflows/checkout.yml@develop
-    with:
-      runner: prod
-
   create_env:
-    needs:
-      - checkout_repository
     name: Create Environment
     uses:
       tstelzle/DigitalCoinLibrary/.github/workflows/add_env_variable.yml@develop
@@ -42,8 +34,6 @@ jobs:
     secrets: inherit
 
   build_images:
-    needs:
-      - checkout_repository
     name: Build Images
     uses:
       tstelzle/DigitalCoinLibrary/.github/workflows/build_images.yml@develop
