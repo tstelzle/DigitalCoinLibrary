@@ -11,6 +11,9 @@ class GoogleSignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('UserState.user (google_sign_in): $userState.user');
+    print('UserState (google_sign_in): $userState');
+
     if (userState.user == null) {
       return (GoogleSignInPlatform.instance as web.GoogleSignInPlugin)
           .renderButton();
