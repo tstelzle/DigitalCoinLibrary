@@ -11,20 +11,21 @@ class GoogleSignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('UserState (google_sign_in): ${userState == null}');
-    print('UserState.user (google_sign_in): ${userState.user?.email}');
+    try {
+      print('UserState (google_sign_in): ${userState == null}');
+      print('UserState.user (google_sign_in): ${userState.user?.email}');
 
-    if (userState.user == null) {
-      try {
+      if (userState.user == null) {
         return (GoogleSignInPlatform.instance as web.GoogleSignInPlugin)
             .renderButton();
-      } catch (e) {
-        print(e);
       }
-    }
 
-    return Center(
-      child: GoogleUserCircleAvatar(identity: userState.user!),
-    );
+      return Center(
+        child: GoogleUserCircleAvatar(identity: userState.user!),
+      );
+    } catch (e) {
+      print(e);
+    }
+    return const Text('ERROR');
   }
 }
