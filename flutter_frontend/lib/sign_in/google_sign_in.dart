@@ -15,12 +15,13 @@ class GoogleSignInPage extends StatelessWidget {
     print('UserState.user (google_sign_in): ${userState.user?.email}');
 
     if (userState.user == null) {
-      print('google_sign_in: renderButton');
-      return (GoogleSignInPlatform.instance as web.GoogleSignInPlugin)
-          .renderButton();
+      try {
+        return (GoogleSignInPlatform.instance as web.GoogleSignInPlugin)
+            .renderButton();
+      } catch (e) {
+        print(e);
+      }
     }
-
-    print('google_sign_in: showAvatar');
 
     return Center(
       child: GoogleUserCircleAvatar(identity: userState.user!),
