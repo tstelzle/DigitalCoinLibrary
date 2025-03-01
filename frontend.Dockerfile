@@ -1,4 +1,4 @@
-FROM ghcr.io/cirruslabs/flutter:stable as BUILD_STAGE
+FROM fischerscode/flutter:stable as BUILD_STAGE
 
 ARG API_URL
 ARG API_PORT
