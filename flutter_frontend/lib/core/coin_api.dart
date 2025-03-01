@@ -33,7 +33,7 @@ class CoinApi {
     int coinId,
     String librarianIdentification,
     bool available,
-      Map<String, String> authHeaders
+      Map<String, String> authHeaders,
   ) async {
     final queryParameters = <String, String>{};
     queryParameters['coinId'] = '$coinId';

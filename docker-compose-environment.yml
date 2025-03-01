@@ -14,7 +14,7 @@ services:
       - TOKEN=${DUCKDNSTOKEN}
 
   letsencrypt:
-    image: linuxserver/swag:1.26.0-ls123
+    image: linuxserver/swag:3.2.0
     container_name: dcl-dev-swag
     volumes:
       - ./environment/config/nginx/proxy-confs:/config/nginx/proxy-confs
