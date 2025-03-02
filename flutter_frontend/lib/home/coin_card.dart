@@ -23,13 +23,14 @@ class _CoinCardState extends State<CoinCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          setState(() {
-            showBack = !showBack;
-          });
-        },
-        onLongPress: _showImagePopup,
-        child: getCard(),);
+      onTap: () {
+        setState(() {
+          showBack = !showBack;
+        });
+      },
+      onLongPress: _showImagePopup,
+      child: getCard(),
+    );
   }
 
   Widget getCard() {
@@ -70,32 +71,44 @@ class _CoinCardState extends State<CoinCard> {
   }
 
   void _showImagePopup() {
-    showDialog(
+    showDialog<AlertDialog>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Wrap(children: [
-            Column(children: <Widget>[
-              getCard(),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                  // TODO compare if logged in user is equal to user on route
-                  child: widget.userState.user == null
-                      ? ElevatedButton(
-                          onPressed: () => {print('TODO Open Email')},
-                          child: const Text('Benachrichtigen'),)
-                      : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
+          content: Wrap(
+            children: [
+              Column(
+                children: <Widget>[
+                  getCard(),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                    // TODO(tarek): compare if logged in user
+                    // is equal to user on route
+                    child: widget.userState.user == null
+                        ? ElevatedButton(
+                            onPressed: () => {print('TODO Open Email')},
+                            child: const Text('Benachrichtigen'),
+                          )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
                               backgroundColor: widget.coin.available
                                   ? Colors.red
-                                  : Colors.green,),
-                          onPressed: () async =>
-                              {await _updateCoin(widget.userState.user!.email)},
-                          child: widget.coin.available
-                              ? const Text('Entfernen')
-                              : const Text('Hinzufügen'),),),
-            ],),
-          ],),
+                                  : Colors.green,
+                            ),
+                            onPressed: () async => {
+                              await _updateCoin(
+                                widget.userState.user!.email,
+                              ),
+                            },
+                            child: widget.coin.available
+                                ? const Text('Entfernen')
+                                : const Text('Hinzufügen'),
+                          ),
+                  ),
+                ],
+              ),
+            ],
+          ),
           title: widget.coin.special
               ? Text(widget.coin.name, softWrap: true)
               : null,
@@ -104,14 +117,20 @@ class _CoinCardState extends State<CoinCard> {
     );
   }
 
-  _updateCoin(String userId) async {
+  Future<void> _updateCoin(String userId) async {
+    final authHeaders = await widget.userState.user?.authHeaders;
+
     final response = await coinApi.updateCoin(
-        widget.coin.id, userId, !widget.coin.available,);
+      widget.coin.id,
+      userId,
+      !widget.coin.available,
+      authHeaders!,
+    );
 
     if (response.statusCode == 200) {
       widget.coin.available = response.body as bool;
     } else {
-      // TODO alert if update was or was not successful
+      // TODO(tarek): alert if update was or was not successful
     }
   }
 }

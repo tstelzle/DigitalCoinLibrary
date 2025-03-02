@@ -7,9 +7,9 @@ const String editionPath = '/api/edition';
 const String frontImage = '/api/frontImage/';
 
 Uri generateUri(String path, Map<String, String> queryParameters) {
-    if (ipAddress == 'localhost') {
-      return Uri.http(domain, path, queryParameters=queryParameters);
-    } else {
-      return Uri.https(domain, path, queryParameters=queryParameters);
-    }
+  if (ipAddress == 'localhost') {
+    return Uri.http(domain, path, queryParameters);
+  } else {
+    return Uri.https(domain, path, queryParameters);
+  }
 }

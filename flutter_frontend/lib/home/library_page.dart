@@ -81,7 +81,10 @@ class _LibraryPageState extends State<LibraryPage> {
         _pagingController.refresh();
       });
       final newEditions = await editionApi.fetchEditions(
-          pageKey, filterBloc.state.country, filterBloc.state.coinSize == -1,);
+        pageKey,
+        filterBloc.state.country,
+        filterBloc.state.coinSize == -1,
+      );
       final isLastPage = newEditions.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newEditions);

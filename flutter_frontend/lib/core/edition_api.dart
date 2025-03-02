@@ -31,6 +31,7 @@ class EditionApi {
   Future<List<String>> fetchCountries() async {
     final body = await get('${constants.editionPath}/countries', {});
 
-    return json.decode(body) as List<String>;
+    final decodedList = json.decode(body) as List<dynamic>;
+    return decodedList.map((dynamic item) => item.toString()).toList();
   }
 }

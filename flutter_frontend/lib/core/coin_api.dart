@@ -6,8 +6,11 @@ import 'package:flutter_frontend/model/coin.dart';
 import 'package:http/http.dart';
 
 class CoinApi {
-  Future<List<Coin>> fetchCoinsByEdition(int editionId, int size,
-      String librarianIdentification,) async {
+  Future<List<Coin>> fetchCoinsByEdition(
+    int editionId,
+    int size,
+    String librarianIdentification,
+  ) async {
     final queryParameters = {'editionId': '$editionId'};
     if (size > 0) {
       queryParameters['size'] = '$size';
@@ -26,14 +29,22 @@ class CoinApi {
     return coinList;
   }
 
-  Future<Response> updateCoin(int coinId, String librarianIdentification,
-      bool available,) async {
+  Future<Response> updateCoin(
+    int coinId,
+    String librarianIdentification,
+    bool available,
+      Map<String, String> authHeaders,
+  ) async {
     final queryParameters = <String, String>{};
     queryParameters['coinId'] = '$coinId';
     queryParameters['librarianIdentification'] = librarianIdentification;
     queryParameters['available'] = '$available';
 
-    final response = await coin_api.post(constants.coinPath, queryParameters);
+    final response = await coin_api.postWithAccess(
+      constants.coinPath,
+      queryParameters,
+      authHeaders,
+    );
 
     return response;
   }

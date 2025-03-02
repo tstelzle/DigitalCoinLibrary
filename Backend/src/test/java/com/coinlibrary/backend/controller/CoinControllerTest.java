@@ -70,7 +70,6 @@ class CoinControllerTest {
 
 
         when(coinRepository.findAll((Specification<Coin>) ArgumentMatchers.any())).thenReturn(List.of(coin1, coin2));
-        when(coinRepository.findCoinsByLibrarians(testUser)).thenReturn(List.of(coin1));
         when(librarianRepository.findByLibrarianEmail("testUser@testuser.de")).thenReturn(Optional.of(testUser));
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/coin")

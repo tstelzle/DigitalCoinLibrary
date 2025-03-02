@@ -44,6 +44,15 @@ void main() {
       child: const MyApp(),
     ),
   );
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<FilterCubit>(create: (context) => FilterCubit()),
+        BlocProvider<UserBloc>(create: (context) => UserBloc()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

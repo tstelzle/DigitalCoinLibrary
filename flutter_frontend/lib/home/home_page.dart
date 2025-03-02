@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend/sign_in/google_sign_in.dart';
 import 'package:go_router/go_router.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

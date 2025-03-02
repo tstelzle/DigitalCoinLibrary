@@ -27,6 +27,7 @@ class _EditionViewState extends State<EditionView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       final screenWidth = constraints.maxWidth;
@@ -59,11 +60,15 @@ class _EditionViewState extends State<EditionView>
                 return const SizedBox();
               }
             } else {
-              return const Column(children: <Widget>[
-                CircularProgressIndicator(color: Colors.black),
-              ],);
+              return const Column(
+                children: <Widget>[
+                  CircularProgressIndicator(color: Colors.black),
+                ],
+              );
             }
-          },);
-    },);
+          },
+        );
+      },
+    );
   }
 }

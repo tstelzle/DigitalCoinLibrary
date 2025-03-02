@@ -9,11 +9,6 @@ class GoogleSignInPage extends StatefulWidget {
   const GoogleSignInPage({super.key});
 
   @override
-  State<GoogleSignInPage> createState() => _GoogleSignInPageState();
-}
-
-class _GoogleSignInPageState extends State<GoogleSignInPage> {
-  @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, userState) {

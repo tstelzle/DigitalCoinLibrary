@@ -6,14 +6,15 @@ const googleClientID = String.fromEnvironment('GOOGLE_CLIENT_ID');
 
 // State
 class UserState {
+  UserState(this.user, this.authentication);
 
-  UserState(this.user);
   GoogleSignInAccount? user;
+  GoogleSignInAuthentication? authentication;
 }
 
 // Bloc
 class UserBloc extends Cubit<UserState> {
-  UserBloc() : super(UserState(null)) {
+  UserBloc() : super(UserState(null, null)) {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       if (account != null) {
         login(account);
@@ -21,20 +22,29 @@ class UserBloc extends Cubit<UserState> {
     });
   }
 
-  final GoogleSignIn _googleSignIn =
-      GoogleSignIn(scopes: ['email', 'profile'], clientId: googleClientID);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile', 'openid'],
+    clientId: googleClientID,
+  );
 
   Future<void> login(GoogleSignInAccount account) async {
     final authentication = await account.authentication;
     final idToken = authentication.idToken;
     if (idToken != null) {
-      // TODO inject backend https://bloclibrary.dev/#/architecture
+      // TODO(tarek): inject backend https://bloclibrary.dev/#/architecture
       final backendAuthentication = await authenticateUser(idToken);
 
+      // TODO extract to method -> ask when needed
+      final authorized =
+      await _googleSignIn.canAccessScopes(_googleSignIn.scopes);
+      if (!authorized) {
+        await _googleSignIn.requestScopes(_googleSignIn.scopes);
+      }
+
       if (backendAuthentication != true) {
-        emit(UserState(null));
+        emit(UserState(null, null));
       } else {
-        emit(UserState(account));
+        emit(UserState(account, authentication));
       }
     }
   }
