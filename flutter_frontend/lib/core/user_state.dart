@@ -15,9 +15,6 @@ class UserState {
 // Bloc
 class UserBloc extends Cubit<UserState> {
   UserBloc() : super(UserState(null, null)) {
-
-    print('GoogleClientID (UserState):$googleClientID');
-
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       if (account != null) {
         login(account);
@@ -37,7 +34,7 @@ class UserBloc extends Cubit<UserState> {
       // TODO(tarek): inject backend https://bloclibrary.dev/#/architecture
       final backendAuthentication = await authenticateUser(idToken);
 
-      // TODOextract to method -> ask when needed
+      // TODO extract to method -> ask when needed
       final authorized =
       await _googleSignIn.canAccessScopes(_googleSignIn.scopes);
       if (!authorized) {
