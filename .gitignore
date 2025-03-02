@@ -1,5 +1,6 @@
 coin_library.env
 Backend/data
+data
 Backend/target
 **/.iml
 **/*/*.log
