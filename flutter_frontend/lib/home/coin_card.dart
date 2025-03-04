@@ -7,7 +7,7 @@ import 'package:flutter_frontend/model/coin.dart';
 
 class CoinCard extends StatefulWidget {
 
-  const CoinCard({required this.coin, required this.userState, super.key, required this.librarianAvailable});
+  const CoinCard({required this.coin, required this.userState, required this.librarianAvailable, super.key});
   final Coin coin;
   final UserState userState;
   final bool librarianAvailable;

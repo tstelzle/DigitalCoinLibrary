@@ -5,7 +5,6 @@ import 'package:flutter_frontend/core/user_state.dart';
 import 'package:flutter_frontend/home/home_page.dart';
 import 'package:flutter_frontend/home/library_page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 // GoRouter configuration
 final _router = GoRouter(
