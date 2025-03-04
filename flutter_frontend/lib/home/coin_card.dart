@@ -6,9 +6,11 @@ import 'package:flutter_frontend/core/user_state.dart';
 import 'package:flutter_frontend/model/coin.dart';
 
 class CoinCard extends StatefulWidget {
-  const CoinCard({required this.coin, required this.userState, super.key});
+
+  const CoinCard({required this.coin, required this.userState, required this.librarianAvailable, super.key});
   final Coin coin;
   final UserState userState;
+  final bool librarianAvailable;
 
   @override
   State<CoinCard> createState() => _CoinCardState();
@@ -33,44 +35,39 @@ class _CoinCardState extends State<CoinCard> {
 
   Widget getCard() {
     return AspectRatio(
-      aspectRatio: 1 / 1,
-      child: Card(
-        shape: const CircleBorder(),
-        color: widget.userState.user == null
-            ? Colors.blue
-            : widget.coin.available
+        aspectRatio: 1 / 1,
+        child: Card(
+            shape: const CircleBorder(),
+            color: widget.librarianAvailable
+              ? widget.coin.available
                 ? Colors.green
-                : Colors.red,
-        child: showBack
-            ? widget.coin.imagePath.isEmpty
-                ? const FittedBox(child: Icon(Icons.do_disturb))
+                : Colors.red
+              : Colors.blue,
+            child: showBack
+                ? widget.coin.imagePath.isEmpty
+                    ? const FittedBox(child: Icon(Icons.do_disturb))
+                    : Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: ClipOval(
+                          child: CachedNetworkImage(
+                              fit: BoxFit.fitWidth,
+                              imageUrl: widget.coin.imagePath,
+                              width: 540,
+                              height: 540,),
+                        ),
+                      )
                 : Padding(
                     padding: const EdgeInsets.all(8),
-                    child: ClipOval(
-                      child: CachedNetworkImage(
+                    child: CachedNetworkImage(
+                        imageUrl: generateUri(
+                                "$frontImage${widget.coin.coinSize}", {},)
+                            .toString(),
                         fit: BoxFit.fitWidth,
-                        imageUrl: widget.coin.imagePath,
+                        errorWidget: (context, url, error) =>
+                            const FittedBox(child: Icon(Icons.wifi_off)),
                         width: 540,
-                        height: 540,
-                      ),
-                    ),
-                  )
-            : Padding(
-                padding: const EdgeInsets.all(8),
-                child: CachedNetworkImage(
-                  imageUrl: generateUri(
-                    '$frontImage${widget.coin.coinSize}',
-                    {},
-                  ).toString(),
-                  fit: BoxFit.fitWidth,
-                  errorWidget: (context, url, error) =>
-                      const FittedBox(child: Icon(Icons.wifi_off)),
-                  width: 540,
-                  height: 540,
-                ),
-              ),
-      ),
-    );
+                        height: 540,),
+                  ),),);
   }
 
   void _showImagePopup() {

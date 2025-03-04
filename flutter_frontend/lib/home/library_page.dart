@@ -9,8 +9,9 @@ import 'package:flutter_frontend/model/edition.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class LibraryPage extends StatefulWidget {
-  const LibraryPage({required this.userState, super.key});
-  final UserState userState;
+
+  const LibraryPage({super.key, this.librarianID});
+  final String? librarianID;
 
   @override
   State<LibraryPage> createState() => _LibraryPageState();
@@ -33,55 +34,48 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget build(BuildContext context) {
     filterBloc = BlocProvider.of<FilterCubit>(context);
     var title = 'Digital Coin Library';
-    if (widget.userState.user != null) {
-      title = "${widget.userState.user!.displayName}'s $title";
+    if (widget.librarianID != null) {
+      title = "${widget.librarianID}'s $title";
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(title),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.filter_alt),
-            tooltip: 'Filter',
-            onPressed: () {
-              showModalBottomSheet<void>(
-                context: context,
-                builder: (context) {
-                  return BlocBuilder<FilterCubit, FilterState>(
+    return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
+        return Scaffold(
+            appBar: AppBar(title: Text(title), actions: <Widget>[
+              IconButton(
+                  icon: const Icon(Icons.filter_alt),
+                  tooltip: 'Filter',
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return BlocBuilder<FilterCubit, FilterState>(
+                              builder: (context, filterState) {
+                            return FilterBar(filterState: filterState);
+                          },);
+                        },);
+                  },),
+            ],),
+            body: PagedListView<int, Edition>(
+              pagingController: _pagingController,
+              physics: const ScrollPhysics(),
+              shrinkWrap: true,
+              builderDelegate: PagedChildBuilderDelegate<Edition>(
+                  itemBuilder: (context, edition, index) {
+                return BlocBuilder<FilterCubit, FilterState>(
                     builder: (context, filterState) {
-                      return FilterBar(filterState: filterState);
-                    },
-                  );
-                },
-              );
-            },
-          ),
-        ],
-      ),
-      body: PagedListView<int, Edition>(
-        pagingController: _pagingController,
-        physics: const ScrollPhysics(),
-        shrinkWrap: true,
-        builderDelegate: PagedChildBuilderDelegate<Edition>(
-          itemBuilder: (context, edition, index) {
-            return BlocBuilder<FilterCubit, FilterState>(
-              builder: (context, filterState) {
-                return EditionView(
-                  edition: edition,
-                  userState: widget.userState,
-                  filterState: filterState,
-                );
-              },
-            );
-          },
-        ),
-      ),
+                  return EditionView(
+                      edition: edition,
+                      userState: userState,
+                      filterState: filterState,
+                      librarianID: widget.librarianID,);
+                },);
+              },),
+            ),);
+      },
     );
   }
 
   Future<void> _fetchEditions(int pageKey) async {
+    print('Getting $pageKey');
     try {
       filterBloc.stream.listen((event) {
         _pagingController.refresh();
@@ -99,6 +93,7 @@ class _LibraryPageState extends State<LibraryPage> {
         _pagingController.appendPage(newEditions, nextPageKey);
       }
     } catch (error) {
+      print(error);
       _pagingController.error = error;
     }
   }
