@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend/core/coin_api.dart';
 import 'package:flutter_frontend/core/constants.dart';
 import 'package:flutter_frontend/core/user_state.dart';
+import 'package:flutter_frontend/home/html_image.dart';
 import 'package:flutter_frontend/model/coin.dart';
 
 class CoinCard extends StatefulWidget {
@@ -23,11 +24,6 @@ class _CoinCardState extends State<CoinCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        setState(() {
-          showBack = !showBack;
-        });
-      },
       onLongPress: _showImagePopup,
       child: getCard(),
     );
@@ -43,31 +39,15 @@ class _CoinCardState extends State<CoinCard> {
                 ? Colors.green
                 : Colors.red
               : Colors.blue,
-            child: showBack
-                ? widget.coin.imagePath.isEmpty
+            child: widget.coin.imagePath.isEmpty
                     ? const FittedBox(child: Icon(Icons.do_disturb))
                     : Padding(
                         padding: const EdgeInsets.all(8),
                         child: ClipOval(
-                          child: CachedNetworkImage(
-                              fit: BoxFit.fitWidth,
-                              imageUrl: widget.coin.imagePath,
-                              width: 540,
-                              height: 540,),
+                          child: HtmlImageWidget(imageUrl: widget.coin.imagePath)
                         ),
                       )
-                : Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: CachedNetworkImage(
-                        imageUrl: generateUri(
-                                "$frontImage${widget.coin.coinSize}", {},)
-                            .toString(),
-                        fit: BoxFit.fitWidth,
-                        errorWidget: (context, url, error) =>
-                            const FittedBox(child: Icon(Icons.wifi_off)),
-                        width: 540,
-                        height: 540,),
-                  ),),);
+                ),);
   }
 
   void _showImagePopup() {
