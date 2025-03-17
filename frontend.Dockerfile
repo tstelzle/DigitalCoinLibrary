@@ -13,7 +13,7 @@ COPY flutter_frontend frontend
 WORKDIR frontend
 
 RUN flutter config --enable-web
-RUN flutter build web --wasm --release --dart-define=API_URL=${API_URL} --dart-define=API_PORT=${API_PORT} --dart-define=GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+RUN flutter build web --release --dart-define=API_URL=${API_URL} --dart-define=API_PORT=${API_PORT} --dart-define=GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
 
 FROM nginx:latest as DEPLOY_STAGE
 
