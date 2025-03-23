@@ -14,7 +14,6 @@ services:
       - "9010:8080"
     depends_on:
       - database
-      - selenium
     environment:
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
@@ -51,14 +50,3 @@ services:
       - "9013:80"
     networks:
       - proxy-network
-
-  selenium:
-    container_name: coin_library_selenium
-    image: selenium/standalone-chrome:4.15.0
-    volumes:
-      - /dev/shm:/dev/shm
-    ports:
-      - "4445:4444"
-      - "7900:7900"
-    networks:
-      - coin-library-network
