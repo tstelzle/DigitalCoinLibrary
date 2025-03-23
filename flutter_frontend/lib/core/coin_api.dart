@@ -1,33 +1,51 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:http/http.dart' as http;
-
-import '../core/constants.dart' as constants;
-import '../model/coin.dart';
+import 'package:flutter_frontend/core/api.dart' as coin_api;
+import 'package:flutter_frontend/core/constants.dart' as constants;
+import 'package:flutter_frontend/model/coin.dart';
+import 'package:http/http.dart';
 
 class CoinApi {
-  Future<List<Coin>> fetchCoinsByEdition(int editionId, int size) async {
-    var queryParameters = {"editionId": "$editionId"};
+  Future<List<Coin>> fetchCoinsByEdition(
+    int editionId,
+    int size,
+    String librarianIdentification,
+  ) async {
+    final queryParameters = {'editionId': '$editionId'};
     if (size > 0) {
-      queryParameters["size"] = "$size";
+      queryParameters['size'] = '$size';
     }
-    final Uri uri = constants.generateUri(constants.coinPath, queryParameters);
-    final response = await http.get(uri, headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-    });
-    if (response.statusCode != 200) {
-      throw Exception('Failed to load coins');
-    }
+    queryParameters['librarianIdentification'] = librarianIdentification;
 
-    List<Coin> coinList = [];
+    final body = await coin_api.get(constants.coinPath, queryParameters);
 
-    final List<dynamic> coinMap = jsonDecode(response.body);
+    final coinList = <Coin>[];
+    final coinMap = jsonDecode(body) as List<dynamic>;
 
-    for (var value in coinMap) {
-      coinList.add(Coin.fromJson(value));
+    for (final value in coinMap) {
+      coinList.add(Coin.fromJson(value as Map<String, dynamic>));
     }
 
     return coinList;
+  }
+
+  Future<Response> updateCoin(
+    int coinId,
+    String librarianIdentification,
+    bool available,
+      Map<String, String> authHeaders,
+  ) async {
+    final queryParameters = <String, String>{};
+    queryParameters['coinId'] = '$coinId';
+    queryParameters['librarianIdentification'] = librarianIdentification;
+    queryParameters['available'] = '$available';
+
+    final response = await coin_api.postWithAccess(
+      constants.coinPath,
+      queryParameters,
+      authHeaders,
+    );
+
+    return response;
   }
 }

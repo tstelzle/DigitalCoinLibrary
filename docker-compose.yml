@@ -1,16 +1,52 @@
-version: "3.7"
-
-include:
-  - docker-compose-base.yml
+networks:
+  proxy-network:
+    name: ${PROXY_NETWORK}
+    external: true
+  coin-library-network:
+    name: coin-library-network
+    external: false
 
 services:
-  selenium:
-    container_name: coin_library_selenium
-    image: selenium/standalone-chrome
-    volumes:
-      - /dev/shm:/dev/shm
+  backend:
+    container_name: coin_library_backend
+    image: ${DOCKERHUB_USER}/dcl_backend:${ENVIRONMENT}
     ports:
-      - "4445:4444"
-      - "7900:7900"
+      - "9010:8080"
+    depends_on:
+      - database
+    environment:
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - SPRING_USERNAME=${SPRING_USERNAME}
+      - SPRING_PASSWORD=${SPRING_PASSWORD}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     networks:
       - coin-library-network
+      - proxy-network
+
+  database:
+    container_name: coin_library_database
+    image: mariadb:10.9.3
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+    volumes:
+      - ${DATABASE_MOUNT}/data:/var/lib/mysql
+      - ${DATABASE_MOUNT}/conf:/etc/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - coin-library-network
+
+  frontend:
+    container_name: coin_library_frontend
+    image: ${DOCKERHUB_USER}/dcl_frontend:${ENVIRONMENT}
+    ports:
+      - "9013:80"
+    networks:
+      - proxy-network

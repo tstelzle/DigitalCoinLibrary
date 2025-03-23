@@ -1,36 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_frontend/core/user_state.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+import 'package:google_sign_in_web/google_sign_in_web.dart' as web;
 
-const googleClientID = String.fromEnvironment("GOOGLE_CLIENT_ID");
-
-final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email'],
-    clientId: googleClientID
-);
-
-class GoogleSignInWidget extends StatelessWidget {
-  const GoogleSignInWidget({super.key});
-
-  Future<void> _signInWithGoogle() async {
-    try {
-      // Trigger the Google Authentication flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-      // Obtain the Google Authentication details
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
-
-      print(googleAuth.accessToken);
-    } catch (error) {
-      print('Error signing in with Google: $error');
-    }
-  }
+class GoogleSignInPage extends StatefulWidget {
+  const GoogleSignInPage({super.key});
 
   @override
+  State<GoogleSignInPage> createState() => _GoogleSignInPageState();
+}
+
+class _GoogleSignInPageState extends State<GoogleSignInPage> {
+  @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: _signInWithGoogle,
-      child: const Text('Sign In with Google'),
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, userState) {
+        if (userState.user == null) {
+          return (GoogleSignInPlatform.instance as web.GoogleSignInPlugin)
+              .renderButton();
+        }
+
+        return Center(
+          child: GoogleUserCircleAvatar(identity: userState.user!),
+        );
+      },
     );
   }
 }

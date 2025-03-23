@@ -8,7 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EditionRepository<T, S> extends PagingAndSortingRepository<Edition, Integer>, JpaSpecificationExecutor<Edition> {
+    Edition save(Edition edition);
+
+    Optional<Edition> findById(int id);
+
     public List<Edition> findByCountry(String country);
 
     public Optional<Edition> findByCountryAndEdition(String country, int edition);
+
+    Iterable<Edition> findAll();
 }

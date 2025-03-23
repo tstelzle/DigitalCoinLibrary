@@ -1,9 +1,11 @@
 package com.coinlibrary.backend.model;
 
 import com.coinlibrary.backend.util.CountryLookUp;
+import jakarta.persistence.*;
+import lombok.Getter;
 
-import javax.persistence.*;
 
+@Getter
 @Entity
 @Table(name = "edition")
 @Embeddable
@@ -22,40 +24,24 @@ public class Edition {
 
     }
 
-    public String getCountry() {
-        return country;
-    }
-
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public int getEdition() {
-        return edition;
     }
 
     public void setEdition(int edition) {
         this.edition = edition;
     }
 
-    public int getYearFrom() {
-        return yearFrom;
-    }
-
     public void setYearFrom(int year_from) {
         this.yearFrom = year_from;
-    }
-
-    public int getYearTo() {
-        return yearTo;
     }
 
     public void setYearTo(int year_to) {
         this.yearTo = year_to;
     }
 
-    public int getId() {
-        return id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEditionString() {
@@ -66,13 +52,11 @@ public class Edition {
 
         String year = "";
         if (!isSpecial) {
-            if (getYearTo() == 2100 ||
-                   getYearTo() == 0) {
-                if (getYearFrom() == 1800 ||
-                        getYearFrom() == 0) {
+            if (getYearTo() == 2100 || getYearTo() == 0) {
+                if (getYearFrom() == 1800 || getYearFrom() == 0) {
                     year = " ab 1999";
                 } else {
-                    year =  String.format(" ab %d", getYearFrom());
+                    year = String.format(" ab %d", getYearFrom());
                 }
             } else {
                 year = String.format(" %d bis %d", getYearFrom(), getYearTo());

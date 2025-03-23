@@ -1,0 +1,34 @@
+version: "3.7"
+
+networks:
+  proxy-network:
+    name: ${PROXY_NETWORK}
+    external: true
+
+services:
+  duckdns:
+    image: linuxserver/duckdns
+    container_name: dcl-dev-duckdns
+    environment:
+      - SUBDOMAINS=dcl-dev.duckdns.org
+      - TOKEN=${DUCKDNSTOKEN}
+
+  letsencrypt:
+    image: linuxserver/swag:3.2.0
+    container_name: dcl-dev-swag
+    volumes:
+      - ./environment/config/nginx/proxy-confs:/config/nginx/proxy-confs
+    ports:
+      - "443:443"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - URL=dcl-dev.duckdns.org
+      - DUCKDNSTOKEN=${DUCKDNSTOKEN}
+      - SUBDOMAINS=wildcard
+      - VALIDATION=duckdns
+    depends_on:
+      - duckdns
+    networks:
+      - proxy-network

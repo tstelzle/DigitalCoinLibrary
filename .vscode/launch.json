@@ -1,0 +1,34 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "CoinLibraryApplication-Dev",
+      "request": "launch",
+      "mainClass": "com.coinlibrary.backend.CoinLibraryApplication",
+      "projectName": "Backend",
+      "args": [
+        "--spring.config.name=application-dev"
+      ],
+      "envFile": "${workspaceFolder}/coin_library.env"
+    },
+    // TODO flutter is not reading coni_library.env file --> need to set env files explicitly
+    {
+      "name": "flutter_frontend",
+      "cwd": "flutter_frontend",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define",
+        "GOOGLE_CLIENT_ID=${env:GOOGLE_CLIENT_ID}",
+        "--dart-define",
+        "API_URL=${env:API_URL}",
+        "--dart-define",
+        "API_PORT=${env:API_PORT}",
+      ]
+    }
+  ]
+}

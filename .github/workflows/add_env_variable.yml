@@ -1,0 +1,46 @@
+name: Add Env Variable
+
+on:
+  workflow_call:
+    inputs:
+      env_var_list:
+        description: "List Of Env Vars To Add."
+        required: true
+        type: string
+      runner:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+
+jobs:
+  checkout_repository:
+    name: Checkout Repository
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+  create_env_file:
+    needs:
+      - checkout_repository
+    name: Create File
+    runs-on: ${{ inputs.runner }}
+    steps:
+    - name: Create Environment File
+      run: touch coin_library.env
+
+  add_env_variable:
+    needs: create_env_file
+    name: Add Variable
+    runs-on: ${{ inputs.runner }}
+    environment: ${{ inputs.environment }}
+    strategy:
+      matrix:
+        env_var: ${{ fromJSON(inputs.env_var_list) }}
+    steps:
+    - name: Add Env Var
+      env:
+        MATRIX_ENV_VAR: ${{ secrets[matrix.env_var] }}
+      run: echo "${{ matrix.env_var }}=$MATRIX_ENV_VAR" >> coin_library.env

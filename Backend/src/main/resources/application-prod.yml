@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://coin_library_database:3306/${MARIADB_DATABASE}
+    username: ${MARIADB_USER}
+    password: ${MARIADB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate.ddl-auto: update
+
+logging:
+  config:
+    classpath: logback.xml
+  level:
+    root: info
+    org:
+      springframework:
+        security: info
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+
+#Custom Parameters
+app:
+  frontend:
+    url: ${FRONTEND_URL}
+  backend:
+    username: ${SPRING_USERNAME}
+    password: ${SPRING_PASSWORD}
+google:
+  client:
+    id: ${GOOGLE_CLIENT_ID}

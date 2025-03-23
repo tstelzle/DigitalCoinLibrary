@@ -1,0 +1,32 @@
+name: Start Application
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+
+jobs:
+  run_application:
+    name: Start Application
+    runs-on: ${{ inputs.runner }}
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Pull Frontend Docker Container
+        env:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        run: docker pull $DOCKERHUB_USER/dcl_frontend:$ENVIRONMENT
+
+      - name: Pull Backend Docker Container
+        env:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        run: docker pull $DOCKERHUB_USER/dcl_backend:$ENVIRONMENT
+
+      - name: Run Application
+        run: docker compose --env-file coin_library.env up -d
