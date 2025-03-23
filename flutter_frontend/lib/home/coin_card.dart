@@ -5,10 +5,14 @@ import 'package:flutter_frontend/core/constants.dart';
 import 'package:flutter_frontend/core/user_state.dart';
 import 'package:flutter_frontend/home/html_image.dart';
 import 'package:flutter_frontend/model/coin.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class CoinCard extends StatefulWidget {
-
-  const CoinCard({required this.coin, required this.userState, required this.librarianAvailable, super.key});
+  const CoinCard(
+      {required this.coin,
+      required this.userState,
+      required this.librarianAvailable,
+      super.key});
   final Coin coin;
   final UserState userState;
   final bool librarianAvailable;
@@ -23,31 +27,52 @@ class _CoinCardState extends State<CoinCard> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onLongPress: _showImagePopup,
-      child: getCard(),
+      return InkWell(
+        onTap: () {
+          setState(() {
+            showBack = !showBack;
+          });
+        },
+        onLongPress: _showImagePopup,
+        child: getCard(),
     );
   }
 
   Widget getCard() {
     return AspectRatio(
-        aspectRatio: 1 / 1,
-        child: Card(
-            shape: const CircleBorder(),
-            color: widget.librarianAvailable
-              ? widget.coin.available
+      aspectRatio: 1 / 1,
+      child: Card(
+        shape: const CircleBorder(),
+        color: widget.librarianAvailable
+            ? widget.coin.available
                 ? Colors.green
                 : Colors.red
-              : Colors.blue,
-            child: widget.coin.imagePath.isEmpty
-                    ? const FittedBox(child: Icon(Icons.do_disturb))
-                    : Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: ClipOval(
-                          child: HtmlImageWidget(imageUrl: widget.coin.imagePath)
-                        ),
-                      )
-                ),);
+            : Colors.blue,
+        child: showBack
+            ? widget.coin.imagePath.isEmpty
+                ? const FittedBox(child: Icon(Icons.do_disturb))
+                : Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ClipOval(
+                        child: HtmlImageWidget(imageUrl: widget.coin.imagePath),
+                    ),
+                  )
+            : Padding(
+                padding: const EdgeInsets.all(8),
+                child: CachedNetworkImage(
+                  imageUrl: generateUri(
+                    "$frontImage${widget.coin.coinSize}",
+                    {},
+                  ).toString(),
+                  fit: BoxFit.fitWidth,
+                  errorWidget: (context, url, error) =>
+                      const FittedBox(child: Icon(Icons.wifi_off)),
+                  width: 540,
+                  height: 540,
+                ),
+              ),
+      ),
+    );
   }
 
   void _showImagePopup() {

@@ -18,24 +18,29 @@ class _HtmlImageWidgetState extends State<HtmlImageWidget> {
   @override
   void initState() {
     super.initState();
-    _viewId = "image_${widget.imageUrl.hashCode}";
-    
-    // Register a view factory
+    _viewId = 'image_${widget.imageUrl.hashCode}';
+
     ui.platformViewRegistry.registerViewFactory(_viewId, (int viewId) {
-      final imgElement = web.document.createElement('img') as web.HTMLImageElement;
-      imgElement.src = widget.imageUrl;
-      imgElement.style.width = '100%';
-      imgElement.style.height = '100%';
-      return imgElement;
+      final container = web.HTMLDivElement()
+        ..style.width = '100%'
+        ..style.height = '100%'
+        ..style.position = 'relative'
+        ..style.overflow = 'hidden';
+
+      final img = web.HTMLImageElement()
+        ..src = widget.imageUrl
+        ..style.width = '100%'
+        ..style.height = '100%'
+        ..style.objectFit = 'cover'
+        ..style.pointerEvents = 'none';
+
+      container.append(img);
+      return container;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return  SizedBox(
-      width: 540,
-      height: 540,
-      child: HtmlElementView(viewType: _viewId),
-    );
+    return IgnorePointer(child: HtmlElementView(viewType: _viewId));
   }
 }
