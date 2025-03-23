@@ -5,7 +5,6 @@ import 'package:flutter_frontend/core/constants.dart';
 import 'package:flutter_frontend/core/user_state.dart';
 import 'package:flutter_frontend/home/html_image.dart';
 import 'package:flutter_frontend/model/coin.dart';
-import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class CoinCard extends StatefulWidget {
   const CoinCard(
@@ -27,14 +26,14 @@ class _CoinCardState extends State<CoinCard> {
 
   @override
   Widget build(BuildContext context) {
-      return InkWell(
-        onTap: () {
-          setState(() {
-            showBack = !showBack;
-          });
-        },
-        onLongPress: _showImagePopup,
-        child: getCard(),
+    return InkWell(
+      onTap: () {
+        setState(() {
+          showBack = !showBack;
+        });
+      },
+      onLongPress: _showImagePopup,
+      child: getCard(),
     );
   }
 
@@ -54,7 +53,7 @@ class _CoinCardState extends State<CoinCard> {
                 : Padding(
                     padding: const EdgeInsets.all(8),
                     child: ClipOval(
-                        child: HtmlImageWidget(imageUrl: widget.coin.imagePath),
+                      child: HtmlImageWidget(imageUrl: widget.coin.imagePath),
                     ),
                   )
             : Padding(
