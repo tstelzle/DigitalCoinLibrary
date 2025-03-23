@@ -12,7 +12,7 @@ public class FailureEvents {
     @EventListener
     public void onFailure(AuthenticationFailureBadCredentialsEvent badCredentials) {
         if (badCredentials.getAuthentication() instanceof BearerTokenAuthenticationToken) {
-            log.error("juhu");
+            log.error(badCredentials.getException().getMessage());
         }
     }
 }
