@@ -1,3 +1,5 @@
+import 'package:flutter_frontend/model/coin.dart';
+
 class Edition {
   Edition({
     required this.id,
@@ -24,4 +26,5 @@ class Edition {
   final int yearFrom;
   final int yearTo;
   final String editionString;
+  List<Coin> coins = [];
 }

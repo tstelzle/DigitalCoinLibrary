@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_frontend/core/constants.dart';
 import 'package:flutter_frontend/model/edition.dart';
 
 class Coin {
@@ -33,9 +35,22 @@ class Coin {
   final int coinSize;
   late bool available;
   final String imagePath;
+  late MaterialColor availableColor;
+  String frontImagePath() => '$frontImage$coinSize';
 
   @override
   String toString() {
     return 'Coin: ${edition.country}, $year, $special, $name, $coinSize';
+  }
+
+  // TODO can somehow be solved smarter
+  void setAvailableColor(bool isAvailable, String librarianId) {
+    if (librarianId == '') {
+      if (isAvailable) {
+        availableColor = Colors.green;
+      }
+      availableColor = Colors.red;
+    }
+    availableColor = Colors.blue;
   }
 }
