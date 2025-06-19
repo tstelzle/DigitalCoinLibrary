@@ -1,7 +1,9 @@
 package com.coinlibrary.backend.controller;
 
+import com.coinlibrary.backend.dto.EditionDto;
 import com.coinlibrary.backend.model.Edition;
 import com.coinlibrary.backend.repository.EditionRepository;
+import com.coinlibrary.backend.service.CoinService;
 import com.coinlibrary.backend.service.EditionService;
 import com.coinlibrary.backend.specification.EditionSpecification;
 import com.coinlibrary.backend.util.CountryLookUp;
@@ -10,9 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -21,12 +25,35 @@ import java.util.stream.Stream;
 public class EditionController {
 
     private final EditionService editionService;
-    private final EditionRepository<Edition, Integer> editionRepository;
+    private final CoinService coinService;
 
     @Autowired
-    public EditionController(EditionService editionService, EditionRepository<Edition, Integer> editionRepository) {
+    public EditionController(EditionService editionService, CoinService coinService) {
         this.editionService = editionService;
-        this.editionRepository = editionRepository;
+        this.coinService = coinService;
+    }
+
+    @GetMapping("/api/edition")
+    public ResponseEntity<List<EditionDto>> getEditions() {
+
+        Iterable<Edition> editions = editionService.findAll();
+
+        List<EditionDto> editionDtos = new ArrayList<>();
+
+        for (Edition edition : editions) {
+            EditionDto editionDto = new EditionDto();
+            editionDto.id = edition.getId();
+            editionDto.country = edition.getCountry();
+            editionDto.edition = edition.getEdition();
+            editionDto.yearFrom = edition.getYearFrom();
+            editionDto.yearTo = edition.getYearTo();
+            editionDto.coins = coinService.findCoinsByEdition(edition);
+            editionDto.editionString = edition.getEditionString();
+
+            editionDtos.add(editionDto);
+        }
+
+        return new ResponseEntity<List<EditionDto>>(editionDtos, HttpStatus.OK);
     }
 
     @GetMapping("/api/edition/page/{pageKey}")
@@ -45,7 +72,7 @@ public class EditionController {
             spec = spec.and(EditionSpecification.isSpecial());
         }
 
-        Page<Edition> editions = editionRepository.findAll(spec, pageable);
+        Page<Edition> editions = editionService.findAll(spec, pageable);
 
         return new ResponseEntity<>(editions, HttpStatus.OK);
     }

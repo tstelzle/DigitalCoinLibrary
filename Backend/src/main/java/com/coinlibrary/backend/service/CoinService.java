@@ -1,14 +1,18 @@
 package com.coinlibrary.backend.service;
 
-import com.coinlibrary.backend.model.Coin;
-import com.coinlibrary.backend.model.Librarian;
-import com.coinlibrary.backend.repository.CoinRepository;
-import com.coinlibrary.backend.repository.LibrarianRepository;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import com.coinlibrary.backend.model.Coin;
+import com.coinlibrary.backend.model.Edition;
+import com.coinlibrary.backend.model.Librarian;
+import com.coinlibrary.backend.repository.CoinRepository;
+import com.coinlibrary.backend.repository.LibrarianRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -60,6 +64,15 @@ public class CoinService {
         }
 
         return -1L;
+    }
+
+    public Iterable<Coin> findCoinsByEdition(Edition edition) {
+        Optional<Iterable<Coin>> coins = coinRepository.findByEdition(edition);
+        if (coins.isPresent()) {
+            return coins.get();
+        } else {
+            return List.of() ;
+        }
     }
 
 }

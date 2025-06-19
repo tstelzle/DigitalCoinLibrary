@@ -17,4 +17,6 @@ public interface CoinRepository<T, S> extends PagingAndSortingRepository<Coin, L
 
     public Optional<Coin> findByEditionAndSizeAndSpecial(Edition edition, int size, boolean special);
 
+    public Optional<Iterable<Coin>> findByEdition(Edition edition);
+
 }
