@@ -4,9 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:web/web.dart' as web;
 
 class HtmlImageWidget extends StatefulWidget {
+  const HtmlImageWidget({required this.imageUrl, super.key});
   final String imageUrl;
-
-  const HtmlImageWidget({super.key, required this.imageUrl});
 
   @override
   State<HtmlImageWidget> createState() => _HtmlImageWidgetState();

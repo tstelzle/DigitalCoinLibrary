@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_frontend/core/filter_state.dart';
-import 'package:flutter_frontend/core/user_state.dart';
-import 'package:flutter_frontend/home/home_page.dart';
-import 'package:flutter_frontend/home/library_page.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_frontend/repository/authentication_api.dart';
+import 'package:flutter_frontend/repository/authentication_repository.dart';
+import 'package:flutter_frontend/repository/edition_api.dart';
+import 'package:flutter_frontend/view/home_page.dart';
+import 'package:flutter_frontend/view/library_page.dart';
 import 'package:go_router/go_router.dart';
-
-final GetIt getIt = GetIt.instance;
 
 // GoRouter configuration
 final _router = GoRouter(
@@ -18,35 +16,30 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/library/:librarianID',
-      builder: (context, state) => LibraryPage(
-        librarianID: state.pathParameters['librarianID'],
-      ),
+      builder: (context, state) {
+        // TODO how to init AuthenticationRepository with librarianID?
+        // context
+        // .read<AuthenticationRepository>()
+        // .login(state.pathParameters['librarianid']!, '');
+        return const LibraryPage();
+      },
     ),
     GoRoute(
       path: '/library',
-      builder: (context, state) => const LibraryPage(librarianID: ''),
+      builder: (context, state) => const LibraryPage(),
     ),
   ],
-  redirect: (BuildContext context, GoRouterState state) {
-    final user = getIt<UserBloc>().state.user;
-    if (user != null) {
-      return '/library/${user.email}';
-    } else {
-      return null;
-    }
-  },
 );
 
-void SetUp() {
-  getIt.registerSingleton<UserBloc>(UserBloc());
-}
-
 void main() async {
-  SetUp();
   runApp(
-    MultiBlocProvider(
+    MultiRepositoryProvider(
       providers: [
-        BlocProvider<FilterCubit>(create: (context) => FilterCubit()),
+        RepositoryProvider(create: (context) => EditionApi()),
+        RepositoryProvider(create: (context) => AuthenticationApi()),
+        RepositoryProvider(
+          create: (context) => AuthenticationRepository(),
+        ),
       ],
       child: const MyApp(),
     ),

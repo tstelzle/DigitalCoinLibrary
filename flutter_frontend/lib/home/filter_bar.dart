@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_frontend/core/edition_api.dart';
 import 'package:flutter_frontend/core/filter_state.dart';
+import 'package:flutter_frontend/repository/edition_api.dart';
 
 class FilterBar extends StatefulWidget {
 

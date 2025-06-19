@@ -8,9 +8,10 @@ class Edition {
     required this.yearFrom,
     required this.yearTo,
     required this.editionString,
+    required this.coins,
   });
 
-  factory Edition.fromJson(Map<String, dynamic> json) {
+  factory Edition.fromJson(Map<String, dynamic> json, String librarianId) {
     return Edition(
       id: json['id'] as int,
       country: json['country'] as String,
@@ -18,6 +19,14 @@ class Edition {
       yearFrom: json['yearFrom'] as int,
       yearTo: json['yearTo'] as int,
       editionString: (json['editionString'] ?? '') as String,
+      coins: (json['coins'] as List<dynamic>)
+          .map(
+            (coinJson) => Coin.fromJson(
+              coinJson as Map<String, dynamic>,
+              librarianId,
+            ),
+          )
+          .toList(),
     );
   }
   final int id;
@@ -26,5 +35,5 @@ class Edition {
   final int yearFrom;
   final int yearTo;
   final String editionString;
-  List<Coin> coins = [];
+  final List<Coin> coins;
 }
