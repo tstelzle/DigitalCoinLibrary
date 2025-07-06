@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_frontend/repository/authentication_api.dart';
 import 'package:flutter_frontend/repository/authentication_repository.dart';
+import 'package:flutter_frontend/repository/user_repository.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 const googleClientID = String.fromEnvironment('GOOGLE_CLIENT_ID');
@@ -15,8 +15,8 @@ class HomeCubit extends Cubit<GoogleSignInAccount?> {
       }
     });
   }
-  AuthenticationApi authenticationApi;
-  AuthenticationRepository authenticationRepository;
+  AuthenticationRepository authenticationApi;
+  UserRepository authenticationRepository;
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile', 'openid'],

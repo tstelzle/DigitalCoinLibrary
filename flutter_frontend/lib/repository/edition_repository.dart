@@ -4,7 +4,7 @@ import 'package:flutter_frontend/core/api.dart';
 import 'package:flutter_frontend/core/constants.dart' as constants;
 import 'package:flutter_frontend/model/edition.dart';
 
-class EditionApi {
+class EditionRepository {
   Future<List<Edition>> fetchEditions(String librarianId) async {
     final body = await get(constants.editionPath, {});
 

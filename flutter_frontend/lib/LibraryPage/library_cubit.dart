@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_frontend/model/edition.dart';
-import 'package:flutter_frontend/model/library_state.dart';
-import 'package:flutter_frontend/repository/authentication_repository.dart';
-import 'package:flutter_frontend/repository/edition_api.dart';
+import 'package:flutter_frontend/LibraryPage/library_state.dart';
+import 'package:flutter_frontend/repository/user_repository.dart';
+import 'package:flutter_frontend/repository/edition_repository.dart';
 
 class LibraryCubit extends Cubit<LibraryState> {
   LibraryCubit(this.editionApi, this.authenticationRepository, this.librarianId)
       : super(LibraryState(editions: [], title: 'Library'));
-  EditionApi editionApi;
-  AuthenticationRepository authenticationRepository;
+  EditionRepository editionApi;
+  UserRepository authenticationRepository;
   String librarianId;
 
   Future<List<Edition>> getEditions() async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/model/edition.dart';
-import 'package:flutter_frontend/view/coin_view.dart';
+import 'package:flutter_frontend/LibraryPage/coin_view.dart';
 
 class EditionView extends StatelessWidget {
   const EditionView({required this.edition, super.key});

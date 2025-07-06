@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_frontend/home/html_image.dart';
+import 'package:flutter_frontend/LibraryPage/html_image.dart';
 import 'package:flutter_frontend/model/coin.dart';
 
 class CoinView extends StatelessWidget {
