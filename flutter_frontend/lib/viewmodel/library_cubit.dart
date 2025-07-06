@@ -5,16 +5,21 @@ import 'package:flutter_frontend/repository/authentication_repository.dart';
 import 'package:flutter_frontend/repository/edition_api.dart';
 
 class LibraryCubit extends Cubit<LibraryState> {
-  LibraryCubit(this.editionApi, this.authenticationRepository)
+  LibraryCubit(this.editionApi, this.authenticationRepository, this.librarianId)
       : super(LibraryState(editions: [], title: 'Library'));
   EditionApi editionApi;
-
   AuthenticationRepository authenticationRepository;
+  String librarianId;
 
   Future<List<Edition>> getEditions() async {
     try {
-      final user = await authenticationRepository.getCurrentUser();
-      final userEmail = user?.email ?? '';
+      String userEmail;
+      if (librarianId.isNotEmpty) {
+        userEmail = librarianId;
+      } else {
+        final user = await authenticationRepository.getCurrentUser();
+        userEmail = user?.email ?? '';
+      }
       final editions = await editionApi.fetchEditions(userEmail);
       var title = 'Digital Coin Library';
       if (userEmail != '') {

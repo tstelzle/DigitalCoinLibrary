@@ -17,16 +17,12 @@ final _router = GoRouter(
     GoRoute(
       path: '/library/:librarianID',
       builder: (context, state) {
-        // TODO how to init AuthenticationRepository with librarianID?
-        // context
-        // .read<AuthenticationRepository>()
-        // .login(state.pathParameters['librarianid']!, '');
-        return const LibraryPage();
+        return LibraryPage(librarianId: state.pathParameters['librarianID']!);
       },
     ),
     GoRoute(
       path: '/library',
-      builder: (context, state) => const LibraryPage(),
+      builder: (context, state) => const LibraryPage(librarianId: ''),
     ),
   ],
 );

@@ -11,39 +11,46 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, GoogleSignInAccount?>(
-      builder: (context, state) {
-        return Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: (state == null)
-                      // ? const Center(child: Text('Not signed in'))
-                      // : const Center(child: Text('Signed in')),
-                  ? (GoogleSignInPlatform.instance
-                          as web.GoogleSignInPlugin)
-                      .renderButton()
-                  : Center(
-                      child: GoogleUserCircleAvatar(identity: state),
-                    ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.go('/library');
-                    },
-                    child: const Text('Bibliothek'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+    return BlocListener<HomeCubit, GoogleSignInAccount?>(
+      listener: (context, state) {
+        if (state != null) {
+          context.go('/library/${state.email}');
+        }
       },
+      child: BlocBuilder<HomeCubit, GoogleSignInAccount?>(
+        builder: (context, state) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: (state == null)
+                        // ? const Center(child: Text('Not signed in'))
+                        // : const Center(child: Text('Signed in')),
+                        ? (GoogleSignInPlatform.instance
+                                as web.GoogleSignInPlugin)
+                            .renderButton()
+                        : Center(
+                            child: GoogleUserCircleAvatar(identity: state),
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.go('/library');
+                      },
+                      child: const Text('Bibliothek'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

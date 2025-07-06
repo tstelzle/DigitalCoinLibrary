@@ -6,7 +6,8 @@ import 'package:flutter_frontend/view/library_view.dart';
 import 'package:flutter_frontend/viewmodel/library_cubit.dart';
 
 class LibraryPage extends StatelessWidget {
-  const LibraryPage({super.key});
+  const LibraryPage({required this.librarianId, super.key});
+  final String librarianId;
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +15,7 @@ class LibraryPage extends StatelessWidget {
       create: (BuildContext context) => LibraryCubit(
         context.read<EditionApi>(),
         context.read<AuthenticationRepository>(),
+        librarianId,
       )..getEditions(),
       child: const LibraryView(),
     );
