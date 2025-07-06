@@ -36,7 +36,7 @@ class Coin {
   final int coinSize;
   late bool available;
   final String imagePath;
-  final MaterialColor availableColor;
+  final int availableColor;
   String frontImagePath() => '$frontImage$coinSize';
 
   @override
@@ -44,16 +44,16 @@ class Coin {
     return 'Coin: $year, $special, $name, $coinSize';
   }
 
-  static MaterialColor _determineAvailableColor(
+  static int _determineAvailableColor(
     bool isAvailable,
     String librarianId,
   ) {
     if (librarianId != '') {
       if (isAvailable) {
-        return Colors.green;
+        return Colors.green.toARGB32();
       }
-      return Colors.red;
+      return Colors.red.toARGB32();
     }
-    return Colors.blue;
+    return Colors.blue.toARGB32();
   }
 }

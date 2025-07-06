@@ -13,7 +13,7 @@ class CoinView extends StatelessWidget {
       aspectRatio: 1 / 1,
       child: Card(
         shape: const CircleBorder(),
-        color: coin.availableColor,
+        color: Color(coin.availableColor),
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: ClipOval(
