@@ -11,21 +11,24 @@ class Coin {
     required this.available,
     required this.imagePath,
     required this.availableColor,
+    required this.frontImagePath,
   });
 
   factory Coin.fromJson(Map<String, dynamic> json, String librarianId) {
     final available = (json['available'] ?? false) as bool;
     final availableColor = _determineAvailableColor(available, librarianId);
+    final coinSize = (json['size'] ?? -1) as int;
 
     return Coin(
       id: json['id'] as int,
       year: (json['year'] ?? -1) as int,
       special: (json['special'] ?? false) as bool,
       name: (json['name'] ?? '') as String,
-      coinSize: (json['size'] ?? -1) as int,
+      coinSize: coinSize,
       available: available,
       imagePath: (json['imagePath'] ?? '') as String,
       availableColor: availableColor,
+      frontImagePath: generateUri('$frontImage$coinSize', {}).toString(),
     );
   }
 
@@ -34,10 +37,10 @@ class Coin {
   final bool special;
   final String name;
   final int coinSize;
-  late bool available;
+  final bool available;
   final String imagePath;
   final int availableColor;
-  String frontImagePath() => '$frontImage$coinSize';
+  final String frontImagePath;
 
   @override
   String toString() {
