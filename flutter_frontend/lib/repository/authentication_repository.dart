@@ -1,0 +1,13 @@
+import 'package:flutter_frontend/core/api.dart';
+
+class AuthenticationRepository {
+  Future<bool> authenticateUser(String idToken) async {
+    final body = await get('/api/authenticate', {'idToken': idToken});
+
+    if (body == 'true') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
