@@ -27,7 +27,7 @@ class _CoinViewState extends State<CoinView> {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: ClipOval(
-              child: CachedNetworkImage(
+              child: HtmlImageWidget(
                 imageUrl: showBack
                     ? widget.coin.imagePath
                     : widget.coin.frontImagePath,
