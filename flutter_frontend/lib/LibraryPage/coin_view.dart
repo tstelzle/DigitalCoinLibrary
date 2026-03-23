@@ -1,6 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_frontend/LibraryPage/html_image.dart';
 import 'package:flutter_frontend/model/coin.dart';
 
 class CoinView extends StatefulWidget {
@@ -27,7 +26,7 @@ class _CoinViewState extends State<CoinView> {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: ClipOval(
-              child: HtmlImageWidget(
+              child: CachedNetworkImage(
                 imageUrl: showBack
                     ? widget.coin.imagePath
                     : widget.coin.frontImagePath,

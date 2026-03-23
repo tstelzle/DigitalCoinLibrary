@@ -18,6 +18,7 @@ class Coin {
     final available = (json['available'] ?? false) as bool;
     final availableColor = _determineAvailableColor(available, librarianId);
     final coinSize = (json['size'] ?? -1) as int;
+    final imagePath = (json['imagePath'] ?? '') as String;
 
     return Coin(
       id: json['id'] as int,
@@ -26,7 +27,7 @@ class Coin {
       name: (json['name'] ?? '') as String,
       coinSize: coinSize,
       available: available,
-      imagePath: (json['imagePath'] ?? '') as String,
+      imagePath: generateUri('/api/images/download', {'imageUrl': imagePath}).toString(),
       availableColor: availableColor,
       frontImagePath: generateUri('$frontImage$coinSize', {}).toString(),
     );

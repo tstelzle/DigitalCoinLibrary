@@ -45,6 +45,12 @@ class HomeView extends StatelessWidget {
                       child: const Text('Bibliothek'),
                     ),
                   ),
+                  TextButton(
+                    onPressed: () {
+                      context.go('/imprint');
+                    },
+                    child: const Text('Impressum'),
+                  ),
                 ],
               ),
             ),

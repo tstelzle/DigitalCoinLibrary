@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_frontend/ImprintPage/imprint_page.dart';
 import 'package:flutter_frontend/repository/authentication_repository.dart';
 import 'package:flutter_frontend/repository/user_repository.dart';
 import 'package:flutter_frontend/repository/edition_repository.dart';
@@ -23,6 +24,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/library',
       builder: (context, state) => const LibraryPage(librarianId: ''),
+    ),
+    GoRoute(
+      path: '/imprint',
+      builder: (context, state) => const ImprintPage(),
     ),
   ],
 );
